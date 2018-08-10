@@ -276,6 +276,176 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/domain adversarial training/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/domain adversarial training/" itemprop="url">
+                  Domain Adversarial Training of Nerual Networks阅读笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-08-09 14:58:51" itemprop="dateModified" datetime="2018-08-09T14:58:51+08:00">2018-08-09</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="introduction">introduction</h1>
+<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
+<p>不需要目标域的标注数据</p>
+<h1 id="domain-adaptation">Domain Adaptation</h1>
+<p>问题描述： <img src="./images/domain_adversrial_training-1.JPG" alt="domain adaption"></p>
+<h2 id="domain-divergence">Domain Divergence</h2>
+<p>为了解决域适应的问题，许多方法通过源域错误率的总和以及源域和目标域的一种距离表示来计算目标域的错误率，这类模型假设当分布相似的时候，源域的风险是目标域风险的很好的指示器。 本文使用了H-divergence（Ben-David et al, 2006,2010）作为源域和目标域距离的度量准则。 H-divergence依赖一个假设类H来判别样本是由源域生成的还是目标域生成的。 Ben-David et al 2006,2010证明了对于对称的假设类，H-divergence可以经验地计算 H-divergence公式表示的是错误分类的概率，经验公式是1减正确分类的概率</p>
+<h2 id="proxy-distance">Proxy Distance</h2>
+<p>通过一个代理距离Proxy A-distance(PAD)来计算H-divergence,</p>
+<h2 id="generalization-bound-on-the-target-risk">Generalization Bound on the Target Risk</h2>
+<p>给出了在目标任务上的风险的上界，而最终的目标是要最小化这个上界 公式的分析： 目标任务上的风险要想小的话，需要beta项小（即存在一个分类器在两个分布上都有小的风险）。 在固定VC维的一个类下，如果想要找到一个在目标任务上有小的经验风险的分类器，学习算法需要最小化那个类上的源任务的风险和经验的H-divergence<span class="math inline">\(\hat{d_H}(S,T)\)</span> 如Ben-David et al(2006)指出的，一个控制H-divergence的策略就是找到一个样本的表示，是的源域和目标域尽量不可区分，在这样的表示方法下，一个在源域上有低风险的假设，根据风险的上界公式，在目标域也有好的表现。</p>
+<h1 id="domain-adversarial-neural-networks">Domain-Adversarial Neural Networks</h1>
+<p>本文的主要思想就是讲上界公式显示地加入到神经网络分类器中。也就是说，为了学习一个能够从源域泛化到其他领域的模型，需要构建一个输入不变的特征表示，同时保持在源任务上的低风险。</p>
+<h2 id="example-case-with-a-shallow-neural-network">Example Case with a Shallow Neural Network</h2>
+<h2 id="generalization-to-arbitrary-architectures">Generalization to Arbitrary Architectures</h2>
+<div class="figure">
+<img src="./images/domain_adversrial_training_network.JPG" alt="network architecture">
+<p class="caption">network architecture</p>
+</div>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/03/Image Style Transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -322,7 +492,7 @@
                 
               
 
-              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:02:55" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
             
 
             
@@ -598,7 +768,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -615,7 +785,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">1</span>
+                      
+                    
+                    <span class="site-state-item-count">2</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
@@ -814,6 +986,8 @@
     
       
         
+      
+    
       
     
       
