@@ -217,7 +217,7 @@
           
           <li class="menu-item menu-item-home menu-item-active">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
   </li>
         
         
@@ -225,7 +225,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archivi</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
   </li>
 
       
@@ -260,6 +260,180 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/coupled-gan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/12/coupled-gan/" itemprop="url">
+                  Coupled GAN
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-08-12 16:26:18 / Updated at: 22:37:43" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="思路">思路</h1>
+<p>提出可以学习多领域图像的联合分布的coupled GAN，不需要不同领域之间图像的对应关系。这是通过强制权重共享来限制网络容量，并且偏向于不同边缘分布的乘积来构造一个联合分布。</p>
+<h1 id="方法">方法</h1>
+<h2 id="网络结构">网络结构</h2>
+<img src="/2018/08/12/coupled-gan/coupled-gan.JPG" title="network of coupled gan">
+<p>采用了两个并列的GAN,各自的输入是不同领域的边缘分布采样的结果。GAN的生成器将<strong>同一个</strong>随机变量（高层语义信息）映射到不同的图像空间，并且通过权重共享的方式来约束不同领域的图像具有相同的高层信息，以及不同的底层实现方式。</p>
+<p>生成器的输入只是随机变量，没有不同领域的图像（不同于conditional GAN），判别器比较的是各自领域的真实图像和生成图像。</p>
+<p>结合下面的公式来理解： <img src="/2018/08/12/coupled-gan/coupled-gan-learning-formula.JPG" title="learning formula of coupled gan"></p>
+<h2 id="生成器">生成器</h2>
+<p>生成模型的前面几层用来解码高层的语义信息（输入的随机变量），而判别模型的后面几层用来提取高层语义信息（用于判断是否是真实图像）。</p>
+<p>不同领域的对应图像共享比较抽象的语义信息，所以这里将生成器的前几层和判别器的后面几层的权重共享。</p>
+<h2 id="判别器">判别器</h2>
+<p>判别器的后面几层的权重也共享了，<strong>但是对学习联合分布是不重要的</strong>，可以帮助减少模型的参数量。</p>
+<h2 id="重点">重点</h2>
+<p>本文的主要贡献在于验证了只对<strong>边缘分布</strong><span class="math inline">\(P_{x1}\)</span>和<span class="math inline">\(P_{x2}\)</span>采样（每次两个领域的真实图像大概率是不对应的），学习到不同图像领域之间的配对关系（也就是<strong>联合分布</strong><span class="math inline">\(P_{x1,x2}\)</span>）。</p>
+<p>本文的结构下也完成将一个领域的特定图像转换到另一个领域的任务。</p>
+<p>自编码器学习<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>通过鼓励生成的<strong>图像对</strong>和目标的<strong>图像对</strong>之间的一致性来最小化loss（因此需要不同领域图像的对应关系），与之不同的是，本文采用的对抗学习仅仅是鼓励生成的<strong>图像对</strong>中的图像和各自领域的图像更像。（这么来看，还是很神奇的）。</p>
+<p>解释是生成模型必须更加有效地利用模型参数来欺骗判别器，由于参数的共享，<strong>最有效的方式就是生成对应的图像</strong>。</p>
+<p>CoGAN需要不同领域之间有共享的高层表示，如果没有的话，就会失败。（实验中有例子？）</p>
+<h1 id="实验">实验</h1>
+<p>在此之前还有没有类似的工作（不需要成对样本的监督），还是相当早的哈</p>
+<p>MNIST上的任务： 1. 图像和边缘的对应 2. 图像和负的图像 3. 图像和90度旋转之后的图像</p>
+<p>数据集均分成不交叉的两部分，用于Domain1 和 Domain2</p>
+<h2 id="应用">应用</h2>
+<h3 id="无监督域适应">无监督域适应</h3>
+<h3 id="跨域图像转换">跨域图像转换</h3>
+<p>竟然可以，很神奇，了解一下</p>
+<h1 id="实现">实现</h1>
+<p>代码在这里 https://github.com/mingyuliutw/cogan</p>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Jiquan Ngiam, Aditya Khosla, Mingyu Kim, Juhan Nam, Honglak Lee, and Andrew Y Ng. Multimodal deep learning. In ICML, 2011.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -315,14 +489,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Scritto il</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Post creato: 2018-08-12 14:43:09 / Post modificato: 16:13:21" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 14:43:09 / Updated at: 16:13:21" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
             
 
             
@@ -485,14 +659,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Scritto il</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Post creato: 2018-08-12 10:47:29 / Post modificato: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 10:47:29 / Updated at: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
             
 
             
@@ -625,14 +799,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Scritto il</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Post creato: 2018-08-11 20:59:26 / Post modificato: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
+              <time title="Post created: 2018-08-11 20:59:26 / Updated at: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
             
 
             
@@ -774,14 +948,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Scritto il</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Post creato: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+              <time title="Post created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
             
 
             
@@ -798,7 +972,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Post modificato: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
+                <time title="Updated at: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
               
             
           </span>
@@ -943,14 +1117,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Scritto il</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Post creato: 2018-08-03 15:06:43 / Post modificato: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
             
 
             
@@ -1077,8 +1251,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">5</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -1102,8 +1276,8 @@
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">tags</span>
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">Tags</span>
                   
                 </div>
               
@@ -1156,7 +1330,7 @@
 
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
 
 
 
@@ -1164,7 +1338,7 @@
 
 
 
-  <div class="theme-info">Tema – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
 
 
 
@@ -1301,6 +1475,8 @@
     
       
         
+      
+    
       
     
       
