@@ -108,27 +108,28 @@
 
 
 
-  <meta name="description" content="introduction 这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性 不需要目标域的标注数据 Doma">
-<meta name="keywords" content="新建,模板,小书匠">
+  <meta name="description" content="原始的GAN可以通过在生成器和判别器上加入额外的依赖信息\(y\)，构成条件GAN，\(y\)可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下：  增加了额外输入信息的条件GAN公式如下：  网络结构如下：">
+<meta name="keywords" content="GAN, conditional GAN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Domain Adversarial Training of Nerual Networks阅读笔记">
-<meta property="og:url" content="http://yoursite.com/2018/08/06/domain adversarial training/index.html">
+<meta property="og:title" content="Conditional Generative Adversarial Nets">
+<meta property="og:url" content="http://yoursite.com/2018/08/12/conditional-gan/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="introduction 这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性 不需要目标域的标注数据 Doma">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/domain%20adversarial%20training/images/domain_adversrial_training-1.JPG">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/domain%20adversarial%20training/images/domain_adversrial_training_network.JPG">
-<meta property="og:updated_time" content="2018-08-09T06:58:51.840Z">
+<meta property="og:description" content="原始的GAN可以通过在生成器和判别器上加入额外的依赖信息\(y\)，构成条件GAN，\(y\)可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下：  增加了额外输入信息的条件GAN公式如下：  网络结构如下：">
+<meta property="og:image" content="http://yoursite.com/2018/08/12/conditional-gan/original-gan-formula.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/08/12/conditional-gan/conditional-gan-formula.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/08/12/conditional-gan/conditional-gan.JPG">
+<meta property="og:updated_time" content="2018-08-12T05:21:02.616Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Domain Adversarial Training of Nerual Networks阅读笔记">
-<meta name="twitter:description" content="introduction 这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性 不需要目标域的标注数据 Doma">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/domain%20adversarial%20training/images/domain_adversrial_training-1.JPG">
+<meta name="twitter:title" content="Conditional Generative Adversarial Nets">
+<meta name="twitter:description" content="原始的GAN可以通过在生成器和判别器上加入额外的依赖信息\(y\)，构成条件GAN，\(y\)可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下：  增加了额外输入信息的条件GAN公式如下：  网络结构如下：">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/12/conditional-gan/original-gan-formula.JPG">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/06/domain adversarial training/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/12/conditional-gan/"/>
 
 
 
@@ -138,7 +139,7 @@
   };
 </script>
 
-  <title>Domain Adversarial Training of Nerual Networks阅读笔记 | Hexo</title>
+  <title>Conditional Generative Adversarial Nets | Hexo</title>
   
 
 
@@ -224,7 +225,7 @@
           
           <li class="menu-item menu-item-home">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
   </li>
         
         
@@ -232,7 +233,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archivi</a>
   </li>
 
       
@@ -283,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/domain adversarial training/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/conditional-gan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -300,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Domain Adversarial Training of Nerual Networks阅读笔记
+          <h1 class="post-title" itemprop="name headline">Conditional Generative Adversarial Nets
               
             
           </h1>
@@ -318,31 +319,19 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Scritto il</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+              <time title="Post creato: 2018-08-12 10:47:29 / Post modificato: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Updated at: 2018-08-09 14:58:51" itemprop="dateModified" datetime="2018-08-09T14:58:51+08:00">2018-08-09</time>
               
             
           </span>
@@ -375,25 +364,7 @@
       
 
       
-        <h1 id="introduction">introduction</h1>
-<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
-<p>不需要目标域的标注数据</p>
-<h1 id="domain-adaptation">Domain Adaptation</h1>
-<p>问题描述： <img src="./images/domain_adversrial_training-1.JPG" alt="domain adaption"></p>
-<h2 id="domain-divergence">Domain Divergence</h2>
-<p>为了解决域适应的问题，许多方法通过源域错误率的总和以及源域和目标域的一种距离表示来计算目标域的错误率，这类模型假设当分布相似的时候，源域的风险是目标域风险的很好的指示器。 本文使用了H-divergence（Ben-David et al, 2006,2010）作为源域和目标域距离的度量准则。 H-divergence依赖一个假设类H来判别样本是由源域生成的还是目标域生成的。 Ben-David et al 2006,2010证明了对于对称的假设类，H-divergence可以经验地计算 H-divergence公式表示的是错误分类的概率，经验公式是1减正确分类的概率</p>
-<h2 id="proxy-distance">Proxy Distance</h2>
-<p>通过一个代理距离Proxy A-distance(PAD)来计算H-divergence,</p>
-<h2 id="generalization-bound-on-the-target-risk">Generalization Bound on the Target Risk</h2>
-<p>给出了在目标任务上的风险的上界，而最终的目标是要最小化这个上界 公式的分析： 目标任务上的风险要想小的话，需要beta项小（即存在一个分类器在两个分布上都有小的风险）。 在固定VC维的一个类下，如果想要找到一个在目标任务上有小的经验风险的分类器，学习算法需要最小化那个类上的源任务的风险和经验的H-divergence<span class="math inline">\(\hat{d_H}(S,T)\)</span> 如Ben-David et al(2006)指出的，一个控制H-divergence的策略就是找到一个样本的表示，是的源域和目标域尽量不可区分，在这样的表示方法下，一个在源域上有低风险的假设，根据风险的上界公式，在目标域也有好的表现。</p>
-<h1 id="domain-adversarial-neural-networks">Domain-Adversarial Neural Networks</h1>
-<p>本文的主要思想就是讲上界公式显示地加入到神经网络分类器中。也就是说，为了学习一个能够从源域泛化到其他领域的模型，需要构建一个输入不变的特征表示，同时保持在源任务上的低风险。</p>
-<h2 id="example-case-with-a-shallow-neural-network">Example Case with a Shallow Neural Network</h2>
-<h2 id="generalization-to-arbitrary-architectures">Generalization to Arbitrary Architectures</h2>
-<div class="figure">
-<img src="./images/domain_adversrial_training_network.JPG" alt="network architecture">
-<p class="caption">network architecture</p>
-</div>
+        <p>原始的GAN可以通过在生成器和判别器上加入额外的依赖信息<span class="math inline">\(y\)</span>，构成条件GAN，<span class="math inline">\(y\)</span>可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下： <img src="/2018/08/12/conditional-gan/original-gan-formula.JPG" title="formula of original GAN"> 增加了额外输入信息的条件GAN公式如下： <img src="/2018/08/12/conditional-gan/conditional-gan-formula.JPG" title="formula of conditional GAN"> 网络结构如下： <img src="/2018/08/12/conditional-gan/conditional-gan.JPG" title="Architecture of Conditional GAN"></p>
 
       
     </div>
@@ -414,7 +385,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/新建-模板-小书匠/" rel="tag"># 新建,模板,小书匠</a>
+            <a href="/tags/GAN-conditional-GAN/" rel="tag"># GAN, conditional GAN</a>
           
         </div>
       
@@ -427,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/03/Image Style Transfer/" rel="next" title="Style Transfer 论文阅读笔记">
-                <i class="fa fa-chevron-left"></i> Style Transfer 论文阅读笔记
+              <a href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" rel="next" title="Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks">
+                <i class="fa fa-chevron-left"></i> Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks
               </a>
             
           </div>
@@ -436,6 +407,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/12/image-to-image-translation-conditional-gan/" rel="prev" title="Image-to-Image Translation with Conditional Adversarial Networks">
+                Image-to-Image Translation with Conditional Adversarial Networks <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -480,17 +455,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Inhaltsverzeichnis
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Übersicht
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -505,8 +471,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
               
@@ -524,8 +490,14 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
-                    <span class="site-state-item-name">Tags</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">tags</span>
                   
                 </div>
               
@@ -550,22 +522,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#domain-adaptation"><span class="nav-number">2.</span> <span class="nav-text">Domain Adaptation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#domain-divergence"><span class="nav-number">2.1.</span> <span class="nav-text">Domain Divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proxy-distance"><span class="nav-number">2.2.</span> <span class="nav-text">Proxy Distance</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generalization-bound-on-the-target-risk"><span class="nav-number">2.3.</span> <span class="nav-text">Generalization Bound on the Target Risk</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#domain-adversarial-neural-networks"><span class="nav-number">3.</span> <span class="nav-text">Domain-Adversarial Neural Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#example-case-with-a-shallow-neural-network"><span class="nav-number">3.1.</span> <span class="nav-text">Example Case with a Shallow Neural Network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generalization-to-arbitrary-architectures"><span class="nav-number">3.2.</span> <span class="nav-text">Generalization to Arbitrary Architectures</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -594,7 +550,7 @@
 
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
 
 
 
@@ -602,7 +558,7 @@
 
 
 
-  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
+  <div class="theme-info">Tema – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
 
 
 

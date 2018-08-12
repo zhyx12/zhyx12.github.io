@@ -217,7 +217,7 @@
           
           <li class="menu-item menu-item-home menu-item-active">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
   </li>
         
         
@@ -225,7 +225,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archivi</a>
   </li>
 
       
@@ -260,6 +260,465 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/12/image-to-image-translation-conditional-gan/" itemprop="url">
+                  Image-to-Image Translation with Conditional Adversarial Networks
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Scritto il</span>
+              
+
+              
+                
+              
+
+              <time title="Post creato: 2018-08-12 14:43:09 / Post modificato: 16:13:21" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="思想">思想</h1>
+<p>利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。</p>
+<p>生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结构进行约束。</p>
+<h1 id="方法">方法</h1>
+<h2 id="网络结构">网络结构</h2>
+<img src="/2018/08/12/image-to-image-translation-conditional-gan/pixel2pixel-network.JPG" title="network of pixel2piexl">
+<p>这里的结构没有体现出来随机噪声</p>
+<h2 id="目标函数">目标函数</h2>
+<p>使用条件GAN 在<strong>生成器</strong>网络上施加一个传统的loss函数，这里使用了L1 loss， L1会比L2更加清晰一些。</p>
+<p>如果没有了噪声项，网络同样也可以学出来一个映射，但是这样会产生决定性的结果，从而不能够匹配除了delta函数之外的其他函数。但是作者初始的实验中，发现加入随机噪声并没有用，生成器还是会忽略随机噪声，这和<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>的观察一样。因此，在最终的模型中，在生成器的不同层添加了dropout（训练和测试时都用）。尽管如此，在输出的图像中，还是只观察到了很小的随机性。</p>
+<h2 id="生成网络">生成网络</h2>
+<p>image到image的转换是高分辨率的输入图像到高分辨率的输入图像的过程，图像之间的外观不同，但是图像的内在结构是一样的。 使用U-Net结构，带有skip连接，可以包含更多的底层信息。在图像着色的应用中，输入和输出共享了边缘的位置。</p>
+<h2 id="markovian-discriminatorpatchgan">Markovian discriminator(PatchGAN)</h2>
+<p>L1已经足够保证图像外观在低频的相似性了。</p>
+<p>在高频，重点关注图像局部的结构。因此，针对高频的相似性，仅仅在图像patch级别做判断。</p>
+<p>实验证明，patch的大小可以取得比全图小很多，同时图像具有很高的质量。</p>
+<p>理论分析： 这样的判别器有效地将图像建模成一个马尔科夫随机场，假设不同patch内的像素是独立的。这一观点在PatchGAN<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>中进行了探索，也是其他领域如纹理生成，图像风格迁移<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>等的常识。</p>
+<h2 id="优化和推断">优化和推断</h2>
+<p>在测试的时候比较特殊，也使用了dropout。</p>
+<p>BN层的参数使用的是测试batch的数据，而不是训练集上累计得到的数据。</p>
+<p>当 batch size设为1的时候，就变成了实例归一化<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>，这在图像生成任务上证明是有效的，实验中采用的batchsize在1到10之间。</p>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>M. Mathieu, C. Couprie, and Y. LeCun. Deep multi-scale video prediction beyond mean square error. ICLR, 2016. PatchGAN<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>C. Li and M. Wand. Precomputed real-time texture synthesis with markovian generative adversarial networks. ECCV, 2016.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Image style transfer using convolutional neural networks. CVPR 2016<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Combining markov random fields and convolutional neural networks for image synthesis. CVPR 2016<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>D. Ulyanov, A. Vedaldi, and V. Lempitsky. Instance normal- ization: The missing ingredient for fast stylization. arXiv preprint arXiv:1607.08022, 2016<a href="#fnref5">↩</a></p></li>
+</ol>
+</div>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/conditional-gan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/12/conditional-gan/" itemprop="url">
+                  Conditional Generative Adversarial Nets
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Scritto il</span>
+              
+
+              
+                
+              
+
+              <time title="Post creato: 2018-08-12 10:47:29 / Post modificato: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>原始的GAN可以通过在生成器和判别器上加入额外的依赖信息<span class="math inline">\(y\)</span>，构成条件GAN，<span class="math inline">\(y\)</span>可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下： <img src="/2018/08/12/conditional-gan/original-gan-formula.JPG" title="formula of original GAN"> 增加了额外输入信息的条件GAN公式如下： <img src="/2018/08/12/conditional-gan/conditional-gan-formula.JPG" title="formula of conditional GAN"> 网络结构如下： <img src="/2018/08/12/conditional-gan/conditional-gan.JPG" title="Architecture of Conditional GAN"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/11/unsupervised-pixel-level-domain-adaptation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" itemprop="url">
+                  Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Scritto il</span>
+              
+
+              
+                
+              
+
+              <time title="Post creato: 2018-08-11 20:59:26 / Post modificato: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="思路">思路</h1>
+<p>利用已经标注好的源域的数据，由生成器初产生和目标域相似的图像，同时保留源域的标注，这样构造的数据集期望和目标域上的数据分布一致，这样在这一“新”数据集上训练的模型可以直接应用到目标数据集上。这里是直接在像素空间进行转换，和Unsupervised Domain Adaptation by Backpropagation在特征层面进行domain invariant约束的方法思路不同。 这篇文章采用的源域数据集是虚拟生成的数据，并且假设源域和目标域的差别主要体现在低级特征上，例如噪声，分辨率，光照，颜色等，而不是高级特征如物体形状，几何变化等。</p>
+<h1 id="模型结构">模型结构</h1>
+<img src="/2018/08/11/unsupervised-pixel-level-domain-adaptation/network-arch.JPG" title="This is an image">
+<p>conditional gan是怎么实现的 T的结构是和具体任务相关的，</p>
+<h1 id="方法">方法</h1>
+<h2 id="learning">learning</h2>
+<p>这里采用的GAN模型不仅依赖于噪声，而且依赖于源域的图像 分类损失的训练同时使用了源域样本和生成样本，只使用生成样本的话，需要很多次的尝试才能找到合适的初始化方式，模型不稳定；如果不使用源域数据的话，预测结果很容易发生偏移（1预测成2,2预测成3），这样也能成功地优化训练目标函数（为什么？，目标域数据不是也有标签的吗？）。</p>
+<h2 id="content-similarity-loss">content-similarity loss</h2>
+<p>可以有很多loss衡量图像之间相似度，比如L1 loss,L2 loss，在一个已经训练好的VGG模型上的激活值的相似性。这里使用了masked pairwise mean squared error(是pairwise mean squared error的变体)。 mask是怎么得到的。 这一loss不会阻碍前景物体的变化，反而会促使前景物体以一致的方式变化。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -315,14 +774,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Scritto il</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+              <time title="Post creato: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
             
 
             
@@ -339,7 +798,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Updated at: 2018-08-10 14:53:14" itemprop="dateModified" datetime="2018-08-10T14:53:14+08:00">2018-08-10</time>
+                <time title="Post modificato: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
               
             
           </span>
@@ -375,7 +834,7 @@
         
           
             <h1 id="introduction">introduction</h1>
-<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
+<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
 <p>不需要目标域的标注数据</p>
 <h1 id="domain-adaptation">Domain Adaptation</h1>
 <p>问题描述： <img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training-1.JPG" title="This is an image"></p>
@@ -484,14 +943,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Scritto il</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+              <time title="Post creato: 2018-08-03 15:06:43 / Post modificato: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
             
 
             
@@ -618,8 +1077,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
               
@@ -637,8 +1096,14 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
-                    <span class="site-state-item-name">Tags</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">tags</span>
                   
                 </div>
               
@@ -691,7 +1156,7 @@
 
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
 
 
 
@@ -699,7 +1164,7 @@
 
 
 
-  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
+  <div class="theme-info">Tema – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
 
 
 
@@ -836,6 +1301,12 @@
     
       
         
+      
+    
+      
+    
+      
+    
       
     
       

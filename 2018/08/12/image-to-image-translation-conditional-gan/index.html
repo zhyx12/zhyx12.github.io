@@ -108,27 +108,26 @@
 
 
 
-  <meta name="description" content="introduction 这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在">
-<meta name="keywords" content="新建,模板,小书匠">
+  <meta name="description" content="思想 利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。 生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结构进行约束。 方法 网络结构  这里的结构没有体现出来随机噪声 目标函数 使用条件GAN">
+<meta name="keywords" content="conditional GAN, image-to-image translation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Domain Adversarial Training of Nerual Networks阅读笔记">
-<meta property="og:url" content="http://yoursite.com/2018/08/06/domain-adversarial-training/index.html">
+<meta property="og:title" content="Image-to-Image Translation with Conditional Adversarial Networks">
+<meta property="og:url" content="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="introduction 这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/domain-adversarial-training/domain_adversrial_training-1.JPG">
-<meta property="og:image" content="http://yoursite.com/2018/08/06/domain-adversarial-training/domain_adversrial_training_network.JPG">
-<meta property="og:updated_time" content="2018-08-10T09:09:43.968Z">
+<meta property="og:description" content="思想 利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。 生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结构进行约束。 方法 网络结构  这里的结构没有体现出来随机噪声 目标函数 使用条件GAN">
+<meta property="og:image" content="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/pixel2pixel-network.JPG">
+<meta property="og:updated_time" content="2018-08-12T08:13:21.829Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Domain Adversarial Training of Nerual Networks阅读笔记">
-<meta name="twitter:description" content="introduction 这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/06/domain-adversarial-training/domain_adversrial_training-1.JPG">
+<meta name="twitter:title" content="Image-to-Image Translation with Conditional Adversarial Networks">
+<meta name="twitter:description" content="思想 利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。 生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结构进行约束。 方法 网络结构  这里的结构没有体现出来随机噪声 目标函数 使用条件GAN">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/pixel2pixel-network.JPG">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/06/domain-adversarial-training/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/"/>
 
 
 
@@ -138,7 +137,7 @@
   };
 </script>
 
-  <title>Domain Adversarial Training of Nerual Networks阅读笔记 | Hexo</title>
+  <title>Image-to-Image Translation with Conditional Adversarial Networks | Hexo</title>
   
 
 
@@ -283,7 +282,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/domain-adversarial-training/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -300,7 +299,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Domain Adversarial Training of Nerual Networks阅读笔记
+          <h1 class="post-title" itemprop="name headline">Image-to-Image Translation with Conditional Adversarial Networks
               
             
           </h1>
@@ -325,24 +324,12 @@
                 
               
 
-              <time title="Post creato: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+              <time title="Post creato: 2018-08-12 14:43:09 / Post modificato: 16:13:21" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Post modificato: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
               
             
           </span>
@@ -375,24 +362,37 @@
       
 
       
-        <h1 id="introduction">introduction</h1>
-<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
-<p>不需要目标域的标注数据</p>
-<h1 id="domain-adaptation">Domain Adaptation</h1>
-<p>问题描述： <img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training-1.JPG" title="This is an image"></p>
-<h2 id="domain-divergence">Domain Divergence</h2>
-<p>为了解决域适应的问题，许多方法通过源域错误率的总和以及源域和目标域的一种距离表示来计算目标域的错误率，这类模型假设当分布相似的时候，源域的风险是目标域风险的很好的指示器。 本文使用了H-divergence（Ben-David et al, 2006,2010）作为源域和目标域距离的度量准则。 H-divergence依赖一个假设类H来判别样本是由源域生成的还是目标域生成的。 Ben-David et al 2006,2010证明了对于对称的假设类，H-divergence可以经验地计算 H-divergence公式表示的是错误分类的概率，经验公式是1减正确分类的概率</p>
-<h2 id="proxy-distance">Proxy Distance</h2>
-<p>通过一个代理距离Proxy A-distance(PAD)来计算H-divergence,</p>
-<h2 id="generalization-bound-on-the-target-risk">Generalization Bound on the Target Risk</h2>
-<p>给出了在目标任务上的风险的上界，而最终的目标是要最小化这个上界 公式的分析： 目标任务上的风险要想小的话，需要beta项小（即存在一个分类器在两个分布上都有小的风险）。 在固定VC维的一个类下，如果想要找到一个在目标任务上有小的经验风险的分类器，学习算法需要最小化那个类上的源任务的风险和经验的H-divergence<span class="math inline">\(\hat{d_H}(S,T)\)</span> 如Ben-David et al(2006)指出的，一个控制H-divergence的策略就是找到一个样本的表示，是的源域和目标域尽量不可区分，在这样的表示方法下，一个在源域上有低风险的假设，根据风险的上界公式，在目标域也有好的表现。</p>
-<h2 id="domain-invarient">domain invarient</h2>
-<p>协偏移假设，域不变的特征可以使得在目标域的性能和在源域一样 shimodaira 2000</p>
-<h1 id="domain-adversarial-neural-networks">Domain-Adversarial Neural Networks</h1>
-<p>本文的主要思想就是讲上界公式显示地加入到神经网络分类器中。也就是说，为了学习一个能够从源域泛化到其他领域的模型，需要构建一个输入不变的特征表示，同时保持在源任务上的低风险。</p>
-<h2 id="example-case-with-a-shallow-neural-network">Example Case with a Shallow Neural Network</h2>
-<h2 id="generalization-to-arbitrary-architectures">Generalization to Arbitrary Architectures</h2>
-<img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training_network.JPG" title="This is an image">
+        <h1 id="思想">思想</h1>
+<p>利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。</p>
+<p>生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结构进行约束。</p>
+<h1 id="方法">方法</h1>
+<h2 id="网络结构">网络结构</h2>
+<img src="/2018/08/12/image-to-image-translation-conditional-gan/pixel2pixel-network.JPG" title="network of pixel2piexl">
+<p>这里的结构没有体现出来随机噪声</p>
+<h2 id="目标函数">目标函数</h2>
+<p>使用条件GAN 在<strong>生成器</strong>网络上施加一个传统的loss函数，这里使用了L1 loss， L1会比L2更加清晰一些。</p>
+<p>如果没有了噪声项，网络同样也可以学出来一个映射，但是这样会产生决定性的结果，从而不能够匹配除了delta函数之外的其他函数。但是作者初始的实验中，发现加入随机噪声并没有用，生成器还是会忽略随机噪声，这和<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>的观察一样。因此，在最终的模型中，在生成器的不同层添加了dropout（训练和测试时都用）。尽管如此，在输出的图像中，还是只观察到了很小的随机性。</p>
+<h2 id="生成网络">生成网络</h2>
+<p>image到image的转换是高分辨率的输入图像到高分辨率的输入图像的过程，图像之间的外观不同，但是图像的内在结构是一样的。 使用U-Net结构，带有skip连接，可以包含更多的底层信息。在图像着色的应用中，输入和输出共享了边缘的位置。</p>
+<h2 id="markovian-discriminatorpatchgan">Markovian discriminator(PatchGAN)</h2>
+<p>L1已经足够保证图像外观在低频的相似性了。</p>
+<p>在高频，重点关注图像局部的结构。因此，针对高频的相似性，仅仅在图像patch级别做判断。</p>
+<p>实验证明，patch的大小可以取得比全图小很多，同时图像具有很高的质量。</p>
+<p>理论分析： 这样的判别器有效地将图像建模成一个马尔科夫随机场，假设不同patch内的像素是独立的。这一观点在PatchGAN<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>中进行了探索，也是其他领域如纹理生成，图像风格迁移<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>等的常识。</p>
+<h2 id="优化和推断">优化和推断</h2>
+<p>在测试的时候比较特殊，也使用了dropout。</p>
+<p>BN层的参数使用的是测试batch的数据，而不是训练集上累计得到的数据。</p>
+<p>当 batch size设为1的时候，就变成了实例归一化<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>，这在图像生成任务上证明是有效的，实验中采用的batchsize在1到10之间。</p>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>M. Mathieu, C. Couprie, and Y. LeCun. Deep multi-scale video prediction beyond mean square error. ICLR, 2016. PatchGAN<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>C. Li and M. Wand. Precomputed real-time texture synthesis with markovian generative adversarial networks. ECCV, 2016.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Image style transfer using convolutional neural networks. CVPR 2016<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Combining markov random fields and convolutional neural networks for image synthesis. CVPR 2016<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>D. Ulyanov, A. Vedaldi, and V. Lempitsky. Instance normal- ization: The missing ingredient for fast stylization. arXiv preprint arXiv:1607.08022, 2016<a href="#fnref5">↩</a></p></li>
+</ol>
+</div>
 
       
     </div>
@@ -413,7 +413,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/新建-模板-小书匠/" rel="tag"># 新建,模板,小书匠</a>
+            <a href="/tags/conditional-GAN-image-to-image-translation/" rel="tag"># conditional GAN, image-to-image translation</a>
           
         </div>
       
@@ -426,8 +426,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/03/Image Style Transfer/" rel="next" title="Style Transfer 论文阅读笔记">
-                <i class="fa fa-chevron-left"></i> Style Transfer 论文阅读笔记
+              <a href="/2018/08/12/conditional-gan/" rel="next" title="Conditional Generative Adversarial Nets">
+                <i class="fa fa-chevron-left"></i> Conditional Generative Adversarial Nets
               </a>
             
           </div>
@@ -435,10 +435,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" rel="prev" title="Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks">
-                Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -569,7 +565,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#domain-adaptation"><span class="nav-number">2.</span> <span class="nav-text">Domain Adaptation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#domain-divergence"><span class="nav-number">2.1.</span> <span class="nav-text">Domain Divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proxy-distance"><span class="nav-number">2.2.</span> <span class="nav-text">Proxy Distance</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generalization-bound-on-the-target-risk"><span class="nav-number">2.3.</span> <span class="nav-text">Generalization Bound on the Target Risk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#domain-invarient"><span class="nav-number">2.4.</span> <span class="nav-text">domain invarient</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#domain-adversarial-neural-networks"><span class="nav-number">3.</span> <span class="nav-text">Domain-Adversarial Neural Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#example-case-with-a-shallow-neural-network"><span class="nav-number">3.1.</span> <span class="nav-text">Example Case with a Shallow Neural Network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#generalization-to-arbitrary-architectures"><span class="nav-number">3.2.</span> <span class="nav-text">Generalization to Arbitrary Architectures</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思想"><span class="nav-number">1.</span> <span class="nav-text">思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络结构"><span class="nav-number">2.1.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标函数"><span class="nav-number">2.2.</span> <span class="nav-text">目标函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成网络"><span class="nav-number">2.3.</span> <span class="nav-text">生成网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#markovian-discriminatorpatchgan"><span class="nav-number">2.4.</span> <span class="nav-text">Markovian discriminator(PatchGAN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化和推断"><span class="nav-number">2.5.</span> <span class="nav-text">优化和推断</span></a></li></ol></li></ol></div>
             
 
           </div>
