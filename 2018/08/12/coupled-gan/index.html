@@ -117,7 +117,7 @@
 <meta property="og:description" content="思路 提出可以学习多领域图像的联合分布的coupled GAN，不需要不同领域之间图像的对应关系。这是通过强制权重共享来限制网络容量，并且偏向于不同边缘分布的乘积来构造一个联合分布。 方法 网络结构  采用了两个并列的GAN,各自的输入是不同领域的边缘分布采样的结果。GAN的生成器将同一个随机变量（高层语义信息）映射到不同的图像空间，并且通过权重共享的方式来约束不同领域的图像具有相同的高">
 <meta property="og:image" content="http://yoursite.com/2018/08/12/coupled-gan/coupled-gan.JPG">
 <meta property="og:image" content="http://yoursite.com/2018/08/12/coupled-gan/coupled-gan-learning-formula.JPG">
-<meta property="og:updated_time" content="2018-08-12T14:37:43.765Z">
+<meta property="og:updated_time" content="2018-08-13T14:31:43.228Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Coupled GAN">
 <meta name="twitter:description" content="思路 提出可以学习多领域图像的联合分布的coupled GAN，不需要不同领域之间图像的对应关系。这是通过强制权重共享来限制网络容量，并且偏向于不同边缘分布的乘积来构造一个联合分布。 方法 网络结构  采用了两个并列的GAN,各自的输入是不同领域的边缘分布采样的结果。GAN的生成器将同一个随机变量（高层语义信息）映射到不同的图像空间，并且通过权重共享的方式来约束不同领域的图像具有相同的高">
@@ -325,12 +325,24 @@
                 
               
 
-              <time title="Post created: 2018-08-12 16:26:18 / Updated at: 22:37:43" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 16:26:18" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-08-13 22:31:43" itemprop="dateModified" datetime="2018-08-13T22:31:43+08:00">2018-08-13</time>
               
             
           </span>
@@ -385,17 +397,31 @@
 <h1 id="实验">实验</h1>
 <p>在此之前还有没有类似的工作（不需要成对样本的监督），还是相当早的哈</p>
 <p>MNIST上的任务： 1. 图像和边缘的对应 2. 图像和负的图像 3. 图像和90度旋转之后的图像</p>
-<p>数据集均分成不交叉的两部分，用于Domain1 和 Domain2</p>
+<h2 id="wight-sharing">wight sharing</h2>
+<p>生成模型的共享层越多，渲染的图像对就越像是从联合分布获取的真实样本。</p>
+<h2 id="和条件gan的比较">和条件GAN的比较</h2>
 <h2 id="应用">应用</h2>
 <h3 id="无监督域适应">无监督域适应</h3>
+<p>无监督域适应的问题是将一个在源域适用的分类器经过调整使之在目标域上也适用。</p>
+<p>实验是从MNSIT到USPS，实验设置和<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>一样，从MNSIT中采样2000张图像，从USPS中，采样1800张图像，将USPS的分辨率缩放到和MNIST一样。</p>
+<p>CoGAN用来生成图像，为了对<span class="math inline">\(D_1\)</span>的图像进行分类，在<span class="math inline">\(D_1\)</span>的判别器的最后一层里添加softmax层进行分类。CoGAN本身的训练和MNIST上的分类任务同时进行。注意到MNIST上的判别器和USPS上的判别器最后几层是共享的，USPS的判别器在分类USPS的数据时可以直接用。</p>
+<p>在分类的时候，直接用真实图像作为判别器的输入，没有生成器的事，生成器只在训练的时候完成共享隐空间的设置。如果在判别器的后面几层不共享，对于这个任务应该是有影响的吧？如果只是单纯的用判别器部分来训练呢？完成UDA的任务吗？</p>
+<p>对比的方法有<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a><a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a></p>
 <h3 id="跨域图像转换">跨域图像转换</h3>
 <p>竟然可以，很神奇，了解一下</p>
+<p>跨域图像转换的任务是</p>
 <h1 id="实现">实现</h1>
 <p>代码在这里 https://github.com/mingyuliutw/cogan</p>
 <div class="footnotes">
 <hr>
 <ol>
 <li id="fn1"><p>Jiquan Ngiam, Aditya Khosla, Mingyu Kim, Juhan Nam, Honglak Lee, and Andrew Y Ng. Multimodal deep learning. In ICML, 2011.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Mingsheng Long, JianminWang, Guiguang Ding, Jiaguang Sun, and Philip Yu. Transfer feature learning with joint distribution adaptation. In ICCV, 2013.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Artem Rozantsev, Mathieu Salzmann, and Pascal Fua. Beyond sharing weights for deep domain adaptation. arXiv:1603.06432, 2016.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Basura Fernando, Tatiana Tommasi, and Tinne Tuytelaars. Joint cross-domain classification and subspace learning for unsupervised adaptation. Pattern Recognition Letters, 65:60–66, 2015.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>Eric Tzeng, Judy Hoffman, Ning Zhang, Kate Saenko, and Trevor Darrell. Deep domain confusion: Maximizing for domain invariance. arXiv:1412.3474, 2014.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>Mingsheng Long, JianminWang, Guiguang Ding, Jiaguang Sun, and Philip Yu. Transfer feature learning with joint distribution adaptation. In ICCV, 2013.<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>Artem Rozantsev, Mathieu Salzmann, and Pascal Fua. Beyond sharing weights for deep domain adaptation. arXiv:1603.06432, 2016.<a href="#fnref7">↩</a></p></li>
 </ol>
 </div>
 
@@ -440,6 +466,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/13/unsupervised-image-to-image-translation/" rel="prev" title="Unsupervised Image-to-Image Translation Networks(UNIT)">
+                Unsupervised Image-to-Image Translation Networks(UNIT) <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -509,7 +539,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -534,7 +564,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
@@ -570,7 +602,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络结构"><span class="nav-number">2.1.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成器"><span class="nav-number">2.2.</span> <span class="nav-text">生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判别器"><span class="nav-number">2.3.</span> <span class="nav-text">判别器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重点"><span class="nav-number">2.4.</span> <span class="nav-text">重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">3.1.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无监督域适应"><span class="nav-number">3.1.1.</span> <span class="nav-text">无监督域适应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨域图像转换"><span class="nav-number">3.1.2.</span> <span class="nav-text">跨域图像转换</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络结构"><span class="nav-number">2.1.</span> <span class="nav-text">网络结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成器"><span class="nav-number">2.2.</span> <span class="nav-text">生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判别器"><span class="nav-number">2.3.</span> <span class="nav-text">判别器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重点"><span class="nav-number">2.4.</span> <span class="nav-text">重点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#wight-sharing"><span class="nav-number">3.1.</span> <span class="nav-text">wight sharing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#和条件gan的比较"><span class="nav-number">3.2.</span> <span class="nav-text">和条件GAN的比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">3.3.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#无监督域适应"><span class="nav-number">3.3.1.</span> <span class="nav-text">无监督域适应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨域图像转换"><span class="nav-number">3.3.2.</span> <span class="nav-text">跨域图像转换</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">4.</span> <span class="nav-text">实现</span></a></li></ol></div>
             
 
           </div>
