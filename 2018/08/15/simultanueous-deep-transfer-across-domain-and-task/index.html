@@ -108,24 +108,26 @@
 
 
 
-  <meta name="description" content="在实际操作的时候，loss用来更新像素的值，而不是网络参数 content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： \[ L_c = w_c x \] style loss用来衡量两幅图像的风格差异，style loss使用Gram矩阵来构建，Gram矩阵是协方差矩阵的近似，而匹">
-<meta name="keywords" content="style transfer, paper reading">
+  <meta name="description" content="思路 本文针对的情况是目标域存在少量稀疏的带标签样本。通过domain confusion loss来获取领域一致的特征表示，同时由源域样本得到的soft label，建模类别之间的关系，指导目标域样本的分类，效果比hard label要好。 方法 网络结构如下图所示：  fcD层后面接的domain confusion loss和domain classifier loss是实现对抗学习">
+<meta name="keywords" content="adversarial">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Style Transfer 论文阅读笔记">
-<meta property="og:url" content="http://yoursite.com/2018/08/03/Image Style Transfer/index.html">
+<meta property="og:title" content="Simultaneous deep transfer across domains and tasks">
+<meta property="og:url" content="http://yoursite.com/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="在实际操作的时候，loss用来更新像素的值，而不是网络参数 content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： \[ L_c = w_c x \] style loss用来衡量两幅图像的风格差异，style loss使用Gram矩阵来构建，Gram矩阵是协方差矩阵的近似，而匹">
-<meta property="og:updated_time" content="2018-08-03T08:16:38.361Z">
+<meta property="og:description" content="思路 本文针对的情况是目标域存在少量稀疏的带标签样本。通过domain confusion loss来获取领域一致的特征表示，同时由源域样本得到的soft label，建模类别之间的关系，指导目标域样本的分类，效果比hard label要好。 方法 网络结构如下图所示：  fcD层后面接的domain confusion loss和domain classifier loss是实现对抗学习">
+<meta property="og:image" content="http://yoursite.com/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/network.JPG">
+<meta property="og:updated_time" content="2018-08-15T08:09:47.852Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Style Transfer 论文阅读笔记">
-<meta name="twitter:description" content="在实际操作的时候，loss用来更新像素的值，而不是网络参数 content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： \[ L_c = w_c x \] style loss用来衡量两幅图像的风格差异，style loss使用Gram矩阵来构建，Gram矩阵是协方差矩阵的近似，而匹">
+<meta name="twitter:title" content="Simultaneous deep transfer across domains and tasks">
+<meta name="twitter:description" content="思路 本文针对的情况是目标域存在少量稀疏的带标签样本。通过domain confusion loss来获取领域一致的特征表示，同时由源域样本得到的soft label，建模类别之间的关系，指导目标域样本的分类，效果比hard label要好。 方法 网络结构如下图所示：  fcD层后面接的domain confusion loss和domain classifier loss是实现对抗学习">
+<meta name="twitter:image" content="http://yoursite.com/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/network.JPG">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/03/Image Style Transfer/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/"/>
 
 
 
@@ -135,7 +137,7 @@
   };
 </script>
 
-  <title>Style Transfer 论文阅读笔记 | Hexo</title>
+  <title>Simultaneous deep transfer across domains and tasks | Hexo</title>
   
 
 
@@ -280,7 +282,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/03/Image Style Transfer/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -297,7 +299,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Style Transfer 论文阅读笔记
+          <h1 class="post-title" itemprop="name headline">Simultaneous deep transfer across domains and tasks
               
             
           </h1>
@@ -322,7 +324,7 @@
                 
               
 
-              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+              <time title="Post created: 2018-08-15 13:29:54 / Updated at: 16:09:47" itemprop="dateCreated datePublished" datetime="2018-08-15T13:29:54+08:00">2018-08-15</time>
             
 
             
@@ -360,12 +362,27 @@
       
 
       
-        <p>在实际操作的时候，loss用来更新像素的值，而不是网络参数</p>
-<p>content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： <span class="math display">\[ L_c = w_c x \]</span></p>
-<p>style loss用来衡量两幅图像的风格差异，style loss使用Gram矩阵来构建，Gram矩阵是协方差矩阵的近似，而匹配两幅图的协方差矩阵是实现风格一致的方式（出处？）。使用Gram矩阵的好处是方便计算。假设特征图 <span class="math inline">\(F^l\)</span>的维度是<span class="math inline">\((C_l,M_l)\)</span>，Gram矩阵的计算方式如下，可以看到Gram矩阵是对称的，（i,j）位置的元素是i,j通道的特征的内积。 <span class="math display">\[G^l_{ij} = \sum_{k} F^l_{ik}F^l_{jk}\]</span></p>
-<p>假设<span class="math inline">\(G^l\)</span>是待优化图像的Gram matrix, <span class="math inline">\(A^l\)</span>是风格图像的Gram matrix, 那么style loss定义为两个Gram matrices的加权欧式距离 <span class="math display">\[L^l_s = w_l \sum_{i,j} {(G^l_{ij} - A^l_{ij})}^2 \]</span></p>
-<p>实际应用时使用多层的特征计算style loss <span class="math display">\[ L_s = \sum_{l \in L}L^l_s\]</span></p>
-<p>加入平滑项有助于图像生成的效果，可以通过加入total variation loss项来惩罚像素的波动或者总体的变化。下面的式子计算了图像中相邻的行和列之间的像素偏差平方 <span class="math display">\[L_{tv} = w_t \times \left(\sum_{c=1}^3\sum_{i=1}^{H-1}\sum_{j=1}^{W} (x_{i+1,j,c} - x_{i,j,c})^2 + \sum_{c=1}^3\sum_{i=1}^{H}\sum_{j=1}^{W - 1} (x_{i,j+1,c} - x_{i,j,c})^2\right)\]</span></p>
+        <h1 id="思路">思路</h1>
+<p>本文针对的情况是目标域存在少量稀疏的带标签样本。通过domain confusion loss来获取领域一致的特征表示，同时由源域样本得到的soft label，建模类别之间的关系，指导目标域样本的分类，效果比hard label要好。</p>
+<h1 id="方法">方法</h1>
+<p>网络结构如下图所示： <img src="/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/network.JPG" title="proposed network"></p>
+<p>fcD层后面接的domain confusion loss和domain classifier loss是实现对抗学习的，目标和by backpropagation一样。</p>
+<h2 id="aligning-domain-via-domain-confusion">Aligning domain via domain confusion</h2>
+<p>首先要学习一个好的domain classifier，这样才能判别特征是不是真的有区分性，这个loss就是真实标签（图像属于哪个领域）和网络输出之间交叉熵损失。 <span class="math display">\[L_D(x_S,x_T,\theta_{repr}; \theta_D) = - \sum 1[y_D=d]logq_d\]</span></p>
+<p>另外，为了最大程度的使domain classifier混淆，构造均匀分布和网络输出之间的交叉熵损失。 <span class="math display">\[L_D(x_S,x_T,\theta_D; \theta_{repr}) = - \sum\frac{1}{D} logq_d\]</span></p>
+<p>这两部分的优化方向对于特征提取网络来说是冲突的，因此是迭代训练的。</p>
+<h2 id="aligning-source-and-target-classes-via-soft-labels">Aligning source and target classes via soft labels</h2>
+<p>对于都在目标域中存在的部分稀疏的标签，也将他们送到domain classifier中进行分类，但是使用hard label使得网络局限在提供的少量样本和少量类别中，因此受到网络蒸馏<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>的启发，一个大的网络可以“蒸馏”到一个小的网络中，通过将小网络的学习目标替换成大网络输出的soft label.这样可以使网络兼顾更多的类别。</p>
+<p>简单来说，就是将source domain中每一类的所有样本的softmax输出的概率向量取平均，作为该类的soft label，用于target domain的交叉熵中需要拟合的分布。这样的soft label可以反映类别之间的相似关系。</p>
+<p>在实际的实验中，一开始就在source domain上微调caffenet，然后生成soft label，后面就不动了（？）。</p>
+<h1 id="代码">代码</h1>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>J. Ba and R. Caruana. Do deep nets really need to be deep? In Z. Ghahramani, M.Welling, C. Cortes, N. Lawrence, and K.Weinberger, editors, Advances in Neural Information Pro- cessing Systems 27, pages 2654–2662. Curran Associates, Inc., 2014.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>G. Hinton, O. Vinyals, and J. Dean. Distilling the knowledge in a neural network. In NIPS Deep Learning and Representa- tion Learning Workshop, 2014.<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
 
       
     </div>
@@ -386,7 +403,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/style-transfer-paper-reading/" rel="tag"># style transfer, paper reading</a>
+            <a href="/tags/adversarial/" rel="tag"># adversarial</a>
           
         </div>
       
@@ -399,15 +416,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/08/15/adversarial-discriminative-domain-adaption/" rel="next" title="Adversarial Discriminative Domain Adaption">
+                <i class="fa fa-chevron-left"></i> Adversarial Discriminative Domain Adaption
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/06/domain-adversarial-training/" rel="prev" title="Domain Adversarial Training of Nerual Networks阅读笔记">
-                Domain Adversarial Training of Nerual Networks阅读笔记 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -452,8 +469,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -523,6 +549,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法"><span class="nav-number">2.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#aligning-domain-via-domain-confusion"><span class="nav-number">2.1.</span> <span class="nav-text">Aligning domain via domain confusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aligning-source-and-target-classes-via-soft-labels"><span class="nav-number">2.2.</span> <span class="nav-text">Aligning source and target classes via soft labels</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -276,6 +276,310 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/" itemprop="url">
+                  Simultaneous deep transfer across domains and tasks
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-08-15 13:29:54 / Updated at: 16:09:47" itemprop="dateCreated datePublished" datetime="2018-08-15T13:29:54+08:00">2018-08-15</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="思路">思路</h1>
+<p>本文针对的情况是目标域存在少量稀疏的带标签样本。通过domain confusion loss来获取领域一致的特征表示，同时由源域样本得到的soft label，建模类别之间的关系，指导目标域样本的分类，效果比hard label要好。</p>
+<h1 id="方法">方法</h1>
+<p>网络结构如下图所示： <img src="/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/network.JPG" title="proposed network"></p>
+<p>fcD层后面接的domain confusion loss和domain classifier loss是实现对抗学习的，目标和by backpropagation一样。</p>
+<h2 id="aligning-domain-via-domain-confusion">Aligning domain via domain confusion</h2>
+<p>首先要学习一个好的domain classifier，这样才能判别特征是不是真的有区分性，这个loss就是真实标签（图像属于哪个领域）和网络输出之间交叉熵损失。 <span class="math display">\[L_D(x_S,x_T,\theta_{repr}; \theta_D) = - \sum 1[y_D=d]logq_d\]</span></p>
+<p>另外，为了最大程度的使domain classifier混淆，构造均匀分布和网络输出之间的交叉熵损失。 <span class="math display">\[L_D(x_S,x_T,\theta_D; \theta_{repr}) = - \sum\frac{1}{D} logq_d\]</span></p>
+<p>这两部分的优化方向对于特征提取网络来说是冲突的，因此是迭代训练的。</p>
+<h2 id="aligning-source-and-target-classes-via-soft-labels">Aligning source and target classes via soft labels</h2>
+<p>对于都在目标域中存在的部分稀疏的标签，也将他们送到domain classifier中进行分类，但是使用hard label使得网络局限在提供的少量样本和少量类别中，因此受到网络蒸馏<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a><a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>的启发，一个大的网络可以“蒸馏”到一个小的网络中，通过将小网络的学习目标替换成大网络输出的soft label.这样可以使网络兼顾更多的类别。</p>
+<p>简单来说，就是将source domain中每一类的所有样本的softmax输出的概率向量取平均，作为该类的soft label，用于target domain的交叉熵中需要拟合的分布。这样的soft label可以反映类别之间的相似关系。</p>
+<p>在实际的实验中，一开始就在source domain上微调caffenet，然后生成soft label，后面就不动了（？）。</p>
+<h1 id="代码">代码</h1>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>J. Ba and R. Caruana. Do deep nets really need to be deep? In Z. Ghahramani, M.Welling, C. Cortes, N. Lawrence, and K.Weinberger, editors, Advances in Neural Information Pro- cessing Systems 27, pages 2654–2662. Curran Associates, Inc., 2014.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>G. Hinton, O. Vinyals, and J. Dean. Distilling the knowledge in a neural network. In NIPS Deep Learning and Representa- tion Learning Workshop, 2014.<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/15/adversarial-discriminative-domain-adaption/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/15/adversarial-discriminative-domain-adaption/" itemprop="url">
+                  Adversarial Discriminative Domain Adaption
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-08-15 10:50:05 / Updated at: 10:50:21" itemprop="dateCreated datePublished" datetime="2018-08-15T10:50:05+08:00">2018-08-15</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="abstract">Abstract</h1>
+<p>之前的生成式方法展示了很好的视觉效果，但是在判别式任务上不是最优的，并且局限于较小的偏移；之前的判别式方法可以处理较大的偏移，引入了附加的权重，并且没有利用gan loss. 本文第一次为对抗式域适应提供了一个通用的框架，可以将最近的方法看做是该框架的一个特例。 # Generalized adverarial adaptation</p>
+<h2 id="source-and-target-mappings-in">Source and target mappings In</h2>
+<p>Coupled generative adversarial networks 在MNIST的无监督学习学习任务上取得了state-of-the-art 由于 ## Adversarial losses</p>
+<h1 id="adversarial-discriminative-domain-adaptation">Adversarial discriminative domain adaptation</h1>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -682,12 +986,24 @@
                 
               
 
-              <time title="Post created: 2018-08-12 14:43:09 / Updated at: 16:13:21" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
               
             
           </span>
@@ -728,9 +1044,11 @@
 <h1 id="方法">方法</h1>
 <h2 id="网络结构">网络结构</h2>
 <img src="/2018/08/12/image-to-image-translation-conditional-gan/pixel2pixel-network.JPG" title="network of pixel2piexl">
-<p>这里的结构没有体现出来随机噪声</p>
+<p>随机噪声没有画出来</p>
+<p>判别器判别的是{real_edge, real_photo} 和 {real_edge, fake_photo}的真假，这也是本文训练需要成对数据的原因。</p>
 <h2 id="目标函数">目标函数</h2>
-<p>使用条件GAN 在<strong>生成器</strong>网络上施加一个传统的loss函数，这里使用了L1 loss， L1会比L2更加清晰一些。</p>
+<p>使用条件GAN</p>
+<p>在<strong>生成器</strong>网络上施加一个传统的loss函数，这里使用了L1 loss， L1会比L2更加清晰一些。目的是使生成器的输出和target domain的真实样本更加相似，可以看做是一个<strong>reconstruction loss</strong>。有了成对的数据，单纯使用Reconstruction loss也是可以训练得到结果的。实验中比较了只使用L1 loss的情况。</p>
 <p>如果没有了噪声项，网络同样也可以学出来一个映射，但是这样会产生决定性的结果，从而不能够匹配除了delta函数之外的其他函数。但是作者初始的实验中，发现加入随机噪声并没有用，生成器还是会忽略随机噪声，这和<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>的观察一样。因此，在最终的模型中，在生成器的不同层添加了dropout（训练和测试时都用）。尽管如此，在输出的图像中，还是只观察到了很小的随机性。</p>
 <h2 id="生成网络">生成网络</h2>
 <p>image到image的转换是高分辨率的输入图像到高分辨率的输入图像的过程，图像之间的外观不同，但是图像的内在结构是一样的。 使用U-Net结构，带有skip连接，可以包含更多的底层信息。在图像着色的应用中，输入和输出共享了边缘的位置。</p>
@@ -743,6 +1061,14 @@
 <p>在测试的时候比较特殊，也使用了dropout。</p>
 <p>BN层的参数使用的是测试batch的数据，而不是训练集上累计得到的数据。</p>
 <p>当 batch size设为1的时候，就变成了实例归一化<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>，这在图像生成任务上证明是有效的，实验中采用的batchsize在1到10之间。</p>
+<h1 id="实验">实验</h1>
+<h2 id="评价指标">评价指标</h2>
+<p><strong>FCN-score</strong>: 利用在数据集上训练好的FCN-8s模型，对由标签生成的图像进行语义分割的任务，看语义分割的指标，生成的图像越真实，语义分割的各项指标也应该越高。（如果是由图像生成标签，那么应该可以直接计算指标，原文给的Table5是labels到photo的双向箭头，不知道是不是两个任务都考虑了？）</p>
+<h2 id="color">color</h2>
+<p>L1 loss生成的图像，颜色分布最窄。加入cGAN可以拓宽颜色分布。</p>
+<h2 id="pixelgan-patchgan-imagegan">PixelGAN PatchGAN ImageGAN</h2>
+<p>改变判别器的patch大小，会有不同的效果。</p>
+<p>1x1的patch对于是使图像锐化没有效果，但是可以增大颜色的分布。</p>
 <div class="footnotes">
 <hr>
 <ol>
@@ -1437,7 +1763,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -1464,7 +1790,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
@@ -1663,6 +1991,10 @@
     
       
         
+      
+    
+      
+    
       
     
       
