@@ -108,27 +108,24 @@
 
 
 
-  <meta name="description" content="文件编码 参考这篇博客 里面包含了linux下查看文件编码的方法 pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况 convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。 字符和编码 这篇博客探讨不同概念的来源">
-<meta name="keywords" content="encoding, python">
+  <meta name="description" content="数据集 Cityscapes SYNTHIA GTA5 BDDS 论文 全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。1中使用带注意力机制的编码解码结构来迁移弱的类别标签，23中迁移物体的位置信息。 更多的工作关注语义分割中的深度无监督域适应。  4 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对">
+<meta name="keywords" content="domain adaptation, semantic segmentation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="字符和编码">
-<meta property="og:url" content="http://yoursite.com/2018/09/03/encoding/index.html">
+<meta property="og:title" content="DA in Semantic Segmentation">
+<meta property="og:url" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="文件编码 参考这篇博客 里面包含了linux下查看文件编码的方法 pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况 convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。 字符和编码 这篇博客探讨不同概念的来源">
-<meta property="og:image" content="http://yoursite.com/2018/09/03/encoding/encoding-1.JPG">
-<meta property="og:image" content="http://yoursite.com/2018/09/03/encoding/encoding-2.JPG">
-<meta property="og:updated_time" content="2018-09-04T06:58:57.711Z">
+<meta property="og:description" content="数据集 Cityscapes SYNTHIA GTA5 BDDS 论文 全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。1中使用带注意力机制的编码解码结构来迁移弱的类别标签，23中迁移物体的位置信息。 更多的工作关注语义分割中的深度无监督域适应。  4 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对">
+<meta property="og:updated_time" content="2018-09-05T09:15:56.970Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="字符和编码">
-<meta name="twitter:description" content="文件编码 参考这篇博客 里面包含了linux下查看文件编码的方法 pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况 convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。 字符和编码 这篇博客探讨不同概念的来源">
-<meta name="twitter:image" content="http://yoursite.com/2018/09/03/encoding/encoding-1.JPG">
+<meta name="twitter:title" content="DA in Semantic Segmentation">
+<meta name="twitter:description" content="数据集 Cityscapes SYNTHIA GTA5 BDDS 论文 全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。1中使用带注意力机制的编码解码结构来迁移弱的类别标签，23中迁移物体的位置信息。 更多的工作关注语义分割中的深度无监督域适应。  4 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/09/03/encoding/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/"/>
 
 
 
@@ -138,7 +135,7 @@
   };
 </script>
 
-  <title>字符和编码 | Hexo</title>
+  <title>DA in Semantic Segmentation | Hexo</title>
   
 
 
@@ -283,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/03/encoding/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -300,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">字符和编码
+          <h1 class="post-title" itemprop="name headline">DA in Semantic Segmentation
               
             
           </h1>
@@ -325,24 +322,12 @@
                 
               
 
-              <time title="Created: 2018-09-03 22:00:23" itemprop="dateCreated datePublished" datetime="2018-09-03T22:00:23+08:00">2018-09-03</time>
+              <time title="Created: 2018-09-05 17:14:11 / Modified: 17:15:56" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:11+08:00">2018-09-05</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-09-04 14:58:57" itemprop="dateModified" datetime="2018-09-04T14:58:57+08:00">2018-09-04</time>
               
             
           </span>
@@ -375,23 +360,59 @@
       
 
       
-        <h1 id="文件编码">文件编码</h1>
-<p>参考<a href="https://blog.csdn.net/gatieme/article/details/55045883" target="_blank" rel="external">这篇博客</a> 里面包含了linux下查看文件编码的方法</p>
-<p>pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert</p>
-<p>reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况</p>
-<p>convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。</p>
-<h1 id="字符和编码">字符和编码</h1>
-<p><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="external">这篇博客</a>探讨不同概念的来源，没有涉及python2中的str和unicode，可以看下面的博客来理解</p>
-<p>关于python2中的str和unicode看<a href="https://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819196283586a37629844456ca7e5a7faa9b94ee8000" target="_blank" rel="external">这篇博客</a></p>
-<img src="/2018/09/03/encoding/encoding-1.JPG" title="encoding和py2的字符，unicode">
-<img src="/2018/09/03/encoding/encoding-2.JPG" title="py2中str和unicode的转换">
-<h1 id="py文件">py文件</h1>
-<p>在py2的文件一开始，通常会写</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br></pre></td></tr></table></figure>
-<p>这句话的作用是为了告诉Python解释器，按照UTF-8编码读取源代码，否则，你在源代码中写的中文输出可能会有乱码。 这句代码并不能保证.py文件自身的编码格式</p>
-<p>需要设置.py文件自身的编码格式是UTF-8，而不是其他如GBK等，pycharm中如果开头添加了这句话，那么右下角的文件编码格式会自动锁定UTF-8，还是很贴心的。</p>
-<h1 id="py2-和-py3的区别">py2 和 py3的区别</h1>
-<p>fluent python的作者写的<a href="https://speakerdeck.com/ramalho/unicode-solutions-in-python-2-and-python-3?slide=22" target="_blank" rel="external">unicode solution</a></p>
+        <h1 id="数据集">数据集</h1>
+<p>Cityscapes</p>
+<p>SYNTHIA</p>
+<p>GTA5</p>
+<p>BDDS</p>
+<h1 id="论文">论文</h1>
+<p>全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>中使用带注意力机制的编码解码结构来迁移弱的类别标签，<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>中迁移物体的位置信息。</p>
+<p>更多的工作关注语义分割中的深度无监督域适应。</p>
+<h2 id="section"></h2>
+<p><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对齐。迁移空间布局是利用类别相关的constrained multiple instance loss。<a href="https://github.com/Wanger-SJTU/FCN-in-the-wild" target="_blank" rel="external">代码，pytorch</a> 数据集：Cityscapes， SYNTHIA，GTA5，BDDS</p>
+<h2 id="section-1"></h2>
+<p><a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
+<h2 id="section-2"></h2>
+<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a></p>
+<h2 id="section-3"></h2>
+<p><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a> 数据集：GTA5→Cityscapes</p>
+<h2 id="section-4"></h2>
+<p><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> CVPR2018 使用了GAN将特征映射到图像空间，并在图像空间使用判别器。<a href="https://github.com/swamiviv/LSD-seg" target="_blank" rel="external">代码，pytorch</a></p>
+<p>数据集：SYNTHIA→CITYSCAPES，GTAV→CITYSCAPES</p>
+<h2 id="section-5"></h2>
+<p><a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码</a></p>
+<p>数据集： GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
+<h2 id="section-6"></h2>
+<p><a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a> CVPR2018</p>
+<p>数据集：GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
+<h2 id="section-7"></h2>
+<p><a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a> ECCV2018</p>
+<p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
+<h2 id="section-8"></h2>
+<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ECCV2018</p>
+<p>数据集： GTA5 Cityscapes SYNTHIA Cityscapes</p>
+<h2 id="section-9"></h2>
+<p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> ECCV2018</p>
+<p>数据集：GTAV，SYNTHIA，VIPER(proposed)，Cityscapes，CamVid</p>
+<h1 id="指标比较">指标比较</h1>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>S. Hong, J. Oh, H. Lee, and B. Han. Learning transferrable knowledge for semantic segmentation with deep convolutional neural network. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 3204–3212, 2016.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>A. Kolesnikov and C. H. Lampert. Seed, expand and constrain: Three principles for weakly-supervised image segmentation. In European Conference on Computer Vision, pages 695–711. Springer, 2016.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>Y. Zhang, P. David, and B. Gong. Curriculum domain adaptation for semantic segmentation of urban scenes. In The IEEE International Conference on Computer Vision (ICCV), volume 2, page 6, 2017.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. arXiv preprint arXiv:1704.08509, 2017.<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>Y. Chen, W. Li, and L. Van Gool. Road: Reality oriented adaptation for semantic segmentation of urban scenes. arXiv preprint arXiv:1711.11556, 2017.<a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref9">↩</a></p></li>
+<li id="fn10"><p>Hong W, Wang Z, Yang M, et al. Conditional Generative Adversarial Network for Structured Domain Adaptation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1335-1344.<a href="#fnref10">↩</a></p></li>
+<li id="fn11"><p>Zou Y, Yu Z, Vijaya Kumar B V K, et al. Unsupervised Domain Adaptation for Semantic Segmentation via Class-Balanced Self-Training[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 289-305.<a href="#fnref11">↩</a></p></li>
+<li id="fn12"><p>Huang H, Huang Q, Kraehenbuehl P. Domain transfer through deep activation matching[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 590-605.<a href="#fnref12">↩</a></p></li>
+<li id="fn13"><p>Saleh F S, Aliakbarian M S, Salzmann M, et al. Effective Use of Synthetic Data for Urban Scene Semantic Segmentation[J]. arXiv preprint arXiv:1807.06132, 2018.<a href="#fnref13">↩</a></p></li>
+</ol>
+</div>
 
       
     </div>
@@ -412,7 +433,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/encoding-python/" rel="tag"># encoding, python</a>
+            <a href="/tags/domain-adaptation-semantic-segmentation/" rel="tag"># domain adaptation, semantic segmentation</a>
           
         </div>
       
@@ -425,8 +446,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/weak-pairwise-constraints/" rel="next" title="Adapting Deep Visuomotor Representations with Weak Pairwise Constraints">
-                <i class="fa fa-chevron-left"></i> Adapting Deep Visuomotor Representations with Weak Pairwise Constraints
+              <a href="/2018/09/03/encoding/" rel="next" title="字符和编码">
+                <i class="fa fa-chevron-left"></i> 字符和编码
               </a>
             
           </div>
@@ -435,8 +456,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/05/DA-in-semantic-segmentation/" rel="prev" title="DA in Semantic Segmentation">
-                DA in Semantic Segmentation <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/05/distribution-adaptation/" rel="prev" title="Distribution Adaptation">
+                Distribution Adaptation <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -578,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文件编码"><span class="nav-number">1.</span> <span class="nav-text">文件编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符和编码"><span class="nav-number">2.</span> <span class="nav-text">字符和编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#py文件"><span class="nav-number">3.</span> <span class="nav-text">py文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#py2-和-py3的区别"><span class="nav-number">4.</span> <span class="nav-text">py2 和 py3的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据集"><span class="nav-number">1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#论文"><span class="nav-number">2.</span> <span class="nav-text">论文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#section"><span class="nav-number">2.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-1"><span class="nav-number">2.2.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2"><span class="nav-number">2.3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-3"><span class="nav-number">2.4.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-4"><span class="nav-number">2.5.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-5"><span class="nav-number">2.6.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-6"><span class="nav-number">2.7.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-7"><span class="nav-number">2.8.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-8"><span class="nav-number">2.9.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-9"><span class="nav-number">2.10.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指标比较"><span class="nav-number">3.</span> <span class="nav-text">指标比较</span></a></li></ol></div>
             
 
           </div>

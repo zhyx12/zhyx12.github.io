@@ -108,27 +108,24 @@
 
 
 
-  <meta name="description" content="文件编码 参考这篇博客 里面包含了linux下查看文件编码的方法 pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况 convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。 字符和编码 这篇博客探讨不同概念的来源">
-<meta name="keywords" content="encoding, python">
+  <meta name="description" content="方法 Distributing Adaptation是数据分布自适应，这里主要介绍DA中的数据分布自适用的浅层方法。 分为边缘分布自适应，条件分布自适应和联合分布自适应。其中边缘分布自适应是最早也是最基础的方法。 TCA是经典的边缘分布自适应方法，使用了MMD准则作为领域（分布）之间距离的度量方法。">
+<meta name="keywords" content="domain adaptation, MMD, distribution adaptation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="字符和编码">
-<meta property="og:url" content="http://yoursite.com/2018/09/03/encoding/index.html">
+<meta property="og:title" content="Distribution Adaptation">
+<meta property="og:url" content="http://yoursite.com/2018/09/05/distribution-adaptation/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="文件编码 参考这篇博客 里面包含了linux下查看文件编码的方法 pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况 convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。 字符和编码 这篇博客探讨不同概念的来源">
-<meta property="og:image" content="http://yoursite.com/2018/09/03/encoding/encoding-1.JPG">
-<meta property="og:image" content="http://yoursite.com/2018/09/03/encoding/encoding-2.JPG">
-<meta property="og:updated_time" content="2018-09-04T06:58:57.711Z">
+<meta property="og:description" content="方法 Distributing Adaptation是数据分布自适应，这里主要介绍DA中的数据分布自适用的浅层方法。 分为边缘分布自适应，条件分布自适应和联合分布自适应。其中边缘分布自适应是最早也是最基础的方法。 TCA是经典的边缘分布自适应方法，使用了MMD准则作为领域（分布）之间距离的度量方法。">
+<meta property="og:updated_time" content="2018-09-05T09:14:56.319Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="字符和编码">
-<meta name="twitter:description" content="文件编码 参考这篇博客 里面包含了linux下查看文件编码的方法 pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况 convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。 字符和编码 这篇博客探讨不同概念的来源">
-<meta name="twitter:image" content="http://yoursite.com/2018/09/03/encoding/encoding-1.JPG">
+<meta name="twitter:title" content="Distribution Adaptation">
+<meta name="twitter:description" content="方法 Distributing Adaptation是数据分布自适应，这里主要介绍DA中的数据分布自适用的浅层方法。 分为边缘分布自适应，条件分布自适应和联合分布自适应。其中边缘分布自适应是最早也是最基础的方法。 TCA是经典的边缘分布自适应方法，使用了MMD准则作为领域（分布）之间距离的度量方法。">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/09/03/encoding/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/05/distribution-adaptation/"/>
 
 
 
@@ -138,7 +135,7 @@
   };
 </script>
 
-  <title>字符和编码 | Hexo</title>
+  <title>Distribution Adaptation | Hexo</title>
   
 
 
@@ -283,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/03/encoding/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/05/distribution-adaptation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -300,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">字符和编码
+          <h1 class="post-title" itemprop="name headline">Distribution Adaptation
               
             
           </h1>
@@ -325,24 +322,12 @@
                 
               
 
-              <time title="Created: 2018-09-03 22:00:23" itemprop="dateCreated datePublished" datetime="2018-09-03T22:00:23+08:00">2018-09-03</time>
+              <time title="Created: 2018-09-05 17:14:45 / Modified: 17:14:56" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:45+08:00">2018-09-05</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-09-04 14:58:57" itemprop="dateModified" datetime="2018-09-04T14:58:57+08:00">2018-09-04</time>
               
             
           </span>
@@ -375,23 +360,10 @@
       
 
       
-        <h1 id="文件编码">文件编码</h1>
-<p>参考<a href="https://blog.csdn.net/gatieme/article/details/55045883" target="_blank" rel="external">这篇博客</a> 里面包含了linux下查看文件编码的方法</p>
-<p>pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert</p>
-<p>reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况</p>
-<p>convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。</p>
-<h1 id="字符和编码">字符和编码</h1>
-<p><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="external">这篇博客</a>探讨不同概念的来源，没有涉及python2中的str和unicode，可以看下面的博客来理解</p>
-<p>关于python2中的str和unicode看<a href="https://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819196283586a37629844456ca7e5a7faa9b94ee8000" target="_blank" rel="external">这篇博客</a></p>
-<img src="/2018/09/03/encoding/encoding-1.JPG" title="encoding和py2的字符，unicode">
-<img src="/2018/09/03/encoding/encoding-2.JPG" title="py2中str和unicode的转换">
-<h1 id="py文件">py文件</h1>
-<p>在py2的文件一开始，通常会写</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br></pre></td></tr></table></figure>
-<p>这句话的作用是为了告诉Python解释器，按照UTF-8编码读取源代码，否则，你在源代码中写的中文输出可能会有乱码。 这句代码并不能保证.py文件自身的编码格式</p>
-<p>需要设置.py文件自身的编码格式是UTF-8，而不是其他如GBK等，pycharm中如果开头添加了这句话，那么右下角的文件编码格式会自动锁定UTF-8，还是很贴心的。</p>
-<h1 id="py2-和-py3的区别">py2 和 py3的区别</h1>
-<p>fluent python的作者写的<a href="https://speakerdeck.com/ramalho/unicode-solutions-in-python-2-and-python-3?slide=22" target="_blank" rel="external">unicode solution</a></p>
+        <h1 id="方法">方法</h1>
+<p>Distributing Adaptation是数据分布自适应，这里主要介绍DA中的数据分布自适用的浅层方法。</p>
+<p>分为边缘分布自适应，条件分布自适应和联合分布自适应。其中边缘分布自适应是最早也是最基础的方法。</p>
+<p>TCA是经典的边缘分布自适应方法，使用了MMD准则作为领域（分布）之间距离的度量方法。</p>
 
       
     </div>
@@ -412,7 +384,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/encoding-python/" rel="tag"># encoding, python</a>
+            <a href="/tags/domain-adaptation-MMD-distribution-adaptation/" rel="tag"># domain adaptation, MMD, distribution adaptation</a>
           
         </div>
       
@@ -425,8 +397,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/15/weak-pairwise-constraints/" rel="next" title="Adapting Deep Visuomotor Representations with Weak Pairwise Constraints">
-                <i class="fa fa-chevron-left"></i> Adapting Deep Visuomotor Representations with Weak Pairwise Constraints
+              <a href="/2018/09/05/DA-in-semantic-segmentation/" rel="next" title="DA in Semantic Segmentation">
+                <i class="fa fa-chevron-left"></i> DA in Semantic Segmentation
               </a>
             
           </div>
@@ -434,10 +406,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/05/DA-in-semantic-segmentation/" rel="prev" title="DA in Semantic Segmentation">
-                DA in Semantic Segmentation <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -578,7 +546,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文件编码"><span class="nav-number">1.</span> <span class="nav-text">文件编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符和编码"><span class="nav-number">2.</span> <span class="nav-text">字符和编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#py文件"><span class="nav-number">3.</span> <span class="nav-text">py文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#py2-和-py3的区别"><span class="nav-number">4.</span> <span class="nav-text">py2 和 py3的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#方法"><span class="nav-number">1.</span> <span class="nav-text">方法</span></a></li></ol></div>
             
 
           </div>
