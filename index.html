@@ -217,7 +217,7 @@
           
           <li class="menu-item menu-item-home menu-item-active">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
   </li>
         
         
@@ -225,7 +225,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
   </li>
 
       
@@ -315,14 +315,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-09-05 17:14:45 / Modified: 17:14:56" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:45+08:00">2018-09-05</time>
+              <time title="Post created: 2018-09-05 17:14:45 / Updated at: 17:14:56" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:45+08:00">2018-09-05</time>
             
 
             
@@ -458,14 +458,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-09-05 17:14:11 / Modified: 17:15:56" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:11+08:00">2018-09-05</time>
+              <time title="Post created: 2018-09-05 17:14:11 / Updated at: 21:05:40" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:11+08:00">2018-09-05</time>
             
 
             
@@ -513,30 +513,31 @@
 <h1 id="论文">论文</h1>
 <p>全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>中使用带注意力机制的编码解码结构来迁移弱的类别标签，<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>中迁移物体的位置信息。</p>
 <p>更多的工作关注语义分割中的深度无监督域适应。</p>
+<h2 id="fcns-in-the-wild">FCNs in the wild</h2>
+<p><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对齐。迁移空间布局是利用类别相关的constrained multiple instance loss。<a href="https://github.com/Wanger-SJTU/FCN-in-the-wild" target="_blank" rel="external">代码，pytorch</a></p>
+<p>数据集：Cityscapes， SYNTHIA，GTA5，BDDS(proposed)</p>
 <h2 id="section"></h2>
-<p><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对齐。迁移空间布局是利用类别相关的constrained multiple instance loss。<a href="https://github.com/Wanger-SJTU/FCN-in-the-wild" target="_blank" rel="external">代码，pytorch</a> 数据集：Cityscapes， SYNTHIA，GTA5，BDDS</p>
-<h2 id="section-1"></h2>
 <p><a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
-<h2 id="section-2"></h2>
+<h2 id="section-1"></h2>
 <p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a></p>
-<h2 id="section-3"></h2>
+<h2 id="section-2"></h2>
 <p><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a> 数据集：GTA5→Cityscapes</p>
-<h2 id="section-4"></h2>
+<h2 id="section-3"></h2>
 <p><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> CVPR2018 使用了GAN将特征映射到图像空间，并在图像空间使用判别器。<a href="https://github.com/swamiviv/LSD-seg" target="_blank" rel="external">代码，pytorch</a></p>
 <p>数据集：SYNTHIA→CITYSCAPES，GTAV→CITYSCAPES</p>
-<h2 id="section-5"></h2>
+<h2 id="section-4"></h2>
 <p><a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码</a></p>
 <p>数据集： GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
-<h2 id="section-6"></h2>
+<h2 id="section-5"></h2>
 <p><a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a> CVPR2018</p>
 <p>数据集：GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
-<h2 id="section-7"></h2>
+<h2 id="section-6"></h2>
 <p><a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a> ECCV2018</p>
 <p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h2 id="section-8"></h2>
+<h2 id="section-7"></h2>
 <p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ECCV2018</p>
 <p>数据集： GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h2 id="section-9"></h2>
+<h2 id="section-8"></h2>
 <p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> ECCV2018</p>
 <p>数据集：GTAV，SYNTHIA，VIPER(proposed)，Cityscapes，CamVid</p>
 <h1 id="指标比较">指标比较</h1>
@@ -650,14 +651,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-09-03 22:00:23" itemprop="dateCreated datePublished" datetime="2018-09-03T22:00:23+08:00">2018-09-03</time>
+              <time title="Post created: 2018-09-03 22:00:23" itemprop="dateCreated datePublished" datetime="2018-09-03T22:00:23+08:00">2018-09-03</time>
             
 
             
@@ -674,7 +675,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-09-04 14:58:57" itemprop="dateModified" datetime="2018-09-04T14:58:57+08:00">2018-09-04</time>
+                <time title="Updated at: 2018-09-04 14:58:57" itemprop="dateModified" datetime="2018-09-04T14:58:57+08:00">2018-09-04</time>
               
             
           </span>
@@ -818,14 +819,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-15 16:22:04 / Modified: 16:25:18" itemprop="dateCreated datePublished" datetime="2018-08-15T16:22:04+08:00">2018-08-15</time>
+              <time title="Post created: 2018-08-15 16:22:04 / Updated at: 16:25:18" itemprop="dateCreated datePublished" datetime="2018-08-15T16:22:04+08:00">2018-08-15</time>
             
 
             
@@ -961,14 +962,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-15 13:29:54 / Modified: 16:09:47" itemprop="dateCreated datePublished" datetime="2018-08-15T13:29:54+08:00">2018-08-15</time>
+              <time title="Post created: 2018-08-15 13:29:54 / Updated at: 16:09:47" itemprop="dateCreated datePublished" datetime="2018-08-15T13:29:54+08:00">2018-08-15</time>
             
 
             
@@ -1121,14 +1122,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-15 10:50:05 / Modified: 10:50:21" itemprop="dateCreated datePublished" datetime="2018-08-15T10:50:05+08:00">2018-08-15</time>
+              <time title="Post created: 2018-08-15 10:50:05 / Updated at: 10:50:21" itemprop="dateCreated datePublished" datetime="2018-08-15T10:50:05+08:00">2018-08-15</time>
             
 
             
@@ -1265,14 +1266,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-13 09:04:25 / Modified: 22:33:15" itemprop="dateCreated datePublished" datetime="2018-08-13T09:04:25+08:00">2018-08-13</time>
+              <time title="Post created: 2018-08-13 09:04:25 / Updated at: 22:33:15" itemprop="dateCreated datePublished" datetime="2018-08-13T09:04:25+08:00">2018-08-13</time>
             
 
             
@@ -1418,14 +1419,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-12 16:26:18" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 16:26:18" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
             
 
             
@@ -1442,7 +1443,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-08-14 22:12:49" itemprop="dateModified" datetime="2018-08-14T22:12:49+08:00">2018-08-14</time>
+                <time title="Updated at: 2018-08-14 22:12:49" itemprop="dateModified" datetime="2018-08-14T22:12:49+08:00">2018-08-14</time>
               
             
           </span>
@@ -1625,14 +1626,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
             
 
             
@@ -1649,7 +1650,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
+                <time title="Updated at: 2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
               
             
           </span>
@@ -1817,14 +1818,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-12 10:47:29 / Modified: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 10:47:29 / Updated at: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
             
 
             
@@ -1951,7 +1952,7 @@
                   <a href="/archives/">
                 
                     <span class="site-state-item-count">13</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -1986,7 +1987,7 @@
                       
                     
                     <span class="site-state-item-count">10</span>
-                    <span class="site-state-item-name">tags</span>
+                    <span class="site-state-item-name">Tags</span>
                   
                 </div>
               
@@ -2039,7 +2040,7 @@
 
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
 
 
 
