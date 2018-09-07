@@ -108,17 +108,22 @@
 
 
 
-  <meta name="description" content="数据集 Cityscapes SYNTHIA GTA5 BDDS 论文 全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。1中使用带注意力机制的编码解码结构来迁移弱的类别标签，23中迁移物体的位置信息。 更多的工作关注语义分割中的深度无监督域适应。 FCNs in the wild 4 首先引入了这一概念，在FCN上进">
+  <meta name="description" content="数据集 Cityscapes 图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉 SYNTHIA 有13个类别 对于season-&amp;gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。图像有8个R">
 <meta name="keywords" content="domain adaptation, semantic segmentation">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DA in Semantic Segmentation">
 <meta property="og:url" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="数据集 Cityscapes SYNTHIA GTA5 BDDS 论文 全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。1中使用带注意力机制的编码解码结构来迁移弱的类别标签，23中迁移物体的位置信息。 更多的工作关注语义分割中的深度无监督域适应。 FCNs in the wild 4 首先引入了这一概念，在FCN上进">
-<meta property="og:updated_time" content="2018-09-05T13:05:40.887Z">
+<meta property="og:description" content="数据集 Cityscapes 图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉 SYNTHIA 有13个类别 对于season-&amp;gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。图像有8个R">
+<meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/learning-from-synthetic-data-framework.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/UNIT-network-arch.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/FCAN-framework.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/FCAN-AAN-framework.JPG">
+<meta property="og:updated_time" content="2018-09-07T03:14:54.433Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DA in Semantic Segmentation">
-<meta name="twitter:description" content="数据集 Cityscapes SYNTHIA GTA5 BDDS 论文 全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。1中使用带注意力机制的编码解码结构来迁移弱的类别标签，23中迁移物体的位置信息。 更多的工作关注语义分割中的深度无监督域适应。 FCNs in the wild 4 首先引入了这一概念，在FCN上进">
+<meta name="twitter:description" content="数据集 Cityscapes 图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉 SYNTHIA 有13个类别 对于season-&amp;gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。图像有8个R">
+<meta name="twitter:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/learning-from-synthetic-data-framework.JPG">
 
 
 
@@ -322,12 +327,24 @@
                 
               
 
-              <time title="Post created: 2018-09-05 17:14:11 / Updated at: 21:05:40" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:11+08:00">2018-09-05</time>
+              <time title="Post created: 2018-09-05 17:14:11" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:11+08:00">2018-09-05</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-09-07 11:14:54" itemprop="dateModified" datetime="2018-09-07T11:14:54+08:00">2018-09-07</time>
               
             
           </span>
@@ -361,41 +378,87 @@
 
       
         <h1 id="数据集">数据集</h1>
-<p>Cityscapes</p>
-<p>SYNTHIA</p>
-<p>GTA5</p>
+<h2 id="cityscapes">Cityscapes</h2>
+<p>图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉</p>
+<h2 id="synthia">SYNTHIA</h2>
+<p>有13个类别 对于season-&gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。图像有8个RGB相机拍摄构成360度的视角。为了减小视角的影响，只选择和行车记录仪视角类型的图像。</p>
+<p>对于synthetic -&gt; real任务，使用SYNTHIA-RAND-CITYSCAPES。从所有的视屏中随机选取了9000张图像，和cityscapes的标签兼容。 GTA5 从Grand Theft Auto V的开放世界中获取的包含24996张高质量图像。图像分辨率1914x1052，城市是基于Los Angeles的Los Santos。</p>
 <p>BDDS</p>
 <h1 id="论文">论文</h1>
 <p>全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>中使用带注意力机制的编码解码结构来迁移弱的类别标签，<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>中迁移物体的位置信息。</p>
 <p>更多的工作关注语义分割中的深度无监督域适应。</p>
-<h2 id="fcns-in-the-wild">FCNs in the wild</h2>
+<h1 id="fcns-in-the-wild">FCNs in the wild</h1>
 <p><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对齐。迁移空间布局是利用类别相关的constrained multiple instance loss。<a href="https://github.com/Wanger-SJTU/FCN-in-the-wild" target="_blank" rel="external">代码，pytorch</a></p>
-<p>数据集：Cityscapes， SYNTHIA，GTA5，BDDS(proposed)</p>
+<p>作者指出在语义分割中有两个主要的领域偏移。首先是全局的变化会导致特征空间的边缘分布不同，这一差异会发生在任何两个不同的领域，但是在差异比较大的领域之间占主要部分；其次是特定类别之间的差异，比如不同城市之间车辆以及交通信号的偏移。作者因此采用了两个loss来分别处理。</p>
+<p>全局的loss是保证特征空间表示的一致性，是不是应在靠后一点？ dense（有空间信息）的特征一致性和一维向量（分类任务）的特征一致性有什么区别吗？ 最后的dense的特征，每一个空间位置的一维向量都可以看做是分类任务的特征，不同位置之间的关系是不是可以利用一下？</p>
+<p>Hoffman et al. [13] introduce the task of domain adaptation on semantic seg- mentation by applying adversarial learning (i.e., DANN) in a fully-convolutional way on feature representations and additional category constraints similar to the constrained CNN [29]. ----<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> category specific adaptation是从弱语义分割学习的方法中借鉴过来的。还需要看一下 Constrained convolutional neural networks for weakly supervised segmentation. Fully convolutional multi-class multiple instance learning.</p>
+<h2 id="指标">指标</h2>
+<p>数据集：Cityscapes， SYNTHIA，GTA5，BDDS(proposed) 分了三类任务： cities-&gt;cities，season-&gt;season，synthetic-&gt;real 其中cities-&gt;cities，synthetic-&gt;real任务使用的是cityscapes的19类标签 season-&gt;season使用的是SYNTHIA的13类标签</p>
+<p>GAT5 -&gt; Cityscapes： before adaptation 21.1 after adaptation 27.1</p>
+<p>SYNTHIA Cityscpes： 14.7 17.0</p>
+<h1 id="curriculum-domain-adaptation">Curriculum domain adaptation</h1>
+<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
+<p>课程学习，更倾向于学习一个数据的分布。</p>
+<p>颜色的一致性在由虚拟到真实的迁移也很重要。使用了现成的方法。</p>
+<p>能不能像STN那样有一个显式的转换模块</p>
+<p><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a><a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a><a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a><a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a>是之前或同一时期的工作。VisDA2017中获胜的方案是很多模型的集成。</p>
+<p>softmax输出的概率层面的分布的匹配和特征空间的概率匹配。</p>
+<p>Constrained convolutional neural networks for weakly supervised segmentation. ICCV2015 Training constrained deconvolutional networks for road scene semantic segmentation.</p>
+<h1 id="no-more-discrimination">No more discrimination</h1>
+<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ICCV2017 中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a></p>
+<h1 id="road-net">ROAD-Net</h1>
+<p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a></p>
+<p>从特征表示的角度讲，模型会在虚拟数据集上过拟合，使得在真实图像上不适合。从分布的角度讲，虚拟数据和真实数据的分布不匹配。</p>
+<p>首先使用目标域引导的蒸馏方法来学习真实图像的风格，通过让分割模型学习在真实图片上预训练好的模型。然后，提出了空间感知模块来对齐两个领域分布。这两个模型可以添加到任意的分割模型中。</p>
+<p>受到模型蒸馏论文的启发，使用了在ImageNet上预训练好的模型（参数固定）来充当老师，在虚拟数据集上训练时构造一个蒸馏损失（特征的欧式距离），使模型输出的特征不要过分地偏向于虚拟数据。还有其他的方法防止在虚拟数据集上的过拟合，比如固定某些层，或者使用learning without forgeting的方法。</p>
+<p>空间感知的适应模块是将图像划分成不同的块，然后在每一块上使用领域对抗损失</p>
+<p>相关工作：<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> <a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a><a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a><a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a><a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a><a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a></p>
+<h2 id="问题">问题</h2>
+<p>However, aligning pixel-level features between synthetic and real data for urban scene images is non-trivial. Conventional domain adaptation approaches are usually proposed for the image classification task. While similar methodol- ogy can be applied by taking each pixel-level feature as a training sample, it is still challenging to fully reduce the distribution mismatch, since the pixels vary significantly in appearance [17] and scale [2]. 挖掘局部特征之间的关联？或者进行max之类的操作然后再对齐。</p>
+<p>Hoffman et al. [17] implemented it by switching domain label similarly as in the Generative Adversarial Networks (GAN) [11]. We follow [8] to insert a gradient reverse layer between F and h. Particularly,</p>
+<h2 id="指标-1">指标</h2>
+<p>数据集：GTA5→Cityscapes DeepLab: 35.9 PSPNet: 39.4</p>
+<h1 id="learning-from-synthetic-data">Learning From Synthetic Data</h1>
+<p><a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a> CVPR2018 使用了GAN将特征映射到图像空间（新的图像空间和原图像可以使用reconstruction loss），在图像空间使用判别器。<a href="https://github.com/swamiviv/LSD-seg" target="_blank" rel="external">代码，pytorch</a></p>
+<p>相关论文：<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a><a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a></p>
+<p>网络结构： <img src="/2018/09/05/DA-in-semantic-segmentation/learning-from-synthetic-data-framework.JPG" title="learning-from-synthetic-data网络结构"></p>
+<p>Unsupervised Image-to-Image Translation Networks(UNIT)的网络结构如下图所示 <img src="/2018/09/05/DA-in-semantic-segmentation/UNIT-network-arch.JPG" title="UNIT网络结果"></p>
+<p>Since the advent of deep neural networks, emphasis has been shifted to learning do- main invariant features in an end-to-end fashion. Astandard framework for deep domain adaptation involves minimizing a measure of domain discrepancy along with the task being solved. Some approaches use Maximum Mean Discrepancy and its kernel variants for this task ( [21], [22]), while oth- ers use adversarial approaches ( [7], [2], [28]).</p>
+<h2 id="指标-2">指标</h2>
+<p>数据集： SYNTHIA→CITYSCAPES FCN8s-VGG16 36.1</p>
+<p>GTAV→CITYSCAPES FCN8s-VGG16 37.1</p>
+<h1 id="learning-to-adapt-structured-output-space">Learning to adapt structured output space</h1>
+<p><a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码,pytorch0.4</a></p>
+<p>考虑到语义分割是结构化的输出，包含了源域和目标域之间的相似性，在输出空间使用对抗学习。</p>
+<p>网络结构如下图  数据集： GTA5→Cityscapes， VGG16 35.0 ResNet101 42.4 SYNTHIA→Cityscapes VGG16 37.6 Resnet101 46.7</p>
+<h2 id="相关工作">相关工作</h2>
+<p><a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> <a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a></p>
+<h2 id="指标-3">指标</h2>
 <h2 id="section"></h2>
-<p><a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
-<h2 id="section-1"></h2>
-<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a>中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a></p>
-<h2 id="section-2"></h2>
-<p><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a> 数据集：GTA5→Cityscapes</p>
-<h2 id="section-3"></h2>
-<p><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a> CVPR2018 使用了GAN将特征映射到图像空间，并在图像空间使用判别器。<a href="https://github.com/swamiviv/LSD-seg" target="_blank" rel="external">代码，pytorch</a></p>
-<p>数据集：SYNTHIA→CITYSCAPES，GTAV→CITYSCAPES</p>
-<h2 id="section-4"></h2>
-<p><a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码</a></p>
-<p>数据集： GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
-<h2 id="section-5"></h2>
-<p><a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a> CVPR2018</p>
+<p><a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a> CVPR2018</p>
 <p>数据集：GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
-<h2 id="section-6"></h2>
-<p><a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a> ECCV2018</p>
+<h2 id="section-1"></h2>
+<p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> ECCV2018</p>
 <p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h2 id="section-7"></h2>
-<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ECCV2018</p>
+<h2 id="section-2"></h2>
+<p><a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a> ECCV2018</p>
 <p>数据集： GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h2 id="section-8"></h2>
-<p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> ECCV2018</p>
+<h2 id="section-3"></h2>
+<p><a href="#fn29" class="footnoteRef" id="fnref29"><sup>29</sup></a> ECCV2018</p>
 <p>数据集：GTAV，SYNTHIA，VIPER(proposed)，Cityscapes，CamVid</p>
-<h1 id="指标比较">指标比较</h1>
+<h2 id="cycada">Cycada</h2>
+<p><a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a> ICML2018 Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learning [13]. ----<a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a></p>
+<h1 id="maximum-classifier-discrepancy">Maximum classifier discrepancy</h1>
+<p><a href="#fn32" class="footnoteRef" id="fnref32"><sup>32</sup></a> CVPR2018</p>
+<h2 id="section-4"></h2>
+<p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> ECCV2018</p>
+<h1 id="fcan">FCAN</h1>
+<p>CVRP2018 In this paper, we facilitate this issue from the perspectives of both visual appearance-level and representation-level do- main adaptation. The former adapts source-domain images to appear as if drawn from the “style” in the target domain and the latter attempts to learn domain-invariant representations.</p>
+<p>在对抗损失的前面增加了一个风格迁移的网络，对抗的分类器中引入了ASPP</p>
+<p>整体的网络结构如下图 <img src="/2018/09/05/DA-in-semantic-segmentation/FCAN-framework.JPG" title="FCAN网络结构"></p>
+<p>风格迁移网络AAN（Appearance Adaptation Network）的结构 <img src="/2018/09/05/DA-in-semantic-segmentation/FCAN-AAN-framework.JPG" title="AAN的网络结构"></p>
+<p>与Learning From Synthetic Data，这里虽然也有fake source,fake target，但是只用用在了领域之间的对抗，而没有真假的对抗。</p>
+<h2 id="其他">其他</h2>
 <div class="footnotes">
 <hr>
 <ol>
@@ -403,15 +466,35 @@
 <li id="fn2"><p>A. Kolesnikov and C. H. Lampert. Seed, expand and constrain: Three principles for weakly-supervised image segmentation. In European Conference on Computer Vision, pages 695–711. Springer, 2016.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref3">↩</a></p></li>
 <li id="fn4"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>Y. Zhang, P. David, and B. Gong. Curriculum domain adaptation for semantic segmentation of urban scenes. In The IEEE International Conference on Computer Vision (ICCV), volume 2, page 6, 2017.<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. arXiv preprint arXiv:1704.08509, 2017.<a href="#fnref6">↩</a></p></li>
-<li id="fn7"><p>Y. Chen, W. Li, and L. Van Gool. Road: Reality oriented adaptation for semantic segmentation of urban scenes. arXiv preprint arXiv:1711.11556, 2017.<a href="#fnref7">↩</a></p></li>
+<li id="fn5"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>Y. Zhang, P. David, and B. Gong. Curriculum domain adaptation for semantic segmentation of urban scenes. In The IEEE International Conference on Computer Vision (ICCV), volume 2, page 6, 2017.<a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>Y. Chen, W. Li, and L. Van Gool. Road: Reality oriented adaptation for semantic segmentation of urban scenes. In CVPR, 2018.<a href="#fnref7">↩</a></p></li>
 <li id="fn8"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref8">↩</a></p></li>
-<li id="fn9"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref9">↩</a></p></li>
-<li id="fn10"><p>Hong W, Wang Z, Yang M, et al. Conditional Generative Adversarial Network for Structured Domain Adaptation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1335-1344.<a href="#fnref10">↩</a></p></li>
-<li id="fn11"><p>Zou Y, Yu Z, Vijaya Kumar B V K, et al. Unsupervised Domain Adaptation for Semantic Segmentation via Class-Balanced Self-Training[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 289-305.<a href="#fnref11">↩</a></p></li>
-<li id="fn12"><p>Huang H, Huang Q, Kraehenbuehl P. Domain transfer through deep activation matching[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 590-605.<a href="#fnref12">↩</a></p></li>
-<li id="fn13"><p>Saleh F S, Aliakbarian M S, Salzmann M, et al. Effective Use of Synthetic Data for Urban Scene Semantic Segmentation[J]. arXiv preprint arXiv:1807.06132, 2018.<a href="#fnref13">↩</a></p></li>
+<li id="fn9"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref9">↩</a></p></li>
+<li id="fn10"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref10">↩</a></p></li>
+<li id="fn11"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref11">↩</a></p></li>
+<li id="fn12"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. In ICCV, 2017.<a href="#fnref12">↩</a></p></li>
+<li id="fn13"><p>Y. Chen, W. Li, and L. Van Gool. Road: Reality oriented adaptation for semantic segmentation of urban scenes. In CVPR, 2018.<a href="#fnref13">↩</a></p></li>
+<li id="fn14"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref14">↩</a></p></li>
+<li id="fn15"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref15">↩</a></p></li>
+<li id="fn16"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. In ICCV, 2017.<a href="#fnref16">↩</a></p></li>
+<li id="fn17"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref17">↩</a></p></li>
+<li id="fn18"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref18">↩</a></p></li>
+<li id="fn19"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref19">↩</a></p></li>
+<li id="fn20"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref20">↩</a></p></li>
+<li id="fn21"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref21">↩</a></p></li>
+<li id="fn22"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref22">↩</a></p></li>
+<li id="fn23"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref23">↩</a></p></li>
+<li id="fn24"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref24">↩</a></p></li>
+<li id="fn25"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref25">↩</a></p></li>
+<li id="fn26"><p>Hong W, Wang Z, Yang M, et al. Conditional Generative Adversarial Network for Structured Domain Adaptation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1335-1344.<a href="#fnref26">↩</a></p></li>
+<li id="fn27"><p>Zou Y, Yu Z, Vijaya Kumar B V K, et al. Unsupervised Domain Adaptation for Semantic Segmentation via Class-Balanced Self-Training[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 289-305.<a href="#fnref27">↩</a></p></li>
+<li id="fn28"><p>Huang H, Huang Q, Kraehenbuehl P. Domain transfer through deep activation matching[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 590-605.<a href="#fnref28">↩</a></p></li>
+<li id="fn29"><p>Saleh F S, Aliakbarian M S, Salzmann M, et al. Effective Use of Synthetic Data for Urban Scene Semantic Segmentation[J]. arXiv preprint arXiv:1807.06132, 2018.<a href="#fnref29">↩</a></p></li>
+<li id="fn30"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref30">↩</a></p></li>
+<li id="fn31"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref31">↩</a></p></li>
+<li id="fn32"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref32">↩</a></p></li>
+<li id="fn33"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref33">↩</a></p></li>
 </ol>
 </div>
 
@@ -600,7 +683,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据集"><span class="nav-number">1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#论文"><span class="nav-number">2.</span> <span class="nav-text">论文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fcns-in-the-wild"><span class="nav-number">2.1.</span> <span class="nav-text">FCNs in the wild</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section"><span class="nav-number">2.2.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-1"><span class="nav-number">2.3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2"><span class="nav-number">2.4.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-3"><span class="nav-number">2.5.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-4"><span class="nav-number">2.6.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-5"><span class="nav-number">2.7.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-6"><span class="nav-number">2.8.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-7"><span class="nav-number">2.9.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-8"><span class="nav-number">2.10.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指标比较"><span class="nav-number">3.</span> <span class="nav-text">指标比较</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据集"><span class="nav-number">1.</span> <span class="nav-text">数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cityscapes"><span class="nav-number">1.1.</span> <span class="nav-text">Cityscapes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#synthia"><span class="nav-number">1.2.</span> <span class="nav-text">SYNTHIA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#论文"><span class="nav-number">2.</span> <span class="nav-text">论文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fcns-in-the-wild"><span class="nav-number">3.</span> <span class="nav-text">FCNs in the wild</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#指标"><span class="nav-number">3.1.</span> <span class="nav-text">指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#curriculum-domain-adaptation"><span class="nav-number">4.</span> <span class="nav-text">Curriculum domain adaptation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#no-more-discrimination"><span class="nav-number">5.</span> <span class="nav-text">No more discrimination</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#road-net"><span class="nav-number">6.</span> <span class="nav-text">ROAD-Net</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">6.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标-1"><span class="nav-number">6.2.</span> <span class="nav-text">指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#learning-from-synthetic-data"><span class="nav-number">7.</span> <span class="nav-text">Learning From Synthetic Data</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#指标-2"><span class="nav-number">7.1.</span> <span class="nav-text">指标</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#learning-to-adapt-structured-output-space"><span class="nav-number">8.</span> <span class="nav-text">Learning to adapt structured output space</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关工作"><span class="nav-number">8.1.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标-3"><span class="nav-number">8.2.</span> <span class="nav-text">指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section"><span class="nav-number">8.3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-1"><span class="nav-number">8.4.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2"><span class="nav-number">8.5.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-3"><span class="nav-number">8.6.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cycada"><span class="nav-number">8.7.</span> <span class="nav-text">Cycada</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#maximum-classifier-discrepancy"><span class="nav-number">9.</span> <span class="nav-text">Maximum classifier discrepancy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#section-4"><span class="nav-number">9.1.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fcan"><span class="nav-number">10.</span> <span class="nav-text">FCAN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">10.1.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
             
 
           </div>
