@@ -276,6 +276,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/11/pytorch-0.4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/11/pytorch-0.4/" itemprop="url">
+                  Pytorch 0.4迁移指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-09-11 19:11:46 / Updated at: 19:16:00" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="版本迁移">版本迁移</h1>
+<p>0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。</p>
+<h1 id="自动求导">自动求导</h1>
+<p>requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数的梯度为0。</p>
+<p>网络权重的梯度的累加和optimizer中是否有该权重是相互独立的。</p>
+<p>optimizer只需要创建的时候参数的requires_grad=True就行，step()时=False也没有关系</p>
+<h2 id="旧版本">旧版本</h2>
+<p>之前版本 Variable的属性：</p>
+<ul>
+<li>data</li>
+<li>grad</li>
+<li>requires_grad</li>
+<li>volatile</li>
+<li>data</li>
+<li>grad</li>
+</ul>
+<h3 id="和optimizer的关系">和optimizer的关系</h3>
+<ol style="list-style-type: decimal">
+<li>错误信息：optimizing a parameter that doesn't require gradients。送到优化器中的参数需要requires_grad = True</li>
+<li>错误信息：can't optimize a non-leaf Variable 送到优化器中的参数只能是leaf或者网络的权重参数，不能是中间的输出变量，如特征图（特征图一般也不需要优化，只需要传递误差就行）</li>
+</ol>
+<p>leaf指的是用户自己定义的变量，其他的正常情况下都是non-leaf（使用了detach_()方法也会变成leaf）。leaf和non-leaf的概念是在计算图的每一步的结果上定义的，CNN的权重没有leaf和non-leaf的概念。但是权重有requires_grad属性</p>
+<p>loss.backward()计算得到的梯度值，可以通过.grad属性得到</p>
+<p>对于中间变量（non-leaf Variable）, 可以通过retain_grad()来使得保存变量的梯度值</p>
+<p>detach() 函数返回一个新的Variable，从当前的计算图中脱离，不需要计算梯度。返回的Variable和原来的Variable共用一个tensor数据，in-place的操作会彼此影响。</p>
+<p>register_hook(hook)注册一个反向传播的hook,hook是一个函数，输入是正常的grad,输出是新的grad或者None hook(grad) -&gt; Tensor or None</p>
+<p>detach_() 从计算图中脱离，成为一个叶子节点。detach_()之后required_grad自动变成False</p>
+<h2 id="新版本">新版本</h2>
+<p>Variable的属性 - data 保留，不变 - grad 保留 - requires_grad 保留 - volatile 废弃 - is_leaf 保留 - grad_fn 保留</p>
+<p>volatile去掉了，改成了使用上下文管理器来设置是否需要计算grad</p>
+<h3 id="data属性和detech">.data属性和detech()</h3>
+<p>在旧版本里.data属性获取的是tensor，就和计算图没有关系了，同时共享了底层的数据，如果对tensor进行in-place的操作，也会对梯度的反向传播产生影响（该变量之前的变量的梯度计算会出错），但是不会报错。 0.4版本中.data属性保持了同样的含义，会返回一个共享数据的Tensor,和计算历史无关，同时requires_grad = False，如果进行了in-place的操作，效果同上。</p>
+<p>推荐的方式是使用detach()，返回一个新的Variable或者tensor。如果detach()之后的量进行了in-place操作，会报错，但是抱错的位置不一样。0.3.1更早一点。</p>
+<p>0.3.1版本中 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3.</span>], requires_grad = <span class="keyword">True</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = a.sigmoid()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c = out.detach()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c.zero_()</span><br><span class="line">tensor([ <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>])</span><br><span class="line">这里就会报错</span><br><span class="line">RuntimeError: <span class="keyword">in</span>-place operations can be only used on variables that don<span class="string">'t share storage with any other variables, but detected that there are 2 objects sharing it</span></span><br></pre></td></tr></table></figure></p>
+<p>0.4.0版本 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a = torch.tensor([1,2,3.], requires_grad = True)</span><br><span class="line">&gt;&gt;&gt; out = a.sigmoid()</span><br><span class="line">&gt;&gt;&gt; c = out.detach()</span><br><span class="line">&gt;&gt;&gt; c.zero_()</span><br><span class="line">tensor([ 0., 0., 0.])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; out # modified by c.zero_() !!</span><br><span class="line">tensor([ 0., 0., 0.])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; out.sum().backward() # Requires the original value of out, but that was overwritten by c.zero_()</span><br><span class="line">RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation</span><br></pre></td></tr></table></figure></p>
+<h3 id="loss累加">loss累加</h3>
+<p>之前版本中常用的计算多个batch的平均loss，用于输出的代码 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">total_loss += loss.data[0]</span><br></pre></td></tr></table></figure></p>
+<p>现在由于 loss是一个scalar，维度是0，所以[0]是会出错的，应该改成 loss.item() <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">total_loss += loss.item()</span><br></pre></td></tr></table></figure></p>
+<p><strong>Note:</strong> item()方法只针对包含一个元素的tensor适用</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/05/distribution-adaptation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -482,7 +660,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Updated at: 2018-09-07 11:14:54" itemprop="dateModified" datetime="2018-09-07T11:14:54+08:00">2018-09-07</time>
+                <time title="Updated at: 2018-09-11 17:20:38" itemprop="dateModified" datetime="2018-09-11T17:20:38+08:00">2018-09-11</time>
               
             
           </span>
@@ -536,7 +714,7 @@
 <p>数据集：Cityscapes， SYNTHIA，GTA5，BDDS(proposed) 分了三类任务： cities-&gt;cities，season-&gt;season，synthetic-&gt;real 其中cities-&gt;cities，synthetic-&gt;real任务使用的是cityscapes的19类标签 season-&gt;season使用的是SYNTHIA的13类标签</p>
 <p>GAT5 -&gt; Cityscapes： before adaptation 21.1 after adaptation 27.1</p>
 <p>SYNTHIA Cityscpes： 14.7 17.0</p>
-<h1 id="curriculum-domain-adaptation">Curriculum domain adaptation</h1>
+<h1 id="curriculum-domain-adaptationcda">Curriculum domain adaptation(CDA)</h1>
 <p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
 <p>课程学习，更倾向于学习一个数据的分布。</p>
 <p>颜色的一致性在由虚拟到真实的迁移也很重要。使用了现成的方法。</p>
@@ -545,7 +723,8 @@
 <p>softmax输出的概率层面的分布的匹配和特征空间的概率匹配。</p>
 <p>Constrained convolutional neural networks for weakly supervised segmentation. ICCV2015 Training constrained deconvolutional networks for road scene semantic segmentation.</p>
 <h1 id="no-more-discrimination">No more discrimination</h1>
-<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ICCV2017 中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a></p>
+<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ICCV2017 中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a> <a href="https://yihsinchen.github.io/segmentation_adaptation/" target="_blank" rel="external">项目主页</a></p>
+<p>和Learning to adapt structured output space的作者是一样的。关注一下</p>
 <h1 id="road-net">ROAD-Net</h1>
 <p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a></p>
 <p>从特征表示的角度讲，模型会在虚拟数据集上过拟合，使得在真实图像上不适合。从分布的角度讲，虚拟数据和真实数据的分布不匹配。</p>
@@ -569,29 +748,54 @@
 <p>GTAV→CITYSCAPES FCN8s-VGG16 37.1</p>
 <h1 id="learning-to-adapt-structured-output-space">Learning to adapt structured output space</h1>
 <p><a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码,pytorch0.4</a></p>
-<p>考虑到语义分割是结构化的输出，包含了源域和目标域之间的相似性，在输出空间使用对抗学习。</p>
+<p>考虑到语义分割是结构化的输出，包含了源域和目标域之间的相似性，在输出空间使用对抗学习。为了进一步增强适应模型，我们在不同的特征层的输出上进行对抗式域适应。</p>
+<p>首先是在输出的语义图上进行对抗训练，也是structured的来源。其次，在多个特征图上进行，如conv5和conv4，使用这两层的输出预测语义分割结果，然后添加两个判别器。</p>
+<p>对抗损失的任务本身还是一个分类任务，所以对于两张语义分割的结果图最终还是输出一个值。</p>
 <p>网络结构如下图  数据集： GTA5→Cityscapes， VGG16 35.0 ResNet101 42.4 SYNTHIA→Cityscapes VGG16 37.6 Resnet101 46.7</p>
 <h2 id="相关工作">相关工作</h2>
-<p><a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> <a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a></p>
+<p><a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> introduce the task of domain adaptation on semantic seg- mentation by applying adversarial learning (i.e., DANN) in a fully-convolutional way on feature representations and additional category constraints similar to the constrained CNN[29]. <a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a> focus on adapting synthetic-to- real or cross-city images by adopting class-wise adversarial learning [3] or label transfer [3]. <a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a> Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learn- ing [13].</p>
+<p>Recently, the PixelDA method [1] addresses domain adap- tation for image classification by transferring the source images to target domain, thereby obtaining a simulated train- ing set for target images.</p>
 <h2 id="指标-3">指标</h2>
-<h2 id="section"></h2>
-<p><a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a> CVPR2018</p>
+<p>实验结果中的oracle指的是在目标域数据集的训练集上训练，测试集上测试的结果</p>
+<p>判别器的选择：全卷积网络，leaky ReLU 0.2，不使用batch-normalization层因为使用了小batchsize</p>
+<p>语义分割网络：DeepLab-v2 不用multi-scale混合策略，</p>
+<h2 id="代码">代码</h2>
+<p>训练领域分类器使用的loss是BCE Loss，尽管论文中训练分类器的时候写的是softmax loss。 在对抗训练的特征提取器训练（以生成领域不变的特征）过程中，只使用了目标域的数据，将它分类成源域数据，和公式(4)一致。 流程是一轮对抗训练完成之后更新一次参数。</p>
+<p>文章中没有说训练时采用的图像大小。 测试代码使用的是1024x512，但是在1080ti上使用1024 x 512显存会超出。</p>
+<p>训练了512x256的模型，测试时使用512x256比1024x512的效果要好。</p>
+<h1 id="conditional-generative-adversarial-network-for-structured-domain-adaptation">Conditional Generative Adversarial Network for Structured Domain Adaptation</h1>
+<p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> CVPR2018</p>
 <p>数据集：GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
-<h2 id="section-1"></h2>
-<p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> ECCV2018</p>
-<p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h2 id="section-2"></h2>
+<h1 id="class-balanced-self-training">Class-Balanced Self-Training</h1>
 <p><a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a> ECCV2018</p>
-<p>数据集： GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h2 id="section-3"></h2>
+<p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
+<h1 id="deep-activation-matching">deep activation matching</h1>
 <p><a href="#fn29" class="footnoteRef" id="fnref29"><sup>29</sup></a> ECCV2018</p>
+<p>数据集： GTA5 Cityscapes SYNTHIA Cityscapes</p>
+<h1 id="effective-use-of-synthetic-data">Effective Use of Synthetic Data</h1>
+<p><a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a> ECCV2018 未找到</p>
 <p>数据集：GTAV，SYNTHIA，VIPER(proposed)，Cityscapes，CamVid</p>
-<h2 id="cycada">Cycada</h2>
-<p><a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a> ICML2018 Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learning [13]. ----<a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a></p>
+<h1 id="cycada">Cycada</h1>
+<p><a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a> ICML2018 引入了循环一致性的对抗式域适应，在像素层面和特征层面进行适配，不需要成对的图像。 <a href="https://github.com/jhoffman/cycada_release" target="_blank" rel="external">代码，pytorch</a> ## motivation Cycada通过循环一致性图像到图像的转换将特征级别（DANN,ADDA）和图像级别(Unsupervised cross-domain image generation ICLR2017,Unsupervised pixel-level domain adaptation with generative adversarial networks，CVPR2017)的对抗式域适应方法结合起来。使用重建损失（循环一致性损失）来保留局部的结构信息，使用语义损失来保持语义的一致性。</p>
+<p>这篇是不是将第一次将循环一致性约束引入域适应的？</p>
+<p>循环一致性的论文如下： Jun-Yan Zhu, Taesung Park, Phillip Isola, and Alexei A Efros. Unpaired image-to-image translation using cycle-consistent adversarial networks. In International Conference on Computer Vision (ICCV), 2017.</p>
+<p>网络结构如下图所示，其中对抗判别器<span class="math inline">\(D_T\)</span>是用来保证转换后的源域图像和目标域图像的风格一致性。为了保证内容的一致性，使用了循环一致性约束（如果只是对源域图像和转换后的源域图像进行内容一致性约束呢？）。为了实现源域图像和转换后的源域图像之间的语义一致性，使用了一个在源域上训练好的语义分割模型，参数固定，损失函数仍然是语义分割任务的损失，转换后的图像作为输出，未转换的图像经过语义分割模型生成的标签作为“真实标签”。与风格转换和像素适应中的内容损失类似。</p>
+
+<p>图中的Reconstructed Source Image图像是不是有问题，内容应该和源域的图像是一致的才对啊。 将上图与Learning From Synthetic Data中的结构对比，</p>
+<p>Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learning [13]. ----<a href="#fn32" class="footnoteRef" id="fnref32"><sup>32</sup></a></p>
+<h2 id="相关工作-1">相关工作</h2>
+<p>The representation is optimized using the standard minimax objective (Ganin &amp; Lempitsky, 2015), the symmetric confusion objective (Tzeng et al., 2015), or the inverted label objective (Tzeng et al., 2017). Each of these objectives is related to the literature on generative adversarial networks (Goodfellow et al., 2014) and follow-up work for improved training procedures for these networks (Salimans et al., 2016b; Arjovsky et al., 2017).</p>
+<p>特征空间的对齐-&gt;对抗式学习(discriminative representation space)-&gt;生成式模型(pixel-space)</p>
+<p>图像风格转换，其中怎么利用对抗式方法？ 源域图像，转换后的源域图像，和目标域的图像，三者之间的loss应该怎么用。源域图像和转换后的源域图像之间的内容应该是相似的，转换后的源域图像和目标域的图像之间的风格是相似的。</p>
+<p>非成对的图像转换</p>
+<h2 id="指标-4">指标</h2>
+<p>GAT5 -&gt; Cityscapes FCN-8s pixel+feat 35.4</p>
 <h1 id="maximum-classifier-discrepancy">Maximum classifier discrepancy</h1>
-<p><a href="#fn32" class="footnoteRef" id="fnref32"><sup>32</sup></a> CVPR2018</p>
-<h2 id="section-4"></h2>
-<p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> ECCV2018</p>
+<p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> CVPR2018 <a href="https://github.com/mil-tokyo/MCD_DA" target="_blank" rel="external">代码</a></p>
+<h2 id="指标-5">指标</h2>
+<p>GTA5-&gt;Cityscapes VGG-16 28.8</p>
+<h1 id="dual-channel-wise-alignment-networks">Dual Channel-wise Alignment Networks</h1>
+<p><a href="#fn34" class="footnoteRef" id="fnref34"><sup>34</sup></a> ECCV2018 代码未找到</p>
 <h1 id="fcan">FCAN</h1>
 <p>CVRP2018 In this paper, we facilitate this issue from the perspectives of both visual appearance-level and representation-level do- main adaptation. The former adapts source-domain images to appear as if drawn from the “style” in the target domain and the latter attempts to learn domain-invariant representations.</p>
 <p>在对抗损失的前面增加了一个风格迁移的网络，对抗的分类器中引入了ASPP</p>
@@ -626,15 +830,16 @@
 <li id="fn22"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref22">↩</a></p></li>
 <li id="fn23"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref23">↩</a></p></li>
 <li id="fn24"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref24">↩</a></p></li>
-<li id="fn25"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref25">↩</a></p></li>
-<li id="fn26"><p>Hong W, Wang Z, Yang M, et al. Conditional Generative Adversarial Network for Structured Domain Adaptation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1335-1344.<a href="#fnref26">↩</a></p></li>
-<li id="fn27"><p>Zou Y, Yu Z, Vijaya Kumar B V K, et al. Unsupervised Domain Adaptation for Semantic Segmentation via Class-Balanced Self-Training[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 289-305.<a href="#fnref27">↩</a></p></li>
-<li id="fn28"><p>Huang H, Huang Q, Kraehenbuehl P. Domain transfer through deep activation matching[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 590-605.<a href="#fnref28">↩</a></p></li>
-<li id="fn29"><p>Saleh F S, Aliakbarian M S, Salzmann M, et al. Effective Use of Synthetic Data for Urban Scene Semantic Segmentation[J]. arXiv preprint arXiv:1807.06132, 2018.<a href="#fnref29">↩</a></p></li>
-<li id="fn30"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref30">↩</a></p></li>
-<li id="fn31"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref31">↩</a></p></li>
-<li id="fn32"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref32">↩</a></p></li>
-<li id="fn33"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref33">↩</a></p></li>
+<li id="fn25"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. In ICCV, 2017.<a href="#fnref25">↩</a></p></li>
+<li id="fn26"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref26">↩</a></p></li>
+<li id="fn27"><p>Hong W, Wang Z, Yang M, et al. Conditional Generative Adversarial Network for Structured Domain Adaptation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1335-1344.<a href="#fnref27">↩</a></p></li>
+<li id="fn28"><p>Zou Y, Yu Z, Vijaya Kumar B V K, et al. Unsupervised Domain Adaptation for Semantic Segmentation via Class-Balanced Self-Training[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 289-305.<a href="#fnref28">↩</a></p></li>
+<li id="fn29"><p>Huang H, Huang Q, Kraehenbuehl P. Domain transfer through deep activation matching[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 590-605.<a href="#fnref29">↩</a></p></li>
+<li id="fn30"><p>Saleh F S, Aliakbarian M S, Salzmann M, et al. Effective Use of Synthetic Data for Urban Scene Semantic Segmentation[J]. arXiv preprint arXiv:1807.06132, 2018.<a href="#fnref30">↩</a></p></li>
+<li id="fn31"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref31">↩</a></p></li>
+<li id="fn32"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref32">↩</a></p></li>
+<li id="fn33"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref33">↩</a></p></li>
+<li id="fn34"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref34">↩</a></p></li>
 </ol>
 </div>
 
@@ -1842,146 +2047,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/conditional-gan/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/12/conditional-gan/" itemprop="url">
-                  Conditional Generative Adversarial Nets
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-
-              
-                
-              
-
-              <time title="Post created: 2018-08-12 10:47:29 / Updated at: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>原始的GAN可以通过在生成器和判别器上加入额外的依赖信息<span class="math inline">\(y\)</span>，构成条件GAN，<span class="math inline">\(y\)</span>可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下： <img src="/2018/08/12/conditional-gan/original-gan-formula.JPG" title="formula of original GAN"> 增加了额外输入信息的条件GAN公式如下： <img src="/2018/08/12/conditional-gan/conditional-gan-formula.JPG" title="formula of conditional GAN"> 网络结构如下： <img src="/2018/08/12/conditional-gan/conditional-gan.JPG" title="Architecture of Conditional GAN"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2029,7 +2094,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-count">14</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -2064,7 +2129,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">10</span>
+                      
+                    
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
