@@ -660,7 +660,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Updated at: 2018-09-11 17:20:38" itemprop="dateModified" datetime="2018-09-11T17:20:38+08:00">2018-09-11</time>
+                <time title="Updated at: 2018-09-12 17:10:58" itemprop="dateModified" datetime="2018-09-12T17:10:58+08:00">2018-09-12</time>
               
             
           </span>
@@ -697,10 +697,12 @@
           
             <h1 id="数据集">数据集</h1>
 <h2 id="cityscapes">Cityscapes</h2>
-<p>图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉</p>
+<p>34个类别 图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉</p>
 <h2 id="synthia">SYNTHIA</h2>
 <p>有13个类别 对于season-&gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。图像有8个RGB相机拍摄构成360度的视角。为了减小视角的影响，只选择和行车记录仪视角类型的图像。</p>
-<p>对于synthetic -&gt; real任务，使用SYNTHIA-RAND-CITYSCAPES。从所有的视屏中随机选取了9000张图像，和cityscapes的标签兼容。 GTA5 从Grand Theft Auto V的开放世界中获取的包含24996张高质量图像。图像分辨率1914x1052，城市是基于Los Angeles的Los Santos。</p>
+<p>对于synthetic -&gt; real任务，使用SYNTHIA-RAND-CITYSCAPES。从所有的视屏中随机选取了9000张图像，和cityscapes的标签兼容。</p>
+<h2 id="gta5">GTA5</h2>
+<p>从Grand Theft Auto V的开放世界中获取的包含24996张高质量图像。图像分辨率1914x1052，城市是基于Los Angeles的Los Santos。</p>
 <p>BDDS</p>
 <h1 id="论文">论文</h1>
 <p>全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>中使用带注意力机制的编码解码结构来迁移弱的类别标签，<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>中迁移物体的位置信息。</p>
@@ -714,6 +716,13 @@
 <p>数据集：Cityscapes， SYNTHIA，GTA5，BDDS(proposed) 分了三类任务： cities-&gt;cities，season-&gt;season，synthetic-&gt;real 其中cities-&gt;cities，synthetic-&gt;real任务使用的是cityscapes的19类标签 season-&gt;season使用的是SYNTHIA的13类标签</p>
 <p>GAT5 -&gt; Cityscapes： before adaptation 21.1 after adaptation 27.1</p>
 <p>SYNTHIA Cityscpes： 14.7 17.0</p>
+<h2 id="实验">实验</h2>
+<h3 id="对抗训练">对抗训练</h3>
+<p>对抗训练是在有空间信息的特征图上，对每一个空间位置都进行源域vs目标域的分类，而不是最后输出1x1的特征图输出然后判断。</p>
+<p>和learning to adapt相比，在反向训练（<span class="math inline">\(L_{inv}\)</span>）的时候，使用了源域的数据，而learning to adapt没有。对应公式(4)</p>
+<p>这里是迭代训练的，而leaning to adapt是反向传播loss并叠加，然后一起更新。</p>
+<p>这里在反向训练（<span class="math inline">\(L_{inv}\)</span>）的时候，也用了正向训练的损失（其实和learning to adapt的一次更新过程一样）。对应公式(7) ### 类别的适应 对于特定类别，通过每一张图片都可以得到一个比例，统计所有图片，可以得到一个直方图 <span class="math inline">\(\alpha_c\)</span>是下10%的界，<span class="math inline">\(\delta_c\)</span>是均值，<span class="math inline">\(\gamma_c\)</span>是上10%的界</p>
+<p>对目标图像使用像素比例上的限制。但是为什么要用图像级别的标签呢？</p>
 <h1 id="curriculum-domain-adaptationcda">Curriculum domain adaptation(CDA)</h1>
 <p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
 <p>课程学习，更倾向于学习一个数据的分布。</p>
@@ -723,8 +732,16 @@
 <p>softmax输出的概率层面的分布的匹配和特征空间的概率匹配。</p>
 <p>Constrained convolutional neural networks for weakly supervised segmentation. ICCV2015 Training constrained deconvolutional networks for road scene semantic segmentation.</p>
 <h1 id="no-more-discrimination">No more discrimination</h1>
-<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ICCV2017 中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a> <a href="https://yihsinchen.github.io/segmentation_adaptation/" target="_blank" rel="external">项目主页</a></p>
-<p>和Learning to adapt structured output space的作者是一样的。关注一下</p>
+<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ICCV2017 中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a> <a href="https://yihsinchen.github.io/segmentation_adaptation/" target="_blank" rel="external">项目主页</a> 作者考虑了两类领域偏移的情况，一类是全局的偏移，一类是类别的偏移。前者是由于城市外观的差异，后者是由于道路上不同的组成情况。</p>
+<p>全局偏移的loss定义和FCN in the wilds是一样的，也是迭代训练，但是正向的损失函数没有参与到反向的迭代过程中。全局的loss也是分开grid来做的。</p>
+<p>类别的适应在Fcn in the wild也有，但是那里是利用类别的组成比例，即假设不同城市之间的组成是相似的。本文拓展了JDA的思想，为目标域的图像赋予伪标签，在全局的域适应完成之后，目标域的图像可以产生语义预测结果。因此，源域和目标域之间的类别关联就可以获得了。类别相关的对抗是在每一个grid的每一类别上进行的，没有对同一位置的类别进行max之后再构造对抗损失。为每一个grid计算类别概率均值，然后对于每一类别在图像空间内进行平均。这一平均之后的值作为对抗损失的系数。</p>
+<p>利用Google Street View构建了一个数据集</p>
+<h2 id="相关论文">相关论文</h2>
+<p>数据偏差论文： A. Khosla, T. Zhou, T. Malisiewicz, A. A. Efros, and A. Tor- ralba. Undoing the damage of dataset bias. In ECCV. Springer, 2012. A. Torralba and A. A. Efros. Unbiased look at dataset bias. In CVPR. IEEE, 2011</p>
+<p>网络结构如下图所示 </p>
+<p>和Learning to adapt structured output space的作者是一样的。</p>
+<h2 id="指标-1">指标</h2>
+<p>SYNTHIA - Cityscapes 预训练 30.7 全局 33.8 全局+类别 35.7</p>
 <h1 id="road-net">ROAD-Net</h1>
 <p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a></p>
 <p>从特征表示的角度讲，模型会在虚拟数据集上过拟合，使得在真实图像上不适合。从分布的角度讲，虚拟数据和真实数据的分布不匹配。</p>
@@ -735,7 +752,7 @@
 <h2 id="问题">问题</h2>
 <p>However, aligning pixel-level features between synthetic and real data for urban scene images is non-trivial. Conventional domain adaptation approaches are usually proposed for the image classification task. While similar methodol- ogy can be applied by taking each pixel-level feature as a training sample, it is still challenging to fully reduce the distribution mismatch, since the pixels vary significantly in appearance [17] and scale [2]. 挖掘局部特征之间的关联？或者进行max之类的操作然后再对齐。</p>
 <p>Hoffman et al. [17] implemented it by switching domain label similarly as in the Generative Adversarial Networks (GAN) [11]. We follow [8] to insert a gradient reverse layer between F and h. Particularly,</p>
-<h2 id="指标-1">指标</h2>
+<h2 id="指标-2">指标</h2>
 <p>数据集：GTA5→Cityscapes DeepLab: 35.9 PSPNet: 39.4</p>
 <h1 id="learning-from-synthetic-data">Learning From Synthetic Data</h1>
 <p><a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a> CVPR2018 使用了GAN将特征映射到图像空间（新的图像空间和原图像可以使用reconstruction loss），在图像空间使用判别器。<a href="https://github.com/swamiviv/LSD-seg" target="_blank" rel="external">代码，pytorch</a></p>
@@ -743,19 +760,19 @@
 <p>网络结构： <img src="/2018/09/05/DA-in-semantic-segmentation/learning-from-synthetic-data-framework.JPG" title="learning-from-synthetic-data网络结构"></p>
 <p>Unsupervised Image-to-Image Translation Networks(UNIT)的网络结构如下图所示 <img src="/2018/09/05/DA-in-semantic-segmentation/UNIT-network-arch.JPG" title="UNIT网络结果"></p>
 <p>Since the advent of deep neural networks, emphasis has been shifted to learning do- main invariant features in an end-to-end fashion. Astandard framework for deep domain adaptation involves minimizing a measure of domain discrepancy along with the task being solved. Some approaches use Maximum Mean Discrepancy and its kernel variants for this task ( [21], [22]), while oth- ers use adversarial approaches ( [7], [2], [28]).</p>
-<h2 id="指标-2">指标</h2>
+<h2 id="指标-3">指标</h2>
 <p>数据集： SYNTHIA→CITYSCAPES FCN8s-VGG16 36.1</p>
 <p>GTAV→CITYSCAPES FCN8s-VGG16 37.1</p>
 <h1 id="learning-to-adapt-structured-output-space">Learning to adapt structured output space</h1>
 <p><a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码,pytorch0.4</a></p>
 <p>考虑到语义分割是结构化的输出，包含了源域和目标域之间的相似性，在输出空间使用对抗学习。为了进一步增强适应模型，我们在不同的特征层的输出上进行对抗式域适应。</p>
-<p>首先是在输出的语义图上进行对抗训练，也是structured的来源。其次，在多个特征图上进行，如conv5和conv4，使用这两层的输出预测语义分割结果，然后添加两个判别器。</p>
+<p>首先是在输出的语义图（是在<span class="math inline">\(c\times h\times w\)</span>的特征图上，没有经过max操作）上进行对抗训练，也是structured的来源。其次，在多个特征图上进行，如conv5和conv4，使用这两层的输出预测语义分割结果，然后添加两个判别器。</p>
 <p>对抗损失的任务本身还是一个分类任务，所以对于两张语义分割的结果图最终还是输出一个值。</p>
 <p>网络结构如下图  数据集： GTA5→Cityscapes， VGG16 35.0 ResNet101 42.4 SYNTHIA→Cityscapes VGG16 37.6 Resnet101 46.7</p>
 <h2 id="相关工作">相关工作</h2>
 <p><a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> introduce the task of domain adaptation on semantic seg- mentation by applying adversarial learning (i.e., DANN) in a fully-convolutional way on feature representations and additional category constraints similar to the constrained CNN[29]. <a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a> focus on adapting synthetic-to- real or cross-city images by adopting class-wise adversarial learning [3] or label transfer [3]. <a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a> Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learn- ing [13].</p>
 <p>Recently, the PixelDA method [1] addresses domain adap- tation for image classification by transferring the source images to target domain, thereby obtaining a simulated train- ing set for target images.</p>
-<h2 id="指标-3">指标</h2>
+<h2 id="指标-4">指标</h2>
 <p>实验结果中的oracle指的是在目标域数据集的训练集上训练，测试集上测试的结果</p>
 <p>判别器的选择：全卷积网络，leaky ReLU 0.2，不使用batch-normalization层因为使用了小batchsize</p>
 <p>语义分割网络：DeepLab-v2 不用multi-scale混合策略，</p>
@@ -764,8 +781,24 @@
 <p>文章中没有说训练时采用的图像大小。 测试代码使用的是1024x512，但是在1080ti上使用1024 x 512显存会超出。</p>
 <p>训练了512x256的模型，测试时使用512x256比1024x512的效果要好。</p>
 <h1 id="conditional-generative-adversarial-network-for-structured-domain-adaptation">Conditional Generative Adversarial Network for Structured Domain Adaptation</h1>
-<p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> CVPR2018</p>
-<p>数据集：GTA5→Cityscapes，SYNTHIA→Cityscapes</p>
+<p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> CVPR2018 将GAN嵌入到FCN中实现域适应。具体地，学习一个条件生成器将生成图像的特征迁移到真实图像，判别器来判断是否是真实图像。对于每一个训练batch，条件生成器和判别器彼此竞争以生成更加真实的特征，然后FCN的参数更新来适应GAN的变化。</p>
+<p>有文献指出对于结构化的预测学习一个决策函数，标签空间是指数级别的。</p>
+<p>模型的网络结构如下图所示： <img src="/2018/09/05/DA-in-semantic-segmentation/conditional-GAN.JPG" title="基于条件GAN的分割域适应模型"></p>
+<h2 id="主要贡献">主要贡献</h2>
+<p>如何才能不依赖于源域和目标域共享一个特征空间上的预测函数？作者提出学习源域和目标域的特征空间的残差。在学习源域到目标之间的变换关系的同时，保留源域的语义空间结构。通过GAN来实现这样的变换。</p>
+<ul>
+<li>不假设共享的特征空间：思想来源于Residual Transfer network。实验结果表明，这种残差学习的思想是解决结构化域适应问题的关键</li>
+<li>统一的网络结构：no more discrimination和curriculum更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</li>
+<li>数据增强：通过依赖于源域图像和随机噪声的生成器，可以创造更多的虚拟样本</li>
+</ul>
+<h2 id="相关工作-1">相关工作</h2>
+<p>FCN in the wild Curriculum domain adaptation (CDA) No more discrimination Cross city adaptation (CCA) ROAD</p>
+<p>前面三个更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</p>
+<h2 id="指标-5">指标</h2>
+<p>基础网络是FCN-8s，VGG19，能达到这个效果还是很好的 GTA5→Cityscapes NoAdapt 21.1 adapt 44.5 SYNTHIA→Cityscapes noadapt 17.4 adapt 41.2</p>
+<p>关于生成器部分的对比实验，为什么不使用生成器，单纯的对抗训练效果比不迁移还差呢？</p>
+<h2 id="训练">训练</h2>
+<p>图像缩放到<span class="math inline">\(480\times960\)</span>，Conv1的特征图大小是<span class="math inline">\(64\times339\times579\)</span>，所以随机噪声的大小是<span class="math inline">\(1\times\339\times579\)</span>，组成<span class="math inline">\(65\times\339\times579\)</span>，然后经过<span class="math inline">\(3\times3\)</span>的卷积，恢复成64通道。后面卷积都是64通道的。</p>
 <h1 id="class-balanced-self-training">Class-Balanced Self-Training</h1>
 <p><a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a> ECCV2018</p>
 <p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
@@ -783,16 +816,16 @@
 
 <p>图中的Reconstructed Source Image图像是不是有问题，内容应该和源域的图像是一致的才对啊。 将上图与Learning From Synthetic Data中的结构对比，</p>
 <p>Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learning [13]. ----<a href="#fn32" class="footnoteRef" id="fnref32"><sup>32</sup></a></p>
-<h2 id="相关工作-1">相关工作</h2>
+<h2 id="相关工作-2">相关工作</h2>
 <p>The representation is optimized using the standard minimax objective (Ganin &amp; Lempitsky, 2015), the symmetric confusion objective (Tzeng et al., 2015), or the inverted label objective (Tzeng et al., 2017). Each of these objectives is related to the literature on generative adversarial networks (Goodfellow et al., 2014) and follow-up work for improved training procedures for these networks (Salimans et al., 2016b; Arjovsky et al., 2017).</p>
 <p>特征空间的对齐-&gt;对抗式学习(discriminative representation space)-&gt;生成式模型(pixel-space)</p>
 <p>图像风格转换，其中怎么利用对抗式方法？ 源域图像，转换后的源域图像，和目标域的图像，三者之间的loss应该怎么用。源域图像和转换后的源域图像之间的内容应该是相似的，转换后的源域图像和目标域的图像之间的风格是相似的。</p>
 <p>非成对的图像转换</p>
-<h2 id="指标-4">指标</h2>
+<h2 id="指标-6">指标</h2>
 <p>GAT5 -&gt; Cityscapes FCN-8s pixel+feat 35.4</p>
 <h1 id="maximum-classifier-discrepancy">Maximum classifier discrepancy</h1>
 <p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> CVPR2018 <a href="https://github.com/mil-tokyo/MCD_DA" target="_blank" rel="external">代码</a></p>
-<h2 id="指标-5">指标</h2>
+<h2 id="指标-7">指标</h2>
 <p>GTA5-&gt;Cityscapes VGG-16 28.8</p>
 <h1 id="dual-channel-wise-alignment-networks">Dual Channel-wise Alignment Networks</h1>
 <p><a href="#fn34" class="footnoteRef" id="fnref34"><sup>34</sup></a> ECCV2018 代码未找到</p>
