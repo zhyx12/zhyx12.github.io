@@ -660,7 +660,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Updated at: 2018-09-12 17:10:58" itemprop="dateModified" datetime="2018-09-12T17:10:58+08:00">2018-09-12</time>
+                <time title="Updated at: 2018-09-17 22:24:25" itemprop="dateModified" datetime="2018-09-17T22:24:25+08:00">2018-09-17</time>
               
             
           </span>
@@ -766,8 +766,9 @@
 <h1 id="learning-to-adapt-structured-output-space">Learning to adapt structured output space</h1>
 <p><a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码,pytorch0.4</a></p>
 <p>考虑到语义分割是结构化的输出，包含了源域和目标域之间的相似性，在输出空间使用对抗学习。为了进一步增强适应模型，我们在不同的特征层的输出上进行对抗式域适应。</p>
-<p>首先是在输出的语义图（是在<span class="math inline">\(c\times h\times w\)</span>的特征图上，没有经过max操作）上进行对抗训练，也是structured的来源。其次，在多个特征图上进行，如conv5和conv4，使用这两层的输出预测语义分割结果，然后添加两个判别器。</p>
-<p>对抗损失的任务本身还是一个分类任务，所以对于两张语义分割的结果图最终还是输出一个值。</p>
+<p>首先是在输出的语义图（是在<span class="math inline">\(c\times h\times w\)</span>的特征图上，没有经过max操作）上进行对抗训练，也是structured的来源。其次，在多个特征图上进行，如conv5和conv4，进行对抗训练，并且使用这两层的输出构造语义分割损失。</p>
+<p>对抗损失的任务本身是一个分类任务，但是和前面一样，都是在特征图的不同位置上都进行对抗损失的计算。</p>
+<p>尽管论文中这样写 Given the segmentation softmax output <span class="math inline">\(P = G(I) ∈ R^H×W×C\)</span>, where C is the number of categories, we forward P to a fully-convolutional discriminator D using a cross-entropy loss <span class="math inline">\(L_d\)</span> for the two classes (i.e., source and target). 但是送到判别的输入不是softmax之后的值，而是softmax前面一步的值，虽然二者的大小关系是一致的。</p>
 <p>网络结构如下图  数据集： GTA5→Cityscapes， VGG16 35.0 ResNet101 42.4 SYNTHIA→Cityscapes VGG16 37.6 Resnet101 46.7</p>
 <h2 id="相关工作">相关工作</h2>
 <p><a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> introduce the task of domain adaptation on semantic seg- mentation by applying adversarial learning (i.e., DANN) in a fully-convolutional way on feature representations and additional category constraints similar to the constrained CNN[29]. <a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a> focus on adapting synthetic-to- real or cross-city images by adopting class-wise adversarial learning [3] or label transfer [3]. <a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a> Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learn- ing [13].</p>
@@ -783,7 +784,12 @@
 <h1 id="conditional-generative-adversarial-network-for-structured-domain-adaptation">Conditional Generative Adversarial Network for Structured Domain Adaptation</h1>
 <p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> CVPR2018 将GAN嵌入到FCN中实现域适应。具体地，学习一个条件生成器将生成图像的特征迁移到真实图像，判别器来判断是否是真实图像。对于每一个训练batch，条件生成器和判别器彼此竞争以生成更加真实的特征，然后FCN的参数更新来适应GAN的变化。</p>
 <p>有文献指出对于结构化的预测学习一个决策函数，标签空间是指数级别的。</p>
+<p>与Learning from synthetic data相比，首先，Learning from synthetic data还是基于共享特征空间的假设，特征提取器和GAN的生成器都是共享的，而这里源域图像额外经过了一个残差连接的结构，以实现虚拟特征到真实特征之间的转换。其次，Learning from synthetic中判别的对象在像素空间，而这里判别的对象在特征空间；最后，learning form synthetic中有虚拟到真实和真实到虚拟两种变换，判别器有领域内真假的判别和跨领域真实和生成之间的判别，这里只有虚拟到真实的变换，判别器只需要进行跨领域的判别。</p>
 <p>模型的网络结构如下图所示： <img src="/2018/09/05/DA-in-semantic-segmentation/conditional-GAN.JPG" title="基于条件GAN的分割域适应模型"></p>
+<p>文章在第一节末尾的写法和PixelDA类似： &gt; Our unsupervised pixel-level domain adaptation method (PixelDA) offers a number of advantages over existing approaches:</p>
+<blockquote>
+<p>Our unsupervised domain adaptation method offers the following advantages over existing approaches:</p>
+</blockquote>
 <h2 id="主要贡献">主要贡献</h2>
 <p>如何才能不依赖于源域和目标域共享一个特征空间上的预测函数？作者提出学习源域和目标域的特征空间的残差。在学习源域到目标之间的变换关系的同时，保留源域的语义空间结构。通过GAN来实现这样的变换。</p>
 <ul>
@@ -791,22 +797,29 @@
 <li>统一的网络结构：no more discrimination和curriculum更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</li>
 <li>数据增强：通过依赖于源域图像和随机噪声的生成器，可以创造更多的虚拟样本</li>
 </ul>
-<h2 id="相关工作-1">相关工作</h2>
-<p>FCN in the wild Curriculum domain adaptation (CDA) No more discrimination Cross city adaptation (CCA) ROAD</p>
+<h2 id="训练">训练</h2>
+<p>值得注意的是这里的判别器使用的是全连接网络，最终只输出一个概率值，而不是像其他方法一样在特征空间的多个位置上进行分类。</p>
+<p>在分割的分类网络的训练中，使用了adapted和non-adapted的特征图进行训练。单纯在adpted之后的网络上训练不稳定，需要多次初始化和学习率设置。 Notice that we train T with both adapted and non-adapted source feature maps. Training T solely on adapted feature maps leads to similar performance, but requires many runs with different initializations and learning rates due to the instability of the GAN. Indeed, without train- ing on source as well, the model is free to shift class assignments (e.g. class 1 becomes 2, class 2 becomes 3 etc.), meanwhile the objective function is still optimized. Similiar to PixelDA, training classifier T on both source and adapted images avoids this shift and greatly stabilizes training. ## 相关工作 FCN in the wild Curriculum domain adaptation (CDA) No more discrimination Cross city adaptation (CCA) ROAD</p>
 <p>前面三个更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</p>
 <h2 id="指标-5">指标</h2>
 <p>基础网络是FCN-8s，VGG19，能达到这个效果还是很好的 GTA5→Cityscapes NoAdapt 21.1 adapt 44.5 SYNTHIA→Cityscapes noadapt 17.4 adapt 41.2</p>
 <p>关于生成器部分的对比实验，为什么不使用生成器，单纯的对抗训练效果比不迁移还差呢？</p>
-<h2 id="训练">训练</h2>
+<h2 id="训练-1">训练</h2>
 <p>图像缩放到<span class="math inline">\(480\times960\)</span>，Conv1的特征图大小是<span class="math inline">\(64\times339\times579\)</span>，所以随机噪声的大小是<span class="math inline">\(1\times\339\times579\)</span>，组成<span class="math inline">\(65\times\339\times579\)</span>，然后经过<span class="math inline">\(3\times3\)</span>的卷积，恢复成64通道。后面卷积都是64通道的。</p>
 <h1 id="class-balanced-self-training">Class-Balanced Self-Training</h1>
-<p><a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a> ECCV2018</p>
+<p><a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a> ECCV2018 文章通过迭代的自学习流程来解决无监督的域适应问题，具体地，为目标样本生成伪标签，然后在用伪标签训练模型，如此不断迭代。在自学习的基础上，也提出了一个新的类别平衡自学习框架来克服伪标签生成过程中的逐渐变大的类别的主导地位，并且引入了空间先验来微调生成的标签。</p>
+<p>不同类别之间的迁移难度是不一样的，原因可能是因为视觉差异，源域中类别分布不平衡，以及源域分布和目标分布不一样。</p>
 <p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
 <h1 id="deep-activation-matching">deep activation matching</h1>
-<p><a href="#fn29" class="footnoteRef" id="fnref29"><sup>29</sup></a> ECCV2018</p>
-<p>数据集： GTA5 Cityscapes SYNTHIA Cityscapes</p>
+<p><a href="#fn29" class="footnoteRef" id="fnref29"><sup>29</sup></a> ECCV2018 通过对齐中间层的输出的分布来解决域适应问题。一方面，中间层的输入可以为网络的训练引入更多的约束。另一方面，匹配之后的激活之可以为下一层提供相似的输入，从而减轻covarite shift。使用了GAN来对齐激活值的分布。</p>
+<p>网络结果如下图所示： <img src="/2018/09/05/DA-in-semantic-segmentation/deep-activation-matching-framework.JPG" title="deep-activate-matching网络结果"> 文章中引入了以下约束来解决目标域没有标注信息的问题 - 标签分布：假设源域和目标域上的标签类别分布是相似的。 - 激活值分布：在中间层的输出上进行分布的匹配。 - 权重漂移：域适应问题通常假设源域的表示会携带目标域的信息，仅仅需要微调来提升目标域的表现。上述的损失函数不能捕捉这一逐渐的变化。通过引入源域网络和目标域网络的正则化项，保证适应的过程中权重变化不要太大。实验中使用的是2范数</p>
+<p>标签分布和激活值分布的匹配的损失函数是JS熵，使用了对抗训练的模式。</p>
+<p>数据集： GTA5 Cityscapes ERFNet 31.3 FCN8s-VGG16 32.6 Dilated Residual Network 40.2 SYNTHIA Cityscapes</p>
+<h2 id="训练-2">训练</h2>
+<p>图像1024x512 在Cityscapes的测试集（1525）上的结果 在语义分割任务里使用了Least Square GAN来稳定训练</p>
 <h1 id="effective-use-of-synthetic-data">Effective Use of Synthetic Data</h1>
-<p><a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a> ECCV2018 未找到</p>
+<p><a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a> ECCV2018 在训练过程中不需要看到任何的真实图片。文章的motivation是前景和背景类别的领域偏移的方式不同，因此需要分别对待。具体地，前景类别的形状通常是一样的，而纹理有差异，使用基于检测的方式来处理，而背景通常更加真实。</p>
+<p>作者比较了DeepLab模型和Mask R-CNN模型在生成数据上的前景物体的mIOU，Mask R-CNN模型的表现更好。因此，使用语义分割模型来处理背景，基于检测的方法来处理前景物体。</p>
 <p>数据集：GTAV，SYNTHIA，VIPER(proposed)，Cityscapes，CamVid</p>
 <h1 id="cycada">Cycada</h1>
 <p><a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a> ICML2018 引入了循环一致性的对抗式域适应，在像素层面和特征层面进行适配，不需要成对的图像。 <a href="https://github.com/jhoffman/cycada_release" target="_blank" rel="external">代码，pytorch</a> ## motivation Cycada通过循环一致性图像到图像的转换将特征级别（DANN,ADDA）和图像级别(Unsupervised cross-domain image generation ICLR2017,Unsupervised pixel-level domain adaptation with generative adversarial networks，CVPR2017)的对抗式域适应方法结合起来。使用重建损失（循环一致性损失）来保留局部的结构信息，使用语义损失来保持语义的一致性。</p>
@@ -816,7 +829,7 @@
 
 <p>图中的Reconstructed Source Image图像是不是有问题，内容应该和源域的图像是一致的才对啊。 将上图与Learning From Synthetic Data中的结构对比，</p>
 <p>Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learning [13]. ----<a href="#fn32" class="footnoteRef" id="fnref32"><sup>32</sup></a></p>
-<h2 id="相关工作-2">相关工作</h2>
+<h2 id="相关工作-1">相关工作</h2>
 <p>The representation is optimized using the standard minimax objective (Ganin &amp; Lempitsky, 2015), the symmetric confusion objective (Tzeng et al., 2015), or the inverted label objective (Tzeng et al., 2017). Each of these objectives is related to the literature on generative adversarial networks (Goodfellow et al., 2014) and follow-up work for improved training procedures for these networks (Salimans et al., 2016b; Arjovsky et al., 2017).</p>
 <p>特征空间的对齐-&gt;对抗式学习(discriminative representation space)-&gt;生成式模型(pixel-space)</p>
 <p>图像风格转换，其中怎么利用对抗式方法？ 源域图像，转换后的源域图像，和目标域的图像，三者之间的loss应该怎么用。源域图像和转换后的源域图像之间的内容应该是相似的，转换后的源域图像和目标域的图像之间的风格是相似的。</p>
@@ -824,18 +837,24 @@
 <h2 id="指标-6">指标</h2>
 <p>GAT5 -&gt; Cityscapes FCN-8s pixel+feat 35.4</p>
 <h1 id="maximum-classifier-discrepancy">Maximum classifier discrepancy</h1>
-<p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> CVPR2018 <a href="https://github.com/mil-tokyo/MCD_DA" target="_blank" rel="external">代码</a></p>
+<p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> CVPR2018，oral <a href="https://github.com/mil-tokyo/MCD_DA" target="_blank" rel="external">代码，pytorch</a> 许多对抗式的方法训练一个领域分类网络来区分特征是来自于源域还是目标域，或者训练一个生成器来模仿判别器。这些方法存在两个问题，首先领域分类器仅仅试图区分特征来自于哪里，并没有考虑任务相关的类别之间的决策边界，使得生成器产生的样本生成类别边界附近的有歧义的样本。其次，这些方法期望完全的匹配不同领域之间的特征分布，但领域的属性不同，导致这一目标很困难。</p>
+<p>为了解决这些问题，引入了一种新方法，利用任务相关的决策边界来对齐源域和目标域之间的分布。我们提出最大化两个分类器输出的差异来检测远离源域支持面的目标域中的样本（有使分类器学到更紧致的界的效果？）。特征生成器用来学习生成目标域的特征来最小化分类器之间的差异（使得目标域的特征趋近于源域？）。</p>
 <h2 id="指标-7">指标</h2>
 <p>GTA5-&gt;Cityscapes VGG-16 28.8</p>
 <h1 id="dual-channel-wise-alignment-networks">Dual Channel-wise Alignment Networks</h1>
-<p><a href="#fn34" class="footnoteRef" id="fnref34"><sup>34</sup></a> ECCV2018 代码未找到</p>
+<p><a href="#fn34" class="footnoteRef" id="fnref34"><sup>34</sup></a> ECCV2018 Dual Channel-wise Alignment Networks是一个在像素级别和特征级别减少领域偏移的网络。为了利用CNN特征的每一个通道的统计数据，在基于通道的特征上对齐，在图像生成器和分割网络上都保留了空间结构和语义信息。具体地，给定了一副源域图像和无标注的目标域图像，生成器在线地合成外观类似于目标域的图像，分割网络进一步地微调高级特征以生成最后的语义图。和最近的依靠对抗训练的网络不同，本文的框架更轻量且容易训练。</p>
+<p>网络结构如下图所示： </p>
+<p>CNN特征图的每一个通道的均值和方差可以看做体现了图像的风格信息，因此，可以通过简单的实例归一化步骤来实现特征图的逐通道的对齐，从而实现快速的风格转换。实际使用了adaptive instance normalization<a href="#fn35" class="footnoteRef" id="fnref35"><sup>35</sup></a>来匹配均值和方差，将源域的多个特征图转换到和和目标域的特征图的分布一致。之后再对特征解码生成新的图像，新的图像和原始的源域图像之间进行内容（欧式距离）和风格（Gram矩阵）的约束。</p>
+<p>同样地，在语义分割网络中也使用了逐通道的对齐。具体地，将语义分割模型分成编码器和解码器，在编码器的输出上应用一次逐通道的对齐，然后送入解码器。</p>
+<h2 id="指标-8">指标</h2>
+<p>GTA5 FCN8s-VGG16 36.2/27.8 FCN8s-ResNet101 38.5/29.8 PSPNet 41.7/33.3</p>
+<h2 id="实验结果分析">实验结果分析</h2>
 <h1 id="fcan">FCAN</h1>
 <p>CVRP2018 In this paper, we facilitate this issue from the perspectives of both visual appearance-level and representation-level do- main adaptation. The former adapts source-domain images to appear as if drawn from the “style” in the target domain and the latter attempts to learn domain-invariant representations.</p>
 <p>在对抗损失的前面增加了一个风格迁移的网络，对抗的分类器中引入了ASPP</p>
 <p>整体的网络结构如下图 <img src="/2018/09/05/DA-in-semantic-segmentation/FCAN-framework.JPG" title="FCAN网络结构"></p>
 <p>风格迁移网络AAN（Appearance Adaptation Network）的结构 <img src="/2018/09/05/DA-in-semantic-segmentation/FCAN-AAN-framework.JPG" title="AAN的网络结构"></p>
 <p>与Learning From Synthetic Data，这里虽然也有fake source,fake target，但是只用用在了领域之间的对抗，而没有真假的对抗。</p>
-<h2 id="其他">其他</h2>
 <div class="footnotes">
 <hr>
 <ol>
@@ -873,6 +892,7 @@
 <li id="fn32"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref32">↩</a></p></li>
 <li id="fn33"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref33">↩</a></p></li>
 <li id="fn34"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref34">↩</a></p></li>
+<li id="fn35"><p>Huang, X., Belongie, S.: Arbitrary style transfer in real-time with adaptive instance normalization. In: ICCV. (2017)<a href="#fnref35">↩</a></p></li>
 </ol>
 </div>
 
