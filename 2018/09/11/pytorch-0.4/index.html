@@ -115,7 +115,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/09/11/pytorch-0.4/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数">
-<meta property="og:updated_time" content="2018-09-11T11:16:00.186Z">
+<meta property="og:updated_time" content="2018-09-26T02:45:47.947Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pytorch 0.4迁移指南">
 <meta name="twitter:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数">
@@ -322,12 +322,24 @@
                 
               
 
-              <time title="Post created: 2018-09-11 19:11:46 / Updated at: 19:16:00" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
+              <time title="Post created: 2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-09-26 10:45:47" itemprop="dateModified" datetime="2018-09-26T10:45:47+08:00">2018-09-26</time>
               
             
           </span>
@@ -399,6 +411,10 @@
 <p>之前版本中常用的计算多个batch的平均loss，用于输出的代码 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">total_loss += loss.data[0]</span><br></pre></td></tr></table></figure></p>
 <p>现在由于 loss是一个scalar，维度是0，所以[0]是会出错的，应该改成 loss.item() <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">total_loss += loss.item()</span><br></pre></td></tr></table></figure></p>
 <p><strong>Note:</strong> item()方法只针对包含一个元素的tensor适用</p>
+<h2 id="nn">nn</h2>
+<p>之前的损失函数中有reduce和size_average两个参数，bool类型，控制一个batch中多个样本的loss计算方式。分为三种情况。 - reduce=False, 这时会忽略size_average的设置，为每个样本返回计算一个loss - reduce=True, size_average=False, 多个样本之间的loss是相加的关系 - reduct=True, size_average=True, 多个样本之间的loss去平均</p>
+<p>其中，第二条和第三条的差别在于loss的值差了<span class="math inline">\(1/batch\)</span></p>
+<p>现在使用，reduction参数（str），取值有三种'none', ‘sum’,'elementwise_mean'对应上面的三种情况</p>
 
       
     </div>
@@ -583,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本迁移"><span class="nav-number">1.</span> <span class="nav-text">版本迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动求导"><span class="nav-number">2.</span> <span class="nav-text">自动求导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">旧版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和optimizer的关系"><span class="nav-number">2.1.1.</span> <span class="nav-text">和optimizer的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本"><span class="nav-number">2.2.</span> <span class="nav-text">新版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data属性和detech"><span class="nav-number">2.2.1.</span> <span class="nav-text">.data属性和detech()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss累加"><span class="nav-number">2.2.2.</span> <span class="nav-text">loss累加</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本迁移"><span class="nav-number">1.</span> <span class="nav-text">版本迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动求导"><span class="nav-number">2.</span> <span class="nav-text">自动求导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">旧版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和optimizer的关系"><span class="nav-number">2.1.1.</span> <span class="nav-text">和optimizer的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本"><span class="nav-number">2.2.</span> <span class="nav-text">新版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data属性和detech"><span class="nav-number">2.2.1.</span> <span class="nav-text">.data属性和detech()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss累加"><span class="nav-number">2.2.2.</span> <span class="nav-text">loss累加</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn"><span class="nav-number">2.3.</span> <span class="nav-text">nn</span></a></li></ol></li></ol></div>
             
 
           </div>
