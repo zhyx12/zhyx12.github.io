@@ -276,6 +276,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/Package_Relative_Import_In_Python/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/15/Package_Relative_Import_In_Python/" itemprop="url">
+                  python中的包导入
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-10-15 11:27:17 / Updated at: 11:27:19" itemprop="dateCreated datePublished" datetime="2018-10-15T11:27:17+08:00">2018-10-15</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="python中的包导入">python中的包导入</h1>
+<h2 id="概念">概念</h2>
+<p>python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。</p>
+<p>绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两层，'insane was the word Guido used'）。 Python2.X在任何时候使用的是先相对再绝对的搜索机制，而在语法和实际执行上有严格的对应关系，默认的搜索（一般的import语法和from语法）使用的是绝对导入，而要指定相对搜索，也就是只搜索相对路径上的目录，从语法上来说，就是from . import *** 或者是 from .*** , 具体地，使用from语句而且由点开始（leading dot）。</p>
+<p>在Python3.X中，import *** （import语句）和 from *** import *** （from语句）是有区别的，import只语句支持绝对导入，不支持相对导入。from即支持绝对导入，也支持相对导入。</p>
+<p>在python2.X中，使用下面的包，可以实现和Python3.X一样的导入机制 from <strong>future</strong> import absolute_import</p>
+<p>相对包导入的实现使用的是文件的__name__属性，所以对于直接执行的文件来说，不能使用相对导入，从下面第二条中Python3.6版本的报错信息可以看出来。</p>
+<p>python -m *** 的执行方式，应该是将要执行的文件作为被调用的模块，而不是顶层文件，-m后接的文件可以不加.py，穿过多级目录的文件中间使用.(dot)来连接，而不是平台相关的'/'或者''</p>
+<h2 id="what-you-cant-do">what you can't do</h2>
+<ul>
+<li><p><strong>在import语句（区别于from语句）中使用dot（相对导入）</strong> 原因：规则，只有from语句才能使用相对导入，详见<a href="https://www.python.org/dev/peps/pep-0328/#rationale-for-relative-imports" target="_blank" rel="external">PEP328</a></p></li>
+<li><p><strong>直接执行的python文件中，出现相对导入。</strong> python2.7的错误如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: Attempted relative import in non-package</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+<p>python3.6的错误如下，或见<a href="https://stackoverflow.com/questions/41816973/modulenotfounderror-what-does-it-mean-main-is-not-a-package" target="_blank" rel="external">stackoverflow</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ModuleNotFoundError: No module named &apos;__main__.da_seg_dataset&apos;; &apos;__main__&apos; is not a package</span><br></pre></td></tr></table></figure>
+<p>原因： 直接执行时，执行文件作为一个命名空间的__name__属性是&quot;<strong>main</strong>&quot;,这样就不能保存路径信息，从而无法确定搜索路径。 常出现的情况是调试大的project中的子文件夹下的文件时，如果需要import该子文件夹下的其他文件时，from语句通常是dot开头(这时也可以使用从根目录开始（只要根目录在sys.path里，比如顶层）的路径，不能使用)</p>
+<ul>
+<li>随意使用 from ..*** import *** 由于相对包导入使用了__name__属性来获取路径，所以使用两个点来导入跨目录的文件时，需要被执行的顶层文件的__name__属性，至少记录了该文件上面两层的父目录才行。 错误如下，或者见<a href="https://stackoverflow.com/questions/30669474/beyond-top-level-package-error-in-relative-import" target="_blank" rel="external">stackoverflow</a>： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Attempted relative import beyond toplevel package</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="what-you-should-do">what you should do</h2>
+<p>Python3中导入同一个文件夹下的文件，且不在sys.path里，<strong>必须使用</strong>相对导入的语法，否则会报错。而在Python2.X中由于&quot;先相对，再绝对的方式&quot;，可以不使用相对导入语法。但是，如果是只想使用绝对导入而不使用相对导入（只想使用sys.path下的包，而不使用本路径下的包）时，Python2.X就无法实现这一功能了。</p>
+<h2 id="whatw-now">what'w now</h2>
+<p>了解python标准库中的<a href="">importlib</a> 阅读<a href="https://docs.python.org/3/reference/import.html" target="_blank" rel="external">import system</a></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.python.org/dev/peps/pep-0328/#rationale-for-relative-imports" target="_blank" rel="external">PEP328</a> <a href="https://stackoverflow.com/questions/72852/how-to-do-relative-imports-in-python/73149#73149" target="_blank" rel="external">how-to-do-relative-imports-in-python</a> <a href="http://www.dsf.unica.it/~fiore/LearningPython.pdf" target="_blank" rel="external">learning python 5th, Chapter 24. Module Packages</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/11/pytorch-0.4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1948,198 +2112,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/12/image-to-image-translation-conditional-gan/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/12/image-to-image-translation-conditional-gan/" itemprop="url">
-                  Image-to-Image Translation with Conditional Adversarial Networks
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-
-              
-                
-              
-
-              <time title="Post created: 2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Updated at: 2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="思想">思想</h1>
-<p>利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。</p>
-<p>生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结构进行约束。</p>
-<h1 id="方法">方法</h1>
-<h2 id="网络结构">网络结构</h2>
-<img src="/2018/08/12/image-to-image-translation-conditional-gan/pixel2pixel-network.JPG" title="network of pixel2piexl">
-<p>随机噪声没有画出来</p>
-<p>判别器判别的是{real_edge, real_photo} 和 {real_edge, fake_photo}的真假，这也是本文训练需要成对数据的原因。</p>
-<h2 id="目标函数">目标函数</h2>
-<p>使用条件GAN</p>
-<p>在<strong>生成器</strong>网络上施加一个传统的loss函数，这里使用了L1 loss， L1会比L2更加清晰一些。目的是使生成器的输出和target domain的真实样本更加相似，可以看做是一个<strong>reconstruction loss</strong>。有了成对的数据，单纯使用Reconstruction loss也是可以训练得到结果的。实验中比较了只使用L1 loss的情况。</p>
-<p>如果没有了噪声项，网络同样也可以学出来一个映射，但是这样会产生决定性的结果，从而不能够匹配除了delta函数之外的其他函数。但是作者初始的实验中，发现加入随机噪声并没有用，生成器还是会忽略随机噪声，这和<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>的观察一样。因此，在最终的模型中，在生成器的不同层添加了dropout（训练和测试时都用）。尽管如此，在输出的图像中，还是只观察到了很小的随机性。</p>
-<h2 id="生成网络">生成网络</h2>
-<p>image到image的转换是高分辨率的输入图像到高分辨率的输入图像的过程，图像之间的外观不同，但是图像的内在结构是一样的。 使用U-Net结构，带有skip连接，可以包含更多的底层信息。在图像着色的应用中，输入和输出共享了边缘的位置。</p>
-<h2 id="markovian-discriminatorpatchgan">Markovian discriminator(PatchGAN)</h2>
-<p>L1已经足够保证图像外观在低频的相似性了。</p>
-<p>在高频，重点关注图像局部的结构。因此，针对高频的相似性，仅仅在图像patch级别做判断。</p>
-<p>实验证明，patch的大小可以取得比全图小很多，同时图像具有很高的质量。</p>
-<p>理论分析： 这样的判别器有效地将图像建模成一个马尔科夫随机场，假设不同patch内的像素是独立的。这一观点在PatchGAN<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>中进行了探索，也是其他领域如纹理生成，图像风格迁移<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a>等的常识。</p>
-<h2 id="优化和推断">优化和推断</h2>
-<p>在测试的时候比较特殊，也使用了dropout。</p>
-<p>BN层的参数使用的是测试batch的数据，而不是训练集上累计得到的数据。</p>
-<p>当 batch size设为1的时候，就变成了实例归一化<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a>，这在图像生成任务上证明是有效的，实验中采用的batchsize在1到10之间。</p>
-<h1 id="实验">实验</h1>
-<h2 id="评价指标">评价指标</h2>
-<p><strong>FCN-score</strong>: 利用在数据集上训练好的FCN-8s模型，对由标签生成的图像进行语义分割的任务，看语义分割的指标，生成的图像越真实，语义分割的各项指标也应该越高。（如果是由图像生成标签，那么应该可以直接计算指标，原文给的Table5是labels到photo的双向箭头，不知道是不是两个任务都考虑了？）</p>
-<h2 id="color">color</h2>
-<p>L1 loss生成的图像，颜色分布最窄。加入cGAN可以拓宽颜色分布。</p>
-<h2 id="pixelgan-patchgan-imagegan">PixelGAN PatchGAN ImageGAN</h2>
-<p>改变判别器的patch大小，会有不同的效果。</p>
-<p>1x1的patch对于是使图像锐化没有效果，但是可以增大颜色的分布。</p>
-<div class="footnotes">
-<hr>
-<ol>
-<li id="fn1"><p>M. Mathieu, C. Couprie, and Y. LeCun. Deep multi-scale video prediction beyond mean square error. ICLR, 2016. PatchGAN<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>C. Li and M. Wand. Precomputed real-time texture synthesis with markovian generative adversarial networks. ECCV, 2016.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>Image style transfer using convolutional neural networks. CVPR 2016<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>Combining markov random fields and convolutional neural networks for image synthesis. CVPR 2016<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>D. Ulyanov, A. Vedaldi, and V. Lempitsky. Instance normal- ization: The missing ingredient for fast stylization. arXiv preprint arXiv:1607.08022, 2016<a href="#fnref5">↩</a></p></li>
-</ol>
-</div>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2187,7 +2159,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -2224,7 +2196,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
@@ -2422,9 +2396,9 @@
   
     
       
-        
-      
     
+      
+        
       
     
       
