@@ -122,7 +122,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/effective-use-framework.JPG">
 <meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/FCAN-framework.JPG">
 <meta property="og:image" content="http://yoursite.com/2018/09/05/DA-in-semantic-segmentation/FCAN-AAN-framework.JPG">
-<meta property="og:updated_time" content="2018-10-10T14:57:47.483Z">
+<meta property="og:updated_time" content="2018-10-15T08:20:05.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DA in Semantic Segmentation">
 <meta name="twitter:description" content="数据集 Cityscapes 34个类别 图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉 SYNTHIA 有13个类别 对于season-&amp;gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。">
@@ -347,7 +347,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Updated at: 2018-10-10 22:57:47" itemprop="dateModified" datetime="2018-10-10T22:57:47+08:00">2018-10-10</time>
+                <time title="Updated at: 2018-10-15 16:20:05" itemprop="dateModified" datetime="2018-10-15T16:20:05+08:00">2018-10-15</time>
               
             
           </span>
@@ -487,7 +487,7 @@
 </ul>
 <h2 id="训练">训练</h2>
 <p>值得注意的是这里的判别器使用的是全连接网络，最终只输出一个概率值，而不是像其他方法一样在特征空间的多个位置上进行分类。</p>
-<p>在分割网络的训练中，使用了adapted和non-adapted的特征图进行训练。单纯在adpted之后的网络上训练不稳定，需要多次初始化和学习率设置。</p>
+<p>在分割网络的训练中，使用了adapted和non-adapted的特征图进行训练。单纯在adpted之后的网络上训练不稳定，需要多次初始化和学习率设置。和PixelDA中的说法是一样的。</p>
 <p>Notice that we train T with both adapted and non-adapted source feature maps. Training T solely on adapted feature maps leads to similar performance, but requires many runs with different initializations and learning rates due to the instability of the GAN. Indeed, without train- ing on source as well, the model is free to shift class assignments (e.g. class 1 becomes 2, class 2 becomes 3 etc.), meanwhile the objective function is still optimized. Similiar to PixelDA, training classifier T on both source and adapted images avoids this shift and greatly stabilizes training. ## 相关工作 FCN in the wild Curriculum domain adaptation (CDA) No more discrimination Cross city adaptation (CCA) ROAD</p>
 <p>前面三个更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</p>
 <h2 id="指标-5">指标</h2>
@@ -719,7 +719,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>

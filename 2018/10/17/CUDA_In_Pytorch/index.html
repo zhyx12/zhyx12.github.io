@@ -108,26 +108,24 @@
 
 
 
-  <meta name="description" content="思路 本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN. 作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像\(x_1\)和\(x_2\)，存在一个共享的隐空间编码\(z\">
-<meta name="keywords" content="GAN, image-to-image translation">
+  <meta name="description" content="主要讨论模型并行化以及与DataParallel的配合 CUDA semantics torch.cuda用来设置和运行CUDA相关的操作。跟踪当前选择的GPU，所有被创建的CUDA tensor都会位于该GPU上。可以通过torch.cuda.device来控制上下文，改变当前工作的GPU。 一旦tensor被分配到GPU上，你再对它进行操作时就不需要考虑哪一块了，操作的结果的位置始终都和">
+<meta name="keywords" content="pytorch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unsupervised Image-to-Image Translation Networks(UNIT)">
-<meta property="og:url" content="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/index.html">
+<meta property="og:title" content="Pytorch中的CUDA">
+<meta property="og:url" content="http://yoursite.com/2018/10/17/CUDA_In_Pytorch/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="思路 本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN. 作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像\(x_1\)和\(x_2\)，存在一个共享的隐空间编码\(z\">
-<meta property="og:image" content="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG">
-<meta property="og:updated_time" content="2018-08-13T14:33:15.536Z">
+<meta property="og:description" content="主要讨论模型并行化以及与DataParallel的配合 CUDA semantics torch.cuda用来设置和运行CUDA相关的操作。跟踪当前选择的GPU，所有被创建的CUDA tensor都会位于该GPU上。可以通过torch.cuda.device来控制上下文，改变当前工作的GPU。 一旦tensor被分配到GPU上，你再对它进行操作时就不需要考虑哪一块了，操作的结果的位置始终都和">
+<meta property="og:updated_time" content="2018-10-17T12:12:22.313Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Unsupervised Image-to-Image Translation Networks(UNIT)">
-<meta name="twitter:description" content="思路 本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN. 作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像\(x_1\)和\(x_2\)，存在一个共享的隐空间编码\(z\">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG">
+<meta name="twitter:title" content="Pytorch中的CUDA">
+<meta name="twitter:description" content="主要讨论模型并行化以及与DataParallel的配合 CUDA semantics torch.cuda用来设置和运行CUDA相关的操作。跟踪当前选择的GPU，所有被创建的CUDA tensor都会位于该GPU上。可以通过torch.cuda.device来控制上下文，改变当前工作的GPU。 一旦tensor被分配到GPU上，你再对它进行操作时就不需要考虑哪一块了，操作的结果的位置始终都和">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/17/CUDA_In_Pytorch/"/>
 
 
 
@@ -137,7 +135,7 @@
   };
 </script>
 
-  <title>Unsupervised Image-to-Image Translation Networks(UNIT) | Hexo</title>
+  <title>Pytorch中的CUDA | Hexo</title>
   
 
 
@@ -282,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/17/CUDA_In_Pytorch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -299,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Unsupervised Image-to-Image Translation Networks(UNIT)
+          <h1 class="post-title" itemprop="name headline">Pytorch中的CUDA
               
             
           </h1>
@@ -324,7 +322,7 @@
                 
               
 
-              <time title="Post created: 2018-08-13 09:04:25 / Updated at: 22:33:15" itemprop="dateCreated datePublished" datetime="2018-08-13T09:04:25+08:00">2018-08-13</time>
+              <time title="Post created: 2018-10-17 20:12:20 / Updated at: 20:12:22" itemprop="dateCreated datePublished" datetime="2018-10-17T20:12:20+08:00">2018-10-17</time>
             
 
             
@@ -362,20 +360,18 @@
       
 
       
-        <h1 id="思路">思路</h1>
-<p>本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布<span class="math inline">\(P_{x1}\)</span>和<span class="math inline">\(P_{x2}\)</span>，而不知道联合分布<span class="math inline">\(P_{x1,x2}\)</span>,和作者的上一篇Coupled GAN<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>一样. 上一篇论文的介绍看这里<a href="./coupled-gan.md">Coupled GAN</a>.</p>
-<p>作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>，存在一个共享的隐空间编码<span class="math inline">\(z\)</span>，既可以由图像计算编码<span class="math inline">\(z\)</span>，也可以从<span class="math inline">\(z\)</span>恢复两幅图像。Coupled GAN中两个生成器使用同一个随机变量作为输入，从而生成各自领域的图像。作者将生成器作为解码器，随机变量是隐空间的编码，在生成器前加入解码器。模型的结构如下： <img src="/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG" title="network architecture of UNIT"></p>
-<p>正因为有了同一个隐空间的表示，所以<span class="math inline">\(G_1(E_2(G_2(E_1(x_1))))\)</span>的输出就是<span class="math inline">\(x_1\)</span>，同理<span class="math inline">\(x_2\)</span>也可以实现cycle consistency，类似于<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>。但是由cycle consistency并不能推出这里的结构。</p>
-<h1 id="代码">代码</h1>
-<p>代码在<a href="https://github.com/mingyuliutw/unit" target="_blank" rel="external">这里</a></p>
-<div class="footnotes">
-<hr>
-<ol>
-<li id="fn1"><p>M.-Y. Liu and O. Tuzel. Coupled generative adversarial networks. Advances in Neural Information Processing Systems, 2016.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>T. Kim, M. Cha, H. Kim, J. Lee, and J. Kim. Learning to discover cross-domain relations with generative adversarial networks. International Conference on Machine Learning, 2017.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>J.-Y. Zhu, T. Park, P. Isola, and A. A. Efros. Unpaired image-to-image translation using cycle-consistent adversarial networks. International Conference on Computer Vision, 2017.<a href="#fnref3">↩</a></p></li>
-</ol>
-</div>
+        <p>主要讨论模型并行化以及与DataParallel的配合</p>
+<h1 id="cuda-semantics">CUDA semantics</h1>
+<p>torch.cuda用来设置和运行CUDA相关的操作。跟踪当前选择的GPU，所有被创建的CUDA tensor都会位于该GPU上。可以通过torch.cuda.device来控制上下文，改变当前工作的GPU。</p>
+<p>一旦tensor被分配到GPU上，你再对它进行操作时就不需要考虑哪一块了，操作的结果的位置始终都和tensor所处的GPU一致。</p>
+<p>跨GPU的操作通常是不激活的，除非使用copy_()或者其他拷贝类似的函数比如to()和cuda()。</p>
+<h2 id="dataparallel下的数据和模型">DataParallel下的数据和模型</h2>
+<p>DataParallel创建的时候需要model，这里的要求是模型在送入DataParallel之前位于device_ids[0]上，对于模型的输入来说，在CPU和GPU上都可以（是的，在CPU上也可以，但是没有DataParallel包装的模型还是需要将data迁移到GPU上再做前向传播，应该是DataParallel中做了从CPU到GPU的迁移），在实际前向传播的时候，会将一个batch内的数据在dimension0上split，然后分配到不同的GPU上。如果手动放在GPU的话，任何GPU都可以，GPU上的移动是peer-to-peer的，不会经过CPU，当然，还是位于模型所处的几个GPU比较好，不会浪费其他GPU的空间。</p>
+<p>我们采用如下的代码进行测试： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line">vgg16_model = models.vgg16(pretrained=<span class="keyword">False</span>)</span><br><span class="line">vgg16_model = vgg16_model.to(<span class="string">'cuda:0'</span>) <span class="comment"># [1]</span></span><br><span class="line">vgg16_model = nn.DataParallel(vgg16_model, device_ids=[<span class="number">3</span>, <span class="number">4</span>])  <span class="comment"># [2]</span></span><br><span class="line">print(<span class="string">'model parallel done!!!!'</span>)</span><br><span class="line"></span><br><span class="line">input = torch.zeros((<span class="number">4</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">input = input.to(<span class="string">'cuda:3'</span>) <span class="comment"># [3]</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">	out = vgg16_model(input) [<span class="number">4</span>]</span><br><span class="line">	current_device = torch.cuda.current_device()</span><br><span class="line">	print(<span class="string">'current devices is &#123;&#125;'</span>.format(current_device))</span><br></pre></td></tr></table></figure></p>
+<p>如果vgg16_model在传入DataParallel之前位于其他GPU上，会报如下的错，出错的位置在[4]： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: all tensors must be on devices[<span class="number">0</span>]</span><br></pre></td></tr></table></figure></p>
+<p>如果vgg16_model在传入DataParallel之前位于其他CPU上，会报如下的错，出错的位置也在[4]： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: Broadcast function <span class="keyword">not</span> implemented <span class="keyword">for</span> CPU tensors</span><br></pre></td></tr></table></figure></p>
+<p>model在传入之前，需要严格位于device_ids[0]上，如果device_ids=[4,3]，那么vgg16_model就需要to('cuda:4')</p>
+<p>另外，执行完[2]处的时候并不会在指定的GPU上分配显存，而是等到模型前向传播的时候才分配。可以通过debug模式和nvidia-smi配合来观察。</p>
 
       
     </div>
@@ -396,7 +392,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/GAN-image-to-image-translation/" rel="tag"># GAN, image-to-image translation</a>
+            <a href="/tags/pytorch/" rel="tag"># pytorch</a>
           
         </div>
       
@@ -409,8 +405,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/12/coupled-gan/" rel="next" title="Coupled GAN">
-                <i class="fa fa-chevron-left"></i> Coupled GAN
+              <a href="/2018/10/15/Package_Relative_Import_In_Python/" rel="next" title="python中的包导入">
+                <i class="fa fa-chevron-left"></i> python中的包导入
               </a>
             
           </div>
@@ -418,10 +414,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/15/adversarial-discriminative-domain-adaption/" rel="prev" title="Adversarial Discriminative Domain Adaption">
-                Adversarial Discriminative Domain Adaption <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -566,7 +558,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#cuda-semantics"><span class="nav-number">1.</span> <span class="nav-text">CUDA semantics</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dataparallel下的数据和模型"><span class="nav-number">1.1.</span> <span class="nav-text">DataParallel下的数据和模型</span></a></li></ol></li></ol></div>
             
 
           </div>
