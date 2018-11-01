@@ -109,18 +109,18 @@
 
 
   <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:title" content="OnTheMoon">
+<meta property="og:url" content="http://zhyx12.top/index.html">
+<meta property="og:site_name" content="OnTheMoon">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="OnTheMoon">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://zhyx12.top/"/>
 
 
 
@@ -130,7 +130,7 @@
   };
 </script>
 
-  <title>Hexo</title>
+  <title>OnTheMoon</title>
   
 
 
@@ -189,7 +189,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">OnTheMoon</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -276,16 +276,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/adversarial-discriminative-domain-adaptation(ADDA)/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/high-resolution-image-synthesis-and-semantic-manipulation-with-conditional-gans/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -295,8 +295,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/01/adversarial-discriminative-domain-adaptation(ADDA)/" itemprop="url">
-                  Adversarial Discriminative Domain Adaptation(ADDA)
+                <a class="post-title-link" href="/2018/11/01/high-resolution-image-synthesis-and-semantic-manipulation-with-conditional-gans/" itemprop="url">
+                  High-Resolution Image Synthesis and Semantic Manipulation with Conditional GANs
                 </a>
               
             
@@ -322,7 +322,7 @@
                 
               
 
-              <time title="Post created: 2018-11-01 16:48:49" itemprop="dateCreated datePublished" datetime="2018-11-01T16:48:49+08:00">2018-11-01</time>
+              <time title="Post created: 2018-11-01 16:58:06" itemprop="dateCreated datePublished" datetime="2018-11-01T16:58:06+08:00">2018-11-01</time>
             
 
             
@@ -358,8 +358,7 @@
       
         
           
-            <h1 id="思路">思路</h1>
-<h1 id="方法">方法</h1>
+            
 
           
         
@@ -413,16 +412,157 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/openset_da/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/best-practice-in-research-coding/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/01/best-practice-in-research-coding/" itemprop="url">
+                  Best practice with pytorch in cluster
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-11-01 16:56:08" itemprop="dateCreated datePublished" datetime="2018-11-01T16:56:08+08:00">2018-11-01</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="集群使用指南">集群使用指南</h1>
+<h2 id="文件组织方式">文件组织方式</h2>
+<p>沿用了一开始的个人设置，我把所有的项目都放在~/PycharmProjects/下面，</p>
+<h2 id="shell文件">shell文件</h2>
+<p>在shell文件中，都可以采用如下的模板，首先集群中的home是/ghome/，和一般的服务器不同，其次，集群中使用docker之提交任务之后，默认的用户目录发生了改变，这样之前约定的路径都会产生问题，因此，可以屏蔽掉这些区别，直接cd到项目目录。docker中的HOME环境变量是&quot;/&quot;，也需要切换到/ghome/***</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line">if [ $HOME == '/' ]; then</span><br><span class="line">    export HOME='/ghome/zhangyx'</span><br><span class="line">fi</span><br><span class="line">cd $HOME'/PycharmProjects/semseg'</span><br><span class="line">python ***.py</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/openset_da/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -551,16 +691,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/lr_scheduler_in_pytorch/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/lr_scheduler_in_pytorch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -696,16 +836,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/cgan_for_structured_da_ reimplementation/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/cgan_for_structured_da_ reimplementation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -839,16 +979,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/01/residual_parameter_transfer/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/residual_parameter_transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -979,16 +1119,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/25/AdaBN/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/25/AdaBN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -1025,12 +1165,24 @@
                 
               
 
-              <time title="Post created: 2018-10-25 16:08:54 / Updated at: 16:23:22" itemprop="dateCreated datePublished" datetime="2018-10-25T16:08:54+08:00">2018-10-25</time>
+              <time title="Post created: 2018-10-25 16:08:54" itemprop="dateCreated datePublished" datetime="2018-10-25T16:08:54+08:00">2018-10-25</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-11-01 16:58:27" itemprop="dateModified" datetime="2018-11-01T16:58:27+08:00">2018-11-01</time>
               
             
           </span>
@@ -1071,6 +1223,7 @@
 <p>算法流程如下： <img src="/2018/10/25/AdaBN/adabn_algorithm.JPG" title="AdaBN算法"></p>
 <p>REVISITING BATCH NORMALIZATION FOR PRACTICAL DOMAIN ADAPTATION.</p>
 <p>Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization</p>
+<p>Texture Networks: Feed-forward Synthesis of Textures and Stylized Images</p>
 
           
         
@@ -1124,16 +1277,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/17/CUDA_In_Pytorch/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/17/CUDA_In_Pytorch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -1312,16 +1465,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/Package_Relative_Import_In_Python/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/15/Package_Relative_Import_In_Python/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -1358,12 +1511,24 @@
                 
               
 
-              <time title="Post created: 2018-10-15 11:27:17 / Updated at: 11:29:50" itemprop="dateCreated datePublished" datetime="2018-10-15T11:27:17+08:00">2018-10-15</time>
+              <time title="Post created: 2018-10-15 11:27:17" itemprop="dateCreated datePublished" datetime="2018-10-15T11:27:17+08:00">2018-10-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Updated at: 2018-11-01 16:56:45" itemprop="dateModified" datetime="2018-11-01T16:56:45+08:00">2018-11-01</time>
               
             
           </span>
@@ -1480,16 +1645,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/11/pytorch-0.4/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/11/pytorch-0.4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -1670,161 +1835,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/05/distribution-adaptation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/05/distribution-adaptation/" itemprop="url">
-                  Distribution Adaptation
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-
-              
-                
-              
-
-              <time title="Post created: 2018-09-05 17:14:45" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:45+08:00">2018-09-05</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Updated at: 2018-11-01 16:49:32" itemprop="dateModified" datetime="2018-11-01T16:49:32+08:00">2018-11-01</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="方法">方法</h1>
-<p>Distributing Adaptation是数据分布自适应，这里主要介绍DA中的数据分布自适用的浅层方法。</p>
-<p>分为边缘分布自适应，条件分布自适应和联合分布自适应。其中边缘分布自适应是最早也是最基础的方法。</p>
-<p>TCA是经典的边缘分布自适应方法，使用了MMD准则作为领域（分布）之间距离的度量方法。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1861,7 +1871,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-author-name" itemprop="name">Vincent Zhang</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -1872,7 +1882,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -1915,7 +1925,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
@@ -1959,7 +1973,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">Vincent Zhang</span>
 
   
 
@@ -2113,9 +2127,9 @@
   
     
       
-        
-      
     
+      
+        
       
     
       

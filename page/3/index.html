@@ -109,18 +109,18 @@
 
 
   <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:title" content="OnTheMoon">
+<meta property="og:url" content="http://zhyx12.top/page/3/index.html">
+<meta property="og:site_name" content="OnTheMoon">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="OnTheMoon">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/3/"/>
+  <link rel="canonical" href="http://zhyx12.top/page/3/"/>
 
 
 
@@ -130,7 +130,7 @@
   };
 </script>
 
-  <title>Hexo</title>
+  <title>OnTheMoon</title>
   
 
 
@@ -189,7 +189,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">OnTheMoon</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -276,16 +276,165 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/domain-adversarial-training/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/11/unsupervised-pixel-level-domain-adaptation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" itemprop="url">
+                  Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-08-11 20:59:26 / Updated at: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="思路">思路</h1>
+<p>利用已经标注好的源域的数据，由生成器初产生和目标域相似的图像，同时保留源域的标注，这样构造的数据集期望和目标域上的数据分布一致，这样在这一“新”数据集上训练的模型可以直接应用到目标数据集上。这里是直接在像素空间进行转换，和Unsupervised Domain Adaptation by Backpropagation在特征层面进行domain invariant约束的方法思路不同。 这篇文章采用的源域数据集是虚拟生成的数据，并且假设源域和目标域的差别主要体现在低级特征上，例如噪声，分辨率，光照，颜色等，而不是高级特征如物体形状，几何变化等。</p>
+<h1 id="模型结构">模型结构</h1>
+<img src="/2018/08/11/unsupervised-pixel-level-domain-adaptation/network-arch.JPG" title="This is an image">
+<p>conditional gan是怎么实现的 T的结构是和具体任务相关的，</p>
+<h1 id="方法">方法</h1>
+<h2 id="learning">learning</h2>
+<p>这里采用的GAN模型不仅依赖于噪声，而且依赖于源域的图像 分类损失的训练同时使用了源域样本和生成样本，只使用生成样本的话，需要很多次的尝试才能找到合适的初始化方式，模型不稳定；如果不使用源域数据的话，预测结果很容易发生偏移（1预测成2,2预测成3），这样也能成功地优化训练目标函数（为什么？，目标域数据不是也有标签的吗？）。</p>
+<h2 id="content-similarity-loss">content-similarity loss</h2>
+<p>可以有很多loss衡量图像之间相似度，比如L1 loss,L2 loss，在一个已经训练好的VGG模型上的激活值的相似性。这里使用了masked pairwise mean squared error(是pairwise mean squared error的变体)。 mask是怎么得到的。 这一loss不会阻碍前景物体的变化，反而会促使前景物体以一致的方式变化。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/06/domain-adversarial-training/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -445,16 +594,16 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/03/Image Style Transfer/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/03/Image Style Transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Vincent Zhang">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="OnTheMoon">
     </span>
 
     
@@ -611,7 +760,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-author-name" itemprop="name">Vincent Zhang</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -622,7 +771,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
@@ -665,7 +814,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">Tags</span>
                   
                 </div>
@@ -709,7 +862,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">Vincent Zhang</span>
 
   
 
@@ -864,6 +1017,8 @@
     
       
         
+      
+    
       
     
       
