@@ -108,17 +108,17 @@
 
 
 
-  <meta name="description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数">
+  <meta name="description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
 <meta name="keywords" content="pytorch">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pytorch 0.4迁移指南">
 <meta property="og:url" content="http://yoursite.com/2018/09/11/pytorch-0.4/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数">
-<meta property="og:updated_time" content="2018-09-26T02:45:47.947Z">
+<meta property="og:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
+<meta property="og:updated_time" content="2018-11-01T06:52:14.783Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pytorch 0.4迁移指南">
-<meta name="twitter:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数">
+<meta name="twitter:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
 
 
 
@@ -221,7 +221,7 @@
           
           <li class="menu-item menu-item-home">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
   </li>
         
         
@@ -229,7 +229,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
   </li>
 
       
@@ -315,14 +315,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
+              <time title="Post created: 2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
             
 
             
@@ -339,7 +339,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-09-26 10:45:47" itemprop="dateModified" datetime="2018-09-26T10:45:47+08:00">2018-09-26</time>
+                <time title="Updated at: 2018-11-01 14:52:14" itemprop="dateModified" datetime="2018-11-01T14:52:14+08:00">2018-11-01</time>
               
             
           </span>
@@ -375,9 +375,21 @@
         <h1 id="版本迁移">版本迁移</h1>
 <p>0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。</p>
 <h1 id="自动求导">自动求导</h1>
-<p>requires_grad是自动求导的核心标志,可以通过在每一次前向运行网络时设置requires_grad，来控制loss.backward()时部分网络参数的梯度为0。</p>
+<p>requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，并且保存（累加）在grad属性里，如果require_grad=False，就不为该tensor计算误差。 可以通过在每一次前向计算时设置模型参数的requires_grad=False，使得loss.backward()时这些网络参数的梯度（grad）为None。</p>
 <p>网络权重的梯度的累加和optimizer中是否有该权重是相互独立的。</p>
-<p>optimizer只需要创建的时候参数的requires_grad=True就行，step()时=False也没有关系</p>
+<p>optimizer只需要创建的时候参数的requires_grad=True就行，step()时=False也没有关系，grad属性可能是None，这时调用optimizer.step()就不会改变参数的值。requires_grad等于False并不代表grad一定是None，可能只是临时设置为False，但是有之前累积的grad。</p>
+<p>因为联系整个计算图的是中间的计算结果，网络参数本身可以看做是叶子节点，所以才可以做到网络参数的部分更新，这时一定要保证</p>
+<p>举个例子来说，首先定义模型和输入变量，ground truth以及优化器 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.optim <span class="keyword">import</span> SGD</span><br><span class="line"></span><br><span class="line">linear1 = nn.Linear(in_features=<span class="number">2</span>, out_features=<span class="number">2</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">linear2 = nn.Linear(in_features=<span class="number">2</span>, out_features=<span class="number">1</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">nn.init.constant_(linear1.weight.data, <span class="number">1</span>)</span><br><span class="line">nn.init.constant_(linear2.weight.data, <span class="number">2</span>)</span><br><span class="line">optimizer1 = SGD(linear1.parameters(), lr=<span class="number">100</span>)</span><br><span class="line">optimizer2 = SGD(linear2.parameters(), lr=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">gt = torch.ones(<span class="number">1</span>).unsqueeze(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
+<p>正常的前向传播和反向传播的流程如下，input-&gt;linear1-&gt;linear2-&gt;output，： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(output1.is_leaf,output2.is_leaf)</span><br><span class="line">print(linear1.weight.is_leaf,linear2.weight.is_leaf)</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
+<p>输出的模型参数的梯度如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">False</span> <span class="keyword">False</span></span><br><span class="line"><span class="keyword">True</span> <span class="keyword">True</span></span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>],</span><br><span class="line">        [<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br></pre></td></tr></table></figure></p>
+<p>网络的参数也属于leaf node，因为这些参数也是用户定义的，就像模型的输入一样。output1和output2是中间的计算结果，属于non-leaf node，中间节点的requires_grad属性是根据其输出节点的requires_grad属性来推断的，只有所有输入节点requires_grad为False，其自身的requires_grad才是False，否则就是True。但是中间节点的grad属性确实不会开启的，即loss.backward()之后，grad仍然是None，并不会保留梯度值，只有显示地设置retain_grad()，才会保留，如下面的代码所示。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">print(output2.requires_grad)</span><br><span class="line">print(output1.grad)</span><br><span class="line">print(output2.grad)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">print(output2.requires_grad)</span><br><span class="line">print(output1.grad)</span><br><span class="line">print(output2.grad)</span><br></pre></td></tr></table></figure></p>
+<p>结果是： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">None</span></span><br><span class="line"><span class="keyword">None</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">None</span></span><br><span class="line"><span class="keyword">None</span></span><br></pre></td></tr></table></figure></p>
+<p>即requires_grad为True，但是grad属性却始终是None。 retain_grad()可以让中间节点的grad被保留，相反地，如果不想让梯度传回到之前的计算图，可以使用detach()方法，将该中间节点变成leaf node(同时requires_grad变成False)，计算图从此处断开，前面的网络不会再接受梯度。注意，对于中间节点只能通过detach()方法使之requires_grad变为False，而不能直接设置。如果直接设置input1的requires_grad = False，会报错 RuntimeError: you can only change requires_grad flags of leaf variables. If you want to use a computed variable in a subgraph that doesn't require differentiation use var_no_grad = var.detach(). <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">output1 = output1.detach() <span class="comment"># 或者是input1.detach_()</span></span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
+<p>输出结果如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">False</span></span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line"><span class="keyword">None</span></span><br></pre></td></tr></table></figure></p>
+<p>下面进行两次前向-反向传播，第一次设置linear2参数的requires_grad为False，第二次设置linear1参数的requires_grad为True <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一次前向传播</span></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> linear2.parameters():</span><br><span class="line">    param.requires_grad = <span class="keyword">False</span></span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br><span class="line"><span class="comment"># 第二次前向传播</span></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> linear2.parameters():</span><br><span class="line">    param.requires_grad = <span class="keyword">True</span></span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
+<p>输出的结果如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">None</span></span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>],</span><br><span class="line">        [<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line">tensor(<span class="number">1.00000e-03</span> *</span><br><span class="line">       [[<span class="number">-1.3413</span>, <span class="number">-1.3413</span>],</span><br><span class="line">        [<span class="number">-1.3413</span>, <span class="number">-1.3413</span>]])</span><br></pre></td></tr></table></figure></p>
+<p>第一次反向传播之后，linear2参数的grad属性为None，没有误差，第二次的时候误差正常计算，这个过程中只是修改了params的requires_grad属性。第一次运行时，尽管linear2的参数不需要计算梯度，但是output1是需要计算的（因为linear1的参数需要计算梯度），所以output2 requires_grad=True，这样loss的梯度才会反传回来。</p>
+<p>还有一点需要注意，输入loss函数的第一项必须满足requires_grad=True，否则在loss.backward()时会报错，RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</p>
 <h2 id="旧版本">旧版本</h2>
 <p>之前版本 Variable的属性：</p>
 <ul>
@@ -385,6 +397,7 @@
 <li>grad</li>
 <li>requires_grad</li>
 <li>volatile</li>
+<li>is_leaf</li>
 <li>data</li>
 <li>grad</li>
 </ul>
@@ -393,9 +406,7 @@
 <li>错误信息：optimizing a parameter that doesn't require gradients。送到优化器中的参数需要requires_grad = True</li>
 <li>错误信息：can't optimize a non-leaf Variable 送到优化器中的参数只能是leaf或者网络的权重参数，不能是中间的输出变量，如特征图（特征图一般也不需要优化，只需要传递误差就行）</li>
 </ol>
-<p>leaf指的是用户自己定义的变量，其他的正常情况下都是non-leaf（使用了detach_()方法也会变成leaf）。leaf和non-leaf的概念是在计算图的每一步的结果上定义的，CNN的权重没有leaf和non-leaf的概念。但是权重有requires_grad属性</p>
-<p>loss.backward()计算得到的梯度值，可以通过.grad属性得到</p>
-<p>对于中间变量（non-leaf Variable）, 可以通过retain_grad()来使得保存变量的梯度值</p>
+<p>leaf node指的是用户自己定义的变量，以及模型的参数，而中间的结果都是non-leaf node。</p>
 <p>detach() 函数返回一个新的Variable，从当前的计算图中脱离，不需要计算梯度。返回的Variable和原来的Variable共用一个tensor数据，in-place的操作会彼此影响。</p>
 <p>register_hook(hook)注册一个反向传播的hook,hook是一个函数，输入是正常的grad,输出是新的grad或者None hook(grad) -&gt; Tensor or None</p>
 <p>detach_() 从计算图中脱离，成为一个叶子节点。detach_()之后required_grad自动变成False</p>
@@ -507,10 +518,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -530,8 +541,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">16</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -569,8 +580,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
-                    <span class="site-state-item-name">tags</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">Tags</span>
                   
                 </div>
               
@@ -639,7 +652,7 @@
 
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
 
 
 

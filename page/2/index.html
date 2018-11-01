@@ -217,7 +217,7 @@
           
           <li class="menu-item menu-item-home">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
   </li>
         
         
@@ -225,7 +225,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
   </li>
 
       
@@ -260,6 +260,159 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/13/unsupervised-image-to-image-translation/" itemprop="url">
+                  Unsupervised Image-to-Image Translation Networks(UNIT)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2018-08-13 09:04:25 / Updated at: 22:33:15" itemprop="dateCreated datePublished" datetime="2018-08-13T09:04:25+08:00">2018-08-13</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="思路">思路</h1>
+<p>本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布<span class="math inline">\(P_{x1}\)</span>和<span class="math inline">\(P_{x2}\)</span>，而不知道联合分布<span class="math inline">\(P_{x1,x2}\)</span>,和作者的上一篇Coupled GAN<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>一样. 上一篇论文的介绍看这里<a href="./coupled-gan.md">Coupled GAN</a>.</p>
+<p>作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>，存在一个共享的隐空间编码<span class="math inline">\(z\)</span>，既可以由图像计算编码<span class="math inline">\(z\)</span>，也可以从<span class="math inline">\(z\)</span>恢复两幅图像。Coupled GAN中两个生成器使用同一个随机变量作为输入，从而生成各自领域的图像。作者将生成器作为解码器，随机变量是隐空间的编码，在生成器前加入解码器。模型的结构如下： <img src="/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG" title="network architecture of UNIT"></p>
+<p>正因为有了同一个隐空间的表示，所以<span class="math inline">\(G_1(E_2(G_2(E_1(x_1))))\)</span>的输出就是<span class="math inline">\(x_1\)</span>，同理<span class="math inline">\(x_2\)</span>也可以实现cycle consistency，类似于<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>。但是由cycle consistency并不能推出这里的结构。</p>
+<h1 id="代码">代码</h1>
+<p>代码在<a href="https://github.com/mingyuliutw/unit" target="_blank" rel="external">这里</a></p>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>M.-Y. Liu and O. Tuzel. Coupled generative adversarial networks. Advances in Neural Information Processing Systems, 2016.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>T. Kim, M. Cha, H. Kim, J. Lee, and J. Kim. Learning to discover cross-domain relations with generative adversarial networks. International Conference on Machine Learning, 2017.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>J.-Y. Zhu, T. Park, P. Isola, and A. A. Efros. Unpaired image-to-image translation using cycle-consistent adversarial networks. International Conference on Computer Vision, 2017.<a href="#fnref3">↩</a></p></li>
+</ol>
+</div>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -315,14 +468,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-12 16:26:18" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 16:26:18" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
             
 
             
@@ -339,7 +492,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-08-14 22:12:49" itemprop="dateModified" datetime="2018-08-14T22:12:49+08:00">2018-08-14</time>
+                <time title="Updated at: 2018-08-14 22:12:49" itemprop="dateModified" datetime="2018-08-14T22:12:49+08:00">2018-08-14</time>
               
             
           </span>
@@ -522,14 +675,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
             
 
             
@@ -546,7 +699,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
+                <time title="Updated at: 2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
               
             
           </span>
@@ -714,14 +867,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-12 10:47:29 / Modified: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
+              <time title="Post created: 2018-08-12 10:47:29 / Updated at: 13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
             
 
             
@@ -854,14 +1007,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-11 20:59:26 / Modified: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
+              <time title="Post created: 2018-08-11 20:59:26 / Updated at: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
             
 
             
@@ -1003,14 +1156,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+              <time title="Post created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
             
 
             
@@ -1027,7 +1180,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
+                <time title="Updated at: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
               
             
           </span>
@@ -1172,14 +1325,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-03 15:06:43 / Modified: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
             
 
             
@@ -1310,8 +1463,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">16</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -1349,8 +1502,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
-                    <span class="site-state-item-name">tags</span>
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">Tags</span>
                   
                 </div>
               
@@ -1403,7 +1558,7 @@
 
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
 
 
 
@@ -1548,6 +1703,8 @@
     
       
         
+      
+    
       
     
       

@@ -108,26 +108,27 @@
 
 
 
-  <meta name="description" content="思路 本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN. 作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像\(x_1\)和\(x_2\)，存在一个共享的隐空间编码\(z\">
-<meta name="keywords" content="GAN, image-to-image translation">
+  <meta name="description" content="AdaBN 首先在Caltech-256和Bing搜索到的图像这两个领域上进行了实验。在每一个minibatch上提取某一层的神经元的均值和方差作为特征向量，使用线性SVM分类器可以很好的分类，下面是可视化的结果  实验说明了两点： 1. DNN的浅层和深层都被Domain shift所影响，仅仅在输出层进行适应操作是不足的 2. BN层的数据包含了该领域的特征 算法流程如下：  REVI">
+<meta name="keywords" content="domain adaptation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unsupervised Image-to-Image Translation Networks(UNIT)">
-<meta property="og:url" content="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/index.html">
+<meta property="og:title" content="Adaptive BN">
+<meta property="og:url" content="http://yoursite.com/2018/10/25/AdaBN/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="思路 本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN. 作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像\(x_1\)和\(x_2\)，存在一个共享的隐空间编码\(z\">
-<meta property="og:image" content="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG">
-<meta property="og:updated_time" content="2018-08-13T14:33:15.536Z">
+<meta property="og:description" content="AdaBN 首先在Caltech-256和Bing搜索到的图像这两个领域上进行了实验。在每一个minibatch上提取某一层的神经元的均值和方差作为特征向量，使用线性SVM分类器可以很好的分类，下面是可视化的结果  实验说明了两点： 1. DNN的浅层和深层都被Domain shift所影响，仅仅在输出层进行适应操作是不足的 2. BN层的数据包含了该领域的特征 算法流程如下：  REVI">
+<meta property="og:image" content="http://yoursite.com/2018/10/25/AdaBN/adabn_vis.JPG">
+<meta property="og:image" content="http://yoursite.com/2018/10/25/AdaBN/adabn_algorithm.JPG">
+<meta property="og:updated_time" content="2018-10-25T08:23:22.878Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Unsupervised Image-to-Image Translation Networks(UNIT)">
-<meta name="twitter:description" content="思路 本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN. 作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像\(x_1\)和\(x_2\)，存在一个共享的隐空间编码\(z\">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG">
+<meta name="twitter:title" content="Adaptive BN">
+<meta name="twitter:description" content="AdaBN 首先在Caltech-256和Bing搜索到的图像这两个领域上进行了实验。在每一个minibatch上提取某一层的神经元的均值和方差作为特征向量，使用线性SVM分类器可以很好的分类，下面是可视化的结果  实验说明了两点： 1. DNN的浅层和深层都被Domain shift所影响，仅仅在输出层进行适应操作是不足的 2. BN层的数据包含了该领域的特征 算法流程如下：  REVI">
+<meta name="twitter:image" content="http://yoursite.com/2018/10/25/AdaBN/adabn_vis.JPG">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/25/AdaBN/"/>
 
 
 
@@ -137,7 +138,7 @@
   };
 </script>
 
-  <title>Unsupervised Image-to-Image Translation Networks(UNIT) | Hexo</title>
+  <title>Adaptive BN | Hexo</title>
   
 
 
@@ -282,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/13/unsupervised-image-to-image-translation/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/25/AdaBN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -299,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Unsupervised Image-to-Image Translation Networks(UNIT)
+          <h1 class="post-title" itemprop="name headline">Adaptive BN
               
             
           </h1>
@@ -324,7 +325,7 @@
                 
               
 
-              <time title="Post created: 2018-08-13 09:04:25 / Updated at: 22:33:15" itemprop="dateCreated datePublished" datetime="2018-08-13T09:04:25+08:00">2018-08-13</time>
+              <time title="Post created: 2018-10-25 16:08:54 / Updated at: 16:23:22" itemprop="dateCreated datePublished" datetime="2018-10-25T16:08:54+08:00">2018-10-25</time>
             
 
             
@@ -362,20 +363,12 @@
       
 
       
-        <h1 id="思路">思路</h1>
-<p>本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布<span class="math inline">\(P_{x1}\)</span>和<span class="math inline">\(P_{x2}\)</span>，而不知道联合分布<span class="math inline">\(P_{x1,x2}\)</span>,和作者的上一篇Coupled GAN<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>一样. 上一篇论文的介绍看这里<a href="./coupled-gan.md">Coupled GAN</a>.</p>
-<p>作者同样遵循了Coupled GAN中的假设：即对于不同领域的成对的图像<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>，存在一个共享的隐空间编码<span class="math inline">\(z\)</span>，既可以由图像计算编码<span class="math inline">\(z\)</span>，也可以从<span class="math inline">\(z\)</span>恢复两幅图像。Coupled GAN中两个生成器使用同一个随机变量作为输入，从而生成各自领域的图像。作者将生成器作为解码器，随机变量是隐空间的编码，在生成器前加入解码器。模型的结构如下： <img src="/2018/08/13/unsupervised-image-to-image-translation/UNIT-network-arch.JPG" title="network architecture of UNIT"></p>
-<p>正因为有了同一个隐空间的表示，所以<span class="math inline">\(G_1(E_2(G_2(E_1(x_1))))\)</span>的输出就是<span class="math inline">\(x_1\)</span>，同理<span class="math inline">\(x_2\)</span>也可以实现cycle consistency，类似于<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>。但是由cycle consistency并不能推出这里的结构。</p>
-<h1 id="代码">代码</h1>
-<p>代码在<a href="https://github.com/mingyuliutw/unit" target="_blank" rel="external">这里</a></p>
-<div class="footnotes">
-<hr>
-<ol>
-<li id="fn1"><p>M.-Y. Liu and O. Tuzel. Coupled generative adversarial networks. Advances in Neural Information Processing Systems, 2016.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>T. Kim, M. Cha, H. Kim, J. Lee, and J. Kim. Learning to discover cross-domain relations with generative adversarial networks. International Conference on Machine Learning, 2017.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>J.-Y. Zhu, T. Park, P. Isola, and A. A. Efros. Unpaired image-to-image translation using cycle-consistent adversarial networks. International Conference on Computer Vision, 2017.<a href="#fnref3">↩</a></p></li>
-</ol>
-</div>
+        <h1 id="adabn">AdaBN</h1>
+<p>首先在Caltech-256和Bing搜索到的图像这两个领域上进行了实验。在每一个minibatch上提取某一层的神经元的均值和方差作为特征向量，使用线性SVM分类器可以很好的分类，下面是可视化的结果 <img src="/2018/10/25/AdaBN/adabn_vis.JPG" title="在Caltech-256和Bing上的验证实验"></p>
+<p>实验说明了两点： 1. DNN的浅层和深层都被Domain shift所影响，仅仅在输出层进行适应操作是不足的 2. BN层的数据包含了该领域的特征</p>
+<p>算法流程如下： <img src="/2018/10/25/AdaBN/adabn_algorithm.JPG" title="AdaBN算法"></p>
+<p>REVISITING BATCH NORMALIZATION FOR PRACTICAL DOMAIN ADAPTATION.</p>
+<p>Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization</p>
 
       
     </div>
@@ -396,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/GAN-image-to-image-translation/" rel="tag"># GAN, image-to-image translation</a>
+            <a href="/tags/domain-adaptation/" rel="tag"># domain adaptation</a>
           
         </div>
       
@@ -409,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/12/coupled-gan/" rel="next" title="Coupled GAN">
-                <i class="fa fa-chevron-left"></i> Coupled GAN
+              <a href="/2018/10/17/CUDA_In_Pytorch/" rel="next" title="Pytorch中的CUDA">
+                <i class="fa fa-chevron-left"></i> Pytorch中的CUDA
               </a>
             
           </div>
@@ -418,10 +411,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/15/adversarial-discriminative-domain-adaption/" rel="prev" title="Adversarial Discriminative Domain Adaption">
-                Adversarial Discriminative Domain Adaption <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -568,7 +557,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#adabn"><span class="nav-number">1.</span> <span class="nav-text">AdaBN</span></a></li></ol></div>
             
 
           </div>
