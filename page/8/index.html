@@ -111,7 +111,7 @@
   <meta name="description" content="Domain Adaptation">
 <meta property="og:type" content="website">
 <meta property="og:title" content="OnTheMoon">
-<meta property="og:url" content="http://zhyx12.top/page/2/index.html">
+<meta property="og:url" content="http://zhyx12.top/page/8/index.html">
 <meta property="og:site_name" content="OnTheMoon">
 <meta property="og:description" content="Domain Adaptation">
 <meta property="og:locale" content="zh-CN">
@@ -124,7 +124,7 @@
 
 
 
-  <link rel="canonical" href="http://zhyx12.top/page/2/"/>
+  <link rel="canonical" href="http://zhyx12.top/page/8/"/>
 
 
 
@@ -280,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/openset_da/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/11/unsupervised-pixel-level-domain-adaptation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -299,8 +299,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/01/openset_da/" itemprop="url">
-                  Open-set DA
+                <a class="post-title-link" href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" itemprop="url">
+                  Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks
                 </a>
               
             
@@ -326,9 +326,13 @@
                 
               
 
-              <time title="创建时间：2018-11-01 16:46:19" itemprop="dateCreated datePublished" datetime="2018-11-01T16:46:19+08:00">2018-11-01</time>
+              <time title="创建时间：2018-08-11 20:59:26 / 修改时间：21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -362,9 +366,16 @@
       
         
           
-            <h1 id="数据集">数据集</h1>
-<p>Unsupervised domain adaptation is usually done in a transductive manner, meaning that unlabeled test data is actively used to train the model. 怎么理解</p>
+            <h1 id="思路">思路</h1>
+<p>利用已经标注好的源域的数据，由生成器初产生和目标域相似的图像，同时保留源域的标注，这样构造的数据集期望和目标域上的数据分布一致，这样在这一“新”数据集上训练的模型可以直接应用到目标数据集上。这里是直接在像素空间进行转换，和Unsupervised Domain Adaptation by Backpropagation在特征层面进行domain invariant约束的方法思路不同。 这篇文章采用的源域数据集是虚拟生成的数据，并且假设源域和目标域的差别主要体现在低级特征上，例如噪声，分辨率，光照，颜色等，而不是高级特征如物体形状，几何变化等。</p>
+<h1 id="模型结构">模型结构</h1>
+<img src="/2018/08/11/unsupervised-pixel-level-domain-adaptation/network-arch.JPG" title="This is an image">
+<p>conditional gan是怎么实现的 T的结构是和具体任务相关的，</p>
 <h1 id="方法">方法</h1>
+<h2 id="learning">learning</h2>
+<p>这里采用的GAN模型不仅依赖于噪声，而且依赖于源域的图像 分类损失的训练同时使用了源域样本和生成样本，只使用生成样本的话，需要很多次的尝试才能找到合适的初始化方式，模型不稳定；如果不使用源域数据的话，预测结果很容易发生偏移（1预测成2,2预测成3），这样也能成功地优化训练目标函数（为什么？，目标域数据不是也有标签的吗？）。</p>
+<h2 id="content-similarity-loss">content-similarity loss</h2>
+<p>可以有很多loss衡量图像之间相似度，比如L1 loss,L2 loss，在一个已经训练好的VGG模型上的激活值的相似性。这里使用了masked pairwise mean squared error(是pairwise mean squared error的变体)。 mask是怎么得到的。 这一loss不会阻碍前景物体的变化，反而会促使前景物体以一致的方式变化。</p>
 
           
         
@@ -418,7 +429,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/lr_scheduler_in_pytorch/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/06/domain-adversarial-training/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -437,8 +448,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/01/lr_scheduler_in_pytorch/" itemprop="url">
-                  pytorch中的lr_scheduler
+                <a class="post-title-link" href="/2018/08/06/domain-adversarial-training/" itemprop="url">
+                  Domain Adversarial Training of Nerual Networks阅读笔记
                 </a>
               
             
@@ -464,12 +475,24 @@
                 
               
 
-              <time title="创建时间：2018-11-01 16:45:19 / 修改时间：16:45:24" itemprop="dateCreated datePublished" datetime="2018-11-01T16:45:19+08:00">2018-11-01</time>
+              <time title="创建时间：2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
               
             
           </span>
@@ -504,12 +527,24 @@
       
         
           
-            <p>/ 精确除法，总是返回浮点数 // 除法，返回商，向下取整</p>
-<p>bisect_right 返回待查询元素在有序列表插入的顺序，如果出现一样的元素，则插在右边</p>
-<p>基本类 _LRScheduler 初始化函数中，会为optimizer中的每一个group中<strong>添加</strong>一个‘initial_lr’的键，也是scheduler的base_lr，保存的是训练最开始（last_epoch=-1）的学习率，每一时刻的学习率计算只需要初始学习率和当前的步数就可以唯一确定，不需要依赖上一时刻的值。同时，也便于恢复状态的时候使用。</p>
-<p>__state__中有optimizer，base_lr，last_epoch三个属性，state_dict保存的时候只保存base_lr和last_epoch两个。</p>
-<p>因为scheduler的state_dict中<strong>没有保存optimizer</strong>，恢复的时候只是更新一下base_lr（list）和last_epoch（int）两个值。继续训练的时候，optimizer和scheduler的恢复顺序无所谓，在scheduler构造的时候optimizer就已经指定了，而optimizer自身的恢复不会改变该optimizer和scheduler之间的从属关系。如果在初始化的时候就将last_epoch指定为不是-1的值，就需要传入的optimizer的</p>
-<p>函数 state_dict() 返回__dict__中除了optimizer中的其他元素</p>
+            <h1 id="introduction">introduction</h1>
+<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
+<p>不需要目标域的标注数据</p>
+<h1 id="domain-adaptation">Domain Adaptation</h1>
+<p>问题描述： <img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training-1.JPG" title="This is an image"></p>
+<h2 id="domain-divergence">Domain Divergence</h2>
+<p>为了解决域适应的问题，许多方法通过源域错误率的总和以及源域和目标域的一种距离表示来计算目标域的错误率，这类模型假设当分布相似的时候，源域的风险是目标域风险的很好的指示器。 本文使用了H-divergence（Ben-David et al, 2006,2010）作为源域和目标域距离的度量准则。 H-divergence依赖一个假设类H来判别样本是由源域生成的还是目标域生成的。 Ben-David et al 2006,2010证明了对于对称的假设类，H-divergence可以经验地计算 H-divergence公式表示的是错误分类的概率，经验公式是1减正确分类的概率</p>
+<h2 id="proxy-distance">Proxy Distance</h2>
+<p>通过一个代理距离Proxy A-distance(PAD)来计算H-divergence,</p>
+<h2 id="generalization-bound-on-the-target-risk">Generalization Bound on the Target Risk</h2>
+<p>给出了在目标任务上的风险的上界，而最终的目标是要最小化这个上界 公式的分析： 目标任务上的风险要想小的话，需要beta项小（即存在一个分类器在两个分布上都有小的风险）。 在固定VC维的一个类下，如果想要找到一个在目标任务上有小的经验风险的分类器，学习算法需要最小化那个类上的源任务的风险和经验的H-divergence<span class="math inline">\(\hat{d_H}(S,T)\)</span> 如Ben-David et al(2006)指出的，一个控制H-divergence的策略就是找到一个样本的表示，是的源域和目标域尽量不可区分，在这样的表示方法下，一个在源域上有低风险的假设，根据风险的上界公式，在目标域也有好的表现。</p>
+<h2 id="domain-invarient">domain invarient</h2>
+<p>协偏移假设，域不变的特征可以使得在目标域的性能和在源域一样 shimodaira 2000</p>
+<h1 id="domain-adversarial-neural-networks">Domain-Adversarial Neural Networks</h1>
+<p>本文的主要思想就是讲上界公式显示地加入到神经网络分类器中。也就是说，为了学习一个能够从源域泛化到其他领域的模型，需要构建一个输入不变的特征表示，同时保持在源任务上的低风险。</p>
+<h2 id="example-case-with-a-shallow-neural-network">Example Case with a Shallow Neural Network</h2>
+<h2 id="generalization-to-arbitrary-architectures">Generalization to Arbitrary Architectures</h2>
+<img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training_network.JPG" title="This is an image">
 
           
         
@@ -563,7 +598,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/cgan_for_structured_da_ reimplementation/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/03/Image Style Transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -582,8 +617,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/01/cgan_for_structured_da_ reimplementation/" itemprop="url">
-                  CGAN for Structured DA Reimplementation
+                <a class="post-title-link" href="/2018/08/03/Image Style Transfer/" itemprop="url">
+                  Style Transfer 论文阅读笔记
                 </a>
               
             
@@ -609,9 +644,13 @@
                 
               
 
-              <time title="创建时间：2018-11-01 16:44:15" itemprop="dateCreated datePublished" datetime="2018-11-01T16:44:15+08:00">2018-11-01</time>
+              <time title="创建时间：2018-08-03 15:06:43 / 修改时间：16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -645,14 +684,12 @@
       
         
           
-            <h1 id="实验设置">实验设置</h1>
-<ul>
-<li>基础网络：基于VGG19的FCN8s，使用VGG19预训练模型初始化，</li>
-<li>生成器网络：Residual Block，每一个block使用两个<span class="math inline">\(3\times3\)</span>卷积，接BN和ReLU。block数量为16，每一组输出的特征图数量都是64。但是最后是怎么增加到512个特征图的，如果要进行特征pixelwise-sum的话。</li>
-<li><p>判别器网络：三个FC层，输入是向量化的特征图。前两个的输出维度分别是4096，1024</p></li>
-<li><p>训练：使用500张Cityscapes训练集图片用来监测指标变化。Adam优化器，每一个mini batch有5张源域图片和5张目标域图片组成，在训练没有adaptation的基础网络时batchsize=15。图像大小缩放到<span class="math inline">\(480\times960\)</span>。噪声的大小是<span class="math inline">\(339\times579\)</span>。 （240,480）（219,339）(14, 22) （480,960）（339,579）（22，37） （400,800）</p></li>
-</ul>
-<p>参考PixelDA，CGAN，Residual Transfer Learning</p>
+            <p>在实际操作的时候，loss用来更新像素的值，而不是网络参数</p>
+<p>content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： <span class="math display">\[ L_c = w_c x \]</span></p>
+<p>style loss用来衡量两幅图像的风格差异，style loss使用Gram矩阵来构建，Gram矩阵是协方差矩阵的近似，而匹配两幅图的协方差矩阵是实现风格一致的方式（出处？）。使用Gram矩阵的好处是方便计算。假设特征图 <span class="math inline">\(F^l\)</span>的维度是<span class="math inline">\((C_l,M_l)\)</span>，Gram矩阵的计算方式如下，可以看到Gram矩阵是对称的，（i,j）位置的元素是i,j通道的特征的内积。 <span class="math display">\[G^l_{ij} = \sum_{k} F^l_{ik}F^l_{jk}\]</span></p>
+<p>假设<span class="math inline">\(G^l\)</span>是待优化图像的Gram matrix, <span class="math inline">\(A^l\)</span>是风格图像的Gram matrix, 那么style loss定义为两个Gram matrices的加权欧式距离 <span class="math display">\[L^l_s = w_l \sum_{i,j} {(G^l_{ij} - A^l_{ij})}^2 \]</span></p>
+<p>实际应用时使用多层的特征计算style loss <span class="math display">\[ L_s = \sum_{l \in L}L^l_s\]</span></p>
+<p>加入平滑项有助于图像生成的效果，可以通过加入total variation loss项来惩罚像素的波动或者总体的变化。下面的式子计算了图像中相邻的行和列之间的像素偏差平方 <span class="math display">\[L_{tv} = w_t \times \left(\sum_{c=1}^3\sum_{i=1}^{H-1}\sum_{j=1}^{W} (x_{i+1,j,c} - x_{i,j,c})^2 + \sum_{c=1}^3\sum_{i=1}^{H}\sum_{j=1}^{W - 1} (x_{i,j+1,c} - x_{i,j,c})^2\right)\]</span></p>
 
           
         
@@ -695,7 +732,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
   </nav>
 
 

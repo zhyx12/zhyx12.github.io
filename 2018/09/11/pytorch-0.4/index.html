@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="">
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -115,10 +115,13 @@
 <meta property="og:url" content="http://zhyx12.top/2018/09/11/pytorch-0.4/index.html">
 <meta property="og:site_name" content="OnTheMoon">
 <meta property="og:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
-<meta property="og:updated_time" content="2018-11-01T06:52:14.783Z">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://zhyx12.top/2018/09/11/pytorch-0.4/Tensor_class.JPG">
+<meta property="og:updated_time" content="2018-11-11T03:34:59.286Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pytorch 0.4迁移指南">
 <meta name="twitter:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
+<meta name="twitter:image" content="http://zhyx12.top/2018/09/11/pytorch-0.4/Tensor_class.JPG">
 
 
 
@@ -175,7 +178,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -201,7 +204,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -221,7 +224,7 @@
           
           <li class="menu-item menu-item-home">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
         
         
@@ -229,7 +232,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
 
       
@@ -284,7 +287,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Domain Adaptation">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -315,14 +318,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
+              <time title="创建时间：2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
             
 
             
@@ -337,9 +340,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2018-11-01 14:52:14" itemprop="dateModified" datetime="2018-11-01T14:52:14+08:00">2018-11-01</time>
+                <time title="修改时间：2018-11-11 11:34:59" itemprop="dateModified" datetime="2018-11-11T11:34:59+08:00">2018-11-11</time>
               
             
           </span>
@@ -426,6 +429,43 @@
 <p>之前的损失函数中有reduce和size_average两个参数，bool类型，控制一个batch中多个样本的loss计算方式。分为三种情况。 - reduce=False, 这时会忽略size_average的设置，为每个样本返回计算一个loss - reduce=True, size_average=False, 多个样本之间的loss是相加的关系 - reduct=True, size_average=True, 多个样本之间的loss去平均</p>
 <p>其中，第二条和第三条的差别在于loss的值差了<span class="math inline">\(1/batch\)</span></p>
 <p>现在使用，reduction参数（str），取值有三种'none', ‘sum’,'elementwise_mean'对应上面的三种情况</p>
+<h2 id="tensor">tensor</h2>
+<p>torch.Tensor创建函数是默认的tensor类型的别名，torch.Tensor()如果接受多个数字的话，会把他解析成size，如果是序列的话，会解析成数据，这些在新旧版本都一样的，可以参考0.3.1Tensor文档中对于Tensor()创建函数中不同参数的定义。 <img src="/2018/09/11/pytorch-0.4/Tensor_class.JPG" title="Tensor_class"></p>
+<p>之前的版本也存在0维的tensor，torch.Tensor()创建的就是0维的tensor，但是这个没有什么用途（？），而且和0.4.0的不一样，0.4.0的zero-dimensional tensor指的是仅包含一个元素，dim()=0，size()=torch.Size([])的tensor，0.4.0中，torch.Tensor()虽然也会返回一个不包含任何元素的tensor，但是dim()=1，size()=torch.Size([1])。</p>
+<p>0.4.0增加了torch.tensor(data, dtype=None, device=None, requires_grad=False)的tensor创建函数，在之前的版本中，torch.tensor的类型是class 'module'，0.4.0中的类型是builtin_function_or_method。torch.tensor传入的第一个参数总是数据，包括Python number，list, tuple等，而且会拷贝原来的数据。</p>
+<table style="width:35%;">
+<colgroup>
+<col width="15%">
+<col width="6%">
+<col width="5%">
+<col width="6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>numpy</th>
+<th>torch</th>
+<th>类型</th>
+<th>接受参数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>np.array</td>
+<td>torch.tensor</td>
+<td>builtin_function_or_method</td>
+<td>data</td>
+</tr>
+<tr class="even">
+<td>np.ndarray</td>
+<td>torch.Tensor</td>
+<td>type</td>
+<td>np.ndarray只接受shape，torch.Tensor接受data或shape(单纯的数字)</td>
+</tr>
+</tbody>
+</table>
+<p>0.4.0<strong>重新定义</strong>了zero-dimensional tensor，即用tensor.dim()函数查看的话，返回的数字是0。创建的话可以使用torch.tensor(single_number)，</p>
+<p>item()可以用在只包含一个元素的tensor上，zero-dimensional tensor或者dim()=1，torch.size()=torch.Size([1])的都可以</p>
+<p>torch.Scalar相关的<a href="https://github.com/pytorch/pytorch/issues/1433" target="_blank" rel="external">讨论</a></p>
 
       
     </div>
@@ -518,10 +558,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -531,7 +571,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">Vincent Zhang</p>
-              <p class="site-description motion-element" itemprop="description"></p>
+              <p class="site-description motion-element" itemprop="description">Domain Adaptation</p>
           </div>
 
           
@@ -541,8 +581,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -588,8 +628,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
-                    <span class="site-state-item-name">Tags</span>
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">标签</span>
                   
                 </div>
               
@@ -624,7 +666,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本迁移"><span class="nav-number">1.</span> <span class="nav-text">版本迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动求导"><span class="nav-number">2.</span> <span class="nav-text">自动求导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">旧版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和optimizer的关系"><span class="nav-number">2.1.1.</span> <span class="nav-text">和optimizer的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本"><span class="nav-number">2.2.</span> <span class="nav-text">新版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data属性和detech"><span class="nav-number">2.2.1.</span> <span class="nav-text">.data属性和detech()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss累加"><span class="nav-number">2.2.2.</span> <span class="nav-text">loss累加</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn"><span class="nav-number">2.3.</span> <span class="nav-text">nn</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本迁移"><span class="nav-number">1.</span> <span class="nav-text">版本迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动求导"><span class="nav-number">2.</span> <span class="nav-text">自动求导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">旧版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和optimizer的关系"><span class="nav-number">2.1.1.</span> <span class="nav-text">和optimizer的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本"><span class="nav-number">2.2.</span> <span class="nav-text">新版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data属性和detech"><span class="nav-number">2.2.1.</span> <span class="nav-text">.data属性和detech()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss累加"><span class="nav-number">2.2.2.</span> <span class="nav-text">loss累加</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn"><span class="nav-number">2.3.</span> <span class="nav-text">nn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tensor"><span class="nav-number">2.4.</span> <span class="nav-text">tensor</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -658,7 +700,7 @@
 
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.4.0</div>
 
 
 
@@ -666,7 +708,7 @@
 
 
 
-  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
 
 
 

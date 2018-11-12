@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="">
+<html class="theme-next muse use-motion" lang="zh-CN">
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -108,12 +108,16 @@
 
 
 
-  <meta property="og:type" content="website">
+  <meta name="description" content="Domain Adaptation">
+<meta property="og:type" content="website">
 <meta property="og:title" content="OnTheMoon">
 <meta property="og:url" content="http://zhyx12.top/page/3/index.html">
 <meta property="og:site_name" content="OnTheMoon">
+<meta property="og:description" content="Domain Adaptation">
+<meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OnTheMoon">
+<meta name="twitter:description" content="Domain Adaptation">
 
 
 
@@ -170,7 +174,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -197,7 +201,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -217,7 +221,7 @@
           
           <li class="menu-item menu-item-home">
     <a href="/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Startseite</a>
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
   </li>
         
         
@@ -225,7 +229,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archiv</a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
 
       
@@ -276,11 +280,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/11/unsupervised-pixel-level-domain-adaptation/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/11/01/residual_parameter_transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Domain Adaptation">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -295,8 +299,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" itemprop="url">
-                  Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks
+                <a class="post-title-link" href="/2018/11/01/residual_parameter_transfer/" itemprop="url">
+                  Residual Parameter Transfer for Deep Domain Adaptation
                 </a>
               
             
@@ -315,14 +319,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-08-11 20:59:26 / Updated at: 21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
+              <time title="创建时间：2018-11-01 16:40:18 / 修改时间：16:40:28" itemprop="dateCreated datePublished" datetime="2018-11-01T16:40:18+08:00">2018-11-01</time>
             
 
             
@@ -362,16 +366,7 @@
       
         
           
-            <h1 id="思路">思路</h1>
-<p>利用已经标注好的源域的数据，由生成器初产生和目标域相似的图像，同时保留源域的标注，这样构造的数据集期望和目标域上的数据分布一致，这样在这一“新”数据集上训练的模型可以直接应用到目标数据集上。这里是直接在像素空间进行转换，和Unsupervised Domain Adaptation by Backpropagation在特征层面进行domain invariant约束的方法思路不同。 这篇文章采用的源域数据集是虚拟生成的数据，并且假设源域和目标域的差别主要体现在低级特征上，例如噪声，分辨率，光照，颜色等，而不是高级特征如物体形状，几何变化等。</p>
-<h1 id="模型结构">模型结构</h1>
-<img src="/2018/08/11/unsupervised-pixel-level-domain-adaptation/network-arch.JPG" title="This is an image">
-<p>conditional gan是怎么实现的 T的结构是和具体任务相关的，</p>
-<h1 id="方法">方法</h1>
-<h2 id="learning">learning</h2>
-<p>这里采用的GAN模型不仅依赖于噪声，而且依赖于源域的图像 分类损失的训练同时使用了源域样本和生成样本，只使用生成样本的话，需要很多次的尝试才能找到合适的初始化方式，模型不稳定；如果不使用源域数据的话，预测结果很容易发生偏移（1预测成2,2预测成3），这样也能成功地优化训练目标函数（为什么？，目标域数据不是也有标签的吗？）。</p>
-<h2 id="content-similarity-loss">content-similarity loss</h2>
-<p>可以有很多loss衡量图像之间相似度，比如L1 loss,L2 loss，在一个已经训练好的VGG模型上的激活值的相似性。这里使用了masked pairwise mean squared error(是pairwise mean squared error的变体)。 mask是怎么得到的。 这一loss不会阻碍前景物体的变化，反而会促使前景物体以一致的方式变化。</p>
+            <h1 id="section"></h1>
 
           
         
@@ -425,11 +420,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/06/domain-adversarial-training/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/25/AdaBN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Domain Adaptation">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -444,8 +439,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/06/domain-adversarial-training/" itemprop="url">
-                  Domain Adversarial Training of Nerual Networks阅读笔记
+                <a class="post-title-link" href="/2018/10/25/AdaBN/" itemprop="url">
+                  Adaptive BN
                 </a>
               
             
@@ -464,14 +459,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+              <time title="创建时间：2018-10-25 16:08:54" itemprop="dateCreated datePublished" datetime="2018-10-25T16:08:54+08:00">2018-10-25</time>
             
 
             
@@ -486,9 +481,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
+                <time title="修改时间：2018-11-01 16:58:27" itemprop="dateModified" datetime="2018-11-01T16:58:27+08:00">2018-11-01</time>
               
             
           </span>
@@ -523,24 +518,13 @@
       
         
           
-            <h1 id="introduction">introduction</h1>
-<p>这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会更好一些 在训练过程中，通过增加几个标准的层和新的梯度逆转层，可以生成具有如下性质的特征： 1. 在源域的任务中具有区分性 2. 在源域和目标域中具有不变性</p>
-<p>不需要目标域的标注数据</p>
-<h1 id="domain-adaptation">Domain Adaptation</h1>
-<p>问题描述： <img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training-1.JPG" title="This is an image"></p>
-<h2 id="domain-divergence">Domain Divergence</h2>
-<p>为了解决域适应的问题，许多方法通过源域错误率的总和以及源域和目标域的一种距离表示来计算目标域的错误率，这类模型假设当分布相似的时候，源域的风险是目标域风险的很好的指示器。 本文使用了H-divergence（Ben-David et al, 2006,2010）作为源域和目标域距离的度量准则。 H-divergence依赖一个假设类H来判别样本是由源域生成的还是目标域生成的。 Ben-David et al 2006,2010证明了对于对称的假设类，H-divergence可以经验地计算 H-divergence公式表示的是错误分类的概率，经验公式是1减正确分类的概率</p>
-<h2 id="proxy-distance">Proxy Distance</h2>
-<p>通过一个代理距离Proxy A-distance(PAD)来计算H-divergence,</p>
-<h2 id="generalization-bound-on-the-target-risk">Generalization Bound on the Target Risk</h2>
-<p>给出了在目标任务上的风险的上界，而最终的目标是要最小化这个上界 公式的分析： 目标任务上的风险要想小的话，需要beta项小（即存在一个分类器在两个分布上都有小的风险）。 在固定VC维的一个类下，如果想要找到一个在目标任务上有小的经验风险的分类器，学习算法需要最小化那个类上的源任务的风险和经验的H-divergence<span class="math inline">\(\hat{d_H}(S,T)\)</span> 如Ben-David et al(2006)指出的，一个控制H-divergence的策略就是找到一个样本的表示，是的源域和目标域尽量不可区分，在这样的表示方法下，一个在源域上有低风险的假设，根据风险的上界公式，在目标域也有好的表现。</p>
-<h2 id="domain-invarient">domain invarient</h2>
-<p>协偏移假设，域不变的特征可以使得在目标域的性能和在源域一样 shimodaira 2000</p>
-<h1 id="domain-adversarial-neural-networks">Domain-Adversarial Neural Networks</h1>
-<p>本文的主要思想就是讲上界公式显示地加入到神经网络分类器中。也就是说，为了学习一个能够从源域泛化到其他领域的模型，需要构建一个输入不变的特征表示，同时保持在源任务上的低风险。</p>
-<h2 id="example-case-with-a-shallow-neural-network">Example Case with a Shallow Neural Network</h2>
-<h2 id="generalization-to-arbitrary-architectures">Generalization to Arbitrary Architectures</h2>
-<img src="/2018/08/06/domain-adversarial-training/domain_adversrial_training_network.JPG" title="This is an image">
+            <h1 id="adabn">AdaBN</h1>
+<p>首先在Caltech-256和Bing搜索到的图像这两个领域上进行了实验。在每一个minibatch上提取某一层的神经元的均值和方差作为特征向量，使用线性SVM分类器可以很好的分类，下面是可视化的结果 <img src="/2018/10/25/AdaBN/adabn_vis.JPG" title="在Caltech-256和Bing上的验证实验"></p>
+<p>实验说明了两点： 1. DNN的浅层和深层都被Domain shift所影响，仅仅在输出层进行适应操作是不足的 2. BN层的数据包含了该领域的特征</p>
+<p>算法流程如下： <img src="/2018/10/25/AdaBN/adabn_algorithm.JPG" title="AdaBN算法"></p>
+<p>REVISITING BATCH NORMALIZATION FOR PRACTICAL DOMAIN ADAPTATION.</p>
+<p>Arbitrary Style Transfer in Real-time with Adaptive Instance Normalization</p>
+<p>Texture Networks: Feed-forward Synthesis of Textures and Stylized Images</p>
 
           
         
@@ -594,11 +578,11 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/03/Image Style Transfer/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/17/CUDA_In_Pytorch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="Domain Adaptation">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
@@ -613,8 +597,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/03/Image Style Transfer/" itemprop="url">
-                  Style Transfer 论文阅读笔记
+                <a class="post-title-link" href="/2018/10/17/CUDA_In_Pytorch/" itemprop="url">
+                  Pytorch中的CUDA
                 </a>
               
             
@@ -633,19 +617,31 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2018-08-03 15:06:43 / Updated at: 16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+              <time title="创建时间：2018-10-17 20:12:20" itemprop="dateCreated datePublished" datetime="2018-10-17T20:12:20+08:00">2018-10-17</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-10-18 22:02:21" itemprop="dateModified" datetime="2018-10-18T22:02:21+08:00">2018-10-18</time>
               
             
           </span>
@@ -680,12 +676,43 @@
       
         
           
-            <p>在实际操作的时候，loss用来更新像素的值，而不是网络参数</p>
-<p>content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： <span class="math display">\[ L_c = w_c x \]</span></p>
-<p>style loss用来衡量两幅图像的风格差异，style loss使用Gram矩阵来构建，Gram矩阵是协方差矩阵的近似，而匹配两幅图的协方差矩阵是实现风格一致的方式（出处？）。使用Gram矩阵的好处是方便计算。假设特征图 <span class="math inline">\(F^l\)</span>的维度是<span class="math inline">\((C_l,M_l)\)</span>，Gram矩阵的计算方式如下，可以看到Gram矩阵是对称的，（i,j）位置的元素是i,j通道的特征的内积。 <span class="math display">\[G^l_{ij} = \sum_{k} F^l_{ik}F^l_{jk}\]</span></p>
-<p>假设<span class="math inline">\(G^l\)</span>是待优化图像的Gram matrix, <span class="math inline">\(A^l\)</span>是风格图像的Gram matrix, 那么style loss定义为两个Gram matrices的加权欧式距离 <span class="math display">\[L^l_s = w_l \sum_{i,j} {(G^l_{ij} - A^l_{ij})}^2 \]</span></p>
-<p>实际应用时使用多层的特征计算style loss <span class="math display">\[ L_s = \sum_{l \in L}L^l_s\]</span></p>
-<p>加入平滑项有助于图像生成的效果，可以通过加入total variation loss项来惩罚像素的波动或者总体的变化。下面的式子计算了图像中相邻的行和列之间的像素偏差平方 <span class="math display">\[L_{tv} = w_t \times \left(\sum_{c=1}^3\sum_{i=1}^{H-1}\sum_{j=1}^{W} (x_{i+1,j,c} - x_{i,j,c})^2 + \sum_{c=1}^3\sum_{i=1}^{H}\sum_{j=1}^{W - 1} (x_{i,j+1,c} - x_{i,j,c})^2\right)\]</span></p>
+            <p>主要讨论模型并行化以及与DataParallel的配合</p>
+<h1 id="cuda-semantics">CUDA semantics</h1>
+<p>torch.cuda用来设置和运行CUDA相关的操作。跟踪当前选择的GPU，所有被创建的CUDA tensor都会位于该GPU上。可以通过torch.cuda.device来控制上下文，改变当前工作的GPU。</p>
+<p>一旦tensor被分配到GPU上，你再对它进行操作时就不需要考虑哪一块了，操作的结果的位置始终都和tensor所处的GPU一致。</p>
+<p>跨GPU的操作通常是不激活的，除非使用copy_()或者其他拷贝类似的函数比如to()和cuda()。</p>
+<h2 id="dataparallel下的数据和模型">DataParallel下的数据和模型</h2>
+<p>DataParallel创建的时候需要model，这里的要求是模型在送入DataParallel之前位于device_ids[0]上，对于模型的输入来说，在CPU和GPU上都可以（是的，在CPU上也可以，但是没有DataParallel包装的模型还是需要将data迁移到GPU上再做前向传播，应该是DataParallel中做了从CPU到GPU的迁移。所以直接将model放在DataParallel中，即使是单个GPU也可以，不用做额外的区分，可能模型保存时的名字会多一部分？），在实际前向传播的时候，会将一个batch内的数据在dimension0上split，然后分配到不同的GPU上。如果手动放在GPU的话，任何GPU都可以，GPU上的移动是peer-to-peer的，不会经过CPU，当然，还是位于模型所处的几个GPU比较好，不会浪费其他GPU的空间。</p>
+<p>我们采用如下的代码进行测试： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line">vgg16_model = models.vgg16(pretrained=<span class="keyword">False</span>)</span><br><span class="line">vgg16_model.to(<span class="string">'cuda:0'</span>) <span class="comment"># [1]，不需要重新赋值给vgg16_model, Module的to()和cuda()返回值都是self,Tensor的to()和cuda()返回类型都是Tensor</span></span><br><span class="line">vgg16_model = nn.DataParallel(vgg16_model, device_ids=[<span class="number">3</span>, <span class="number">4</span>])  <span class="comment"># [2]</span></span><br><span class="line">print(<span class="string">'model parallel done!!!!'</span>)</span><br><span class="line"></span><br><span class="line">input = torch.zeros((<span class="number">4</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">input = input.to(<span class="string">'cuda:3'</span>) <span class="comment"># [3]</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">	out = vgg16_model(input) [<span class="number">4</span>]</span><br><span class="line">	current_device = torch.cuda.current_device()</span><br><span class="line">	print(<span class="string">'current devices is &#123;&#125;'</span>.format(current_device))  <span class="comment"># 这里输出的始终是0</span></span><br></pre></td></tr></table></figure></p>
+<p>如果vgg16_model在传入DataParallel之前位于其他GPU上，会报如下的错，出错的位置在[4]： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: all tensors must be on devices[<span class="number">0</span>]</span><br></pre></td></tr></table></figure></p>
+<p>如果vgg16_model在传入DataParallel之前位于其他CPU上，会报如下的错，出错的位置也在[4]： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: Broadcast function <span class="keyword">not</span> implemented <span class="keyword">for</span> CPU tensors</span><br></pre></td></tr></table></figure></p>
+<p>model在传入之前，需要严格位于device_ids[0]上，如果device_ids=[4,3]，那么vgg16_model就需要to('cuda:4')</p>
+<p>另外，执行完[2]处的时候并不会在指定的GPU上分配显存，而是等到模型前向传播的时候才分配。可以通过debug模式和nvidia-smi配合来观察。</p>
+<p>注：上面的结论是在Pytorch0.4.1下测试得到的</p>
+<h2 id="model-parallel">model parallel</h2>
+<p>这里的model parallel指的是将一个大的模型分割成几部分，部署在不同GPU上。这一点通过model.to(device)可以指定。</p>
+<p>在运行的时候，暂时不对数据流的并行性做要求，只要能够完成正确的流动顺序即可，现阶段还比较简单。</p>
+<h2 id="model-parallel-and-data-parallel">model parallel and data parallel</h2>
+<p>有了前面的基础，将上述的模型并行和数据并行结合在一起就很简单了。</p>
+<p>只需要为不同的模型分配好不同的GPU（也可以交叉），指定每种模型的首个GPU，然后用DataParallel包装一下。图像数据可以直接放在CPU上，由DataParallel处理，也可以手动放在GPU上。中间的tensor可能在不同的GPU上，但是可以交给DataParallel来处理。（如果没有DataParallel，则需要保证输入的tensor和Module在同一个device上，否则会报错）整个过程中可以不需要用到CUDA的上下文管理器。</p>
+<p>这个是和本小节直接相关的<a href="https://discuss.pytorch.org/t/how-to-train-this-model-on-multi-gpus/7700/12" target="_blank" rel="external">讨论</a>，其中有一个DataParallel的使用方法，用了set_device()函数，以避免RuntimeError: all tensors must be on devices[0]的错误。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">gpu_ids = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">torch.cuda.set_device(gpu_ids[<span class="number">0</span>]) <span class="comment"># fix the bug for " RuntimeError: all tensors must be on devices[0] "</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> use multigpu <span class="keyword">in</span> dataset loader use: pin_memory=<span class="keyword">True</span></span><br><span class="line">model = torch.nn.DataParallel(model, device_ids=gpu_ids)</span><br><span class="line">model.cuda()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> vars <span class="keyword">in</span> train use:</span><br><span class="line">target_var = torch.autograd.Variable(target.cuda(<span class="keyword">async</span>=<span class="keyword">True</span>))</span><br><span class="line">input_var = torch.autograd.Variable(input.cuda(<span class="keyword">async</span>=<span class="keyword">True</span>), requires_grad=<span class="keyword">True</span>, volatile=<span class="keyword">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> vars <span class="keyword">in</span> test stage:</span><br><span class="line">target_var = torch.autograd.Variable(target.cuda(<span class="keyword">async</span>=<span class="keyword">True</span>))</span><br><span class="line">input_var = torch.autograd.Variable(input.cuda(<span class="keyword">async</span>=<span class="keyword">True</span>), volatile=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>尽管torch.cuda.set_device()可以设置当前的GPU，但是DataParallel中接受的device_ids不会受当前GPU的影响，而是默认从0开始，.cuda()找的是device_ids[0]=0，和当前GPU不一致，，所以下面的代码还是会报 ”RuntimeError: all tensors must be on devices[0] “的错。一般模型或者tensor的.cuda()函数会转移到当前GPU上，但是DataParallel既要符合device_ids，而且还要求当前的GPU。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.cuda.set_device(<span class="number">4</span>)</span><br><span class="line">vgg16_model = nn.DataParallel(vgg16_model)</span><br><span class="line">vgg16_model.cuda()</span><br></pre></td></tr></table></figure></p>
+<p>通过set_device()函数，可以修改current devices，这启发我们可以使用更先进的上下文管理器来管理GPU的运行。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vgg16_model = models.vgg16(pretrained=<span class="keyword">False</span>)</span><br><span class="line"><span class="keyword">with</span> torch.cuda.device(<span class="number">6</span>):</span><br><span class="line">	print(<span class="string">'current devices is &#123;&#125;'</span>.format(torch.cuda.current_device()))</span><br><span class="line">	vgg16_model = nn.DataParallel(vgg16_model, device_ids=[<span class="number">6</span>, <span class="number">7</span>])</span><br><span class="line">	vgg16_model.cuda()</span><br><span class="line">	print(<span class="string">'model parallel done!!!!'</span>)</span><br><span class="line">	input = torch.zeros((<span class="number">4</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">		vgg16_out = vgg16_model(input)</span><br><span class="line">		print(<span class="string">'current devices is &#123;&#125;'</span>.format(current_device))</span><br></pre></td></tr></table></figure></p>
+<p>最开始的例子中，current_device始终是0，但是只要提前转移到GPU并且正确指定device_ids，pytorch会帮你管理好运行时的GPU环境。使用context manager的话可以局部修改current device，更直观一些。</p>
+<p>如果不将模型迁移到GPU上，只使用Dataparallel的话， <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vgg16_model = models.vgg16(pretrained=<span class="keyword">False</span>)</span><br><span class="line"><span class="comment"># 既没有先把模型迁到GPU上</span></span><br><span class="line"><span class="comment"># vgg16_model = vgg16_model.to('cuda:6')</span></span><br><span class="line">vgg16_model = nn.DataParallel(vgg16_model, device_ids=[<span class="number">6</span>, <span class="number">7</span>])</span><br><span class="line"><span class="comment"># 也没有对并行之后的模型迁移</span></span><br><span class="line"><span class="comment"># vgg16_model.cuda() # 这里只需要.cuda()即可，不用再赋值</span></span><br><span class="line">input = torch.zeros((<span class="number">4</span>, <span class="number">3</span>, <span class="number">224</span>, <span class="number">224</span>))</span><br><span class="line">vgg16_out = vgg16_model(input) <span class="comment"># 报错点</span></span><br></pre></td></tr></table></figure></p>
+<p>会报如下的错误，意思是DataParallel是针对GPU实现的 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: Broadcast function <span class="keyword">not</span> implemented <span class="keyword">for</span> CPU tensors</span><br></pre></td></tr></table></figure></p>
+<h2 id="something-more">something more</h2>
+<p><a href="https://discuss.pytorch.org/t/model-parallelism-in-pytorch-for-large-r-than-1-gpu-models/778" target="_blank" rel="external">模型并行</a></p>
+<p><a href="https://discuss.pytorch.org/t/model-parallelism-in-pytorch/10799" target="_blank" rel="external">提到了multiprocessing</a></p>
+<p><a href="https://discuss.pytorch.org/t/how-to-solve-the-problem-of-runtimeerror-all-tensors-must-be-on-devices-0/15198" target="_blank" rel="external">关于all-tensors-must-be-on-devices-0的讨论</a>，但是第一个解释是模型的输入数据需要位于deivce_ids[0]，和这里测试的结果不一致（这里是模型），可能是因为版本比较旧？</p>
+<p><a href="https://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html" target="_blank" rel="external">关于DataParallel的教程，和机制的解释</a>，其中一段代码，部分网络使用了DataParallel，而且是在模型定义的时候，代码在CPU模式下也可以用。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataParallelModel</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.block1 = nn.Linear(<span class="number">10</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># wrap block2 in DataParallel</span></span><br><span class="line">        self.block2 = nn.Linear(<span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line">        self.block2 = nn.DataParallel(self.block2)</span><br><span class="line"></span><br><span class="line">        self.block3 = nn.Linear(<span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = self.block1(x)</span><br><span class="line">        x = self.block2(x)</span><br><span class="line">        x = self.block3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<p>下面这段代码来自<a href="https://github.com/pytorch/examples/blob/master/imagenet/main.py" target="_blank" rel="external">pytorch/examples/imagenet</a>，正是因为DataParallel的lazy execution，所以才可以先定义DataParallel，然后再用.cuda()来指定GPU <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> args.gpu <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        model = model.cuda(args.gpu)</span><br><span class="line">    <span class="keyword">elif</span> args.distributed:</span><br><span class="line">        model.cuda()</span><br><span class="line">        model = torch.nn.parallel.DistributedDataParallel(model)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> args.arch.startswith(<span class="string">'alexnet'</span>) <span class="keyword">or</span> args.arch.startswith(<span class="string">'vgg'</span>):</span><br><span class="line">            model.features = torch.nn.DataParallel(model.features)</span><br><span class="line">            model.cuda()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            model = torch.nn.DataParallel(model).cuda()  <span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<p>部分CPU，部分GPU的例子 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">device = torch.device(<span class="string">"cuda:0"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DistributedModel</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super().__init__(</span><br><span class="line">            embedding=nn.Embedding(<span class="number">1000</span>, <span class="number">10</span>),</span><br><span class="line">            rnn=nn.Linear(<span class="number">10</span>, <span class="number">10</span>).to(device),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="comment"># Compute embedding on CPU</span></span><br><span class="line">        x = self.embedding(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Transfer to GPU</span></span><br><span class="line">        x = x.to(device)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Compute RNN on GPU</span></span><br><span class="line">        x = self.rnn(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<h1 id="参考">参考</h1>
+<p><a href="https://pytorch.org/docs/stable/notes/cuda.html?highlight=dataparallel" target="_blank" rel="external">cuda semantics</a></p>
+<p><a href="https://pytorch.org/docs/stable/cuda.html" target="_blank" rel="external">torch.cuda</a></p>
+<p><a href="https://pytorch.org/docs/stable/nn.html?highlight=dataparallel#torch.nn.DataParallel" target="_blank" rel="external">DataParallel layer</a></p>
 
           
         
@@ -728,7 +755,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -761,7 +788,7 @@
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">Vincent Zhang</p>
-              <p class="site-description motion-element" itemprop="description"></p>
+              <p class="site-description motion-element" itemprop="description">Domain Adaptation</p>
           </div>
 
           
@@ -771,8 +798,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -818,8 +845,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
-                    <span class="site-state-item-name">Tags</span>
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">标签</span>
                   
                 </div>
               
@@ -872,7 +901,7 @@
 
 
 
-  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.4.0</div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.4.0</div>
 
 
 
@@ -880,7 +909,7 @@
 
 
 
-  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.3.0</div>
 
 
 
