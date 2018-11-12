@@ -280,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/15/Package_Relative_Import_In_Python/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/03/encoding/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -299,8 +299,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/10/15/Package_Relative_Import_In_Python/" itemprop="url">
-                  python中的包导入
+                <a class="post-title-link" href="/2018/09/03/encoding/" itemprop="url">
+                  字符和编码
                 </a>
               
             
@@ -326,7 +326,7 @@
                 
               
 
-              <time title="创建时间：2018-10-15 11:27:17" itemprop="dateCreated datePublished" datetime="2018-10-15T11:27:17+08:00">2018-10-15</time>
+              <time title="创建时间：2018-09-03 22:00:23" itemprop="dateCreated datePublished" datetime="2018-09-03T22:00:23+08:00">2018-09-03</time>
             
 
             
@@ -343,7 +343,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-01 16:56:45" itemprop="dateModified" datetime="2018-11-01T16:56:45+08:00">2018-11-01</time>
+                <time title="修改时间：2018-09-04 14:58:57" itemprop="dateModified" datetime="2018-09-04T14:58:57+08:00">2018-09-04</time>
               
             
           </span>
@@ -378,37 +378,19 @@
       
         
           
-            <h1 id="python中的包导入">python中的包导入</h1>
-<h2 id="概念">概念</h2>
-<p>python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。</p>
-<p>绝对导入：导入时只搜索sys.path</p>
-<p>相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两层，'insane was the word Guido used'）。 Python2.X在任何时候使用的是先相对再绝对的搜索机制，而在语法和实际执行上有<strong>严格的对应关系</strong>，默认的搜索（一般的import语法和from语法）使用的是绝对导入，而要指定相对搜索，也就是只搜索相对路径上的目录，从语法上来说，就是from . import *** 或者是 from .*** , 具体地，使用from语句而且由点开始（leading dot）。</p>
-<p>在Python3.X中，import *** （import语句）和 from *** import *** （from语句）是<strong>有区别的</strong>，import只语句支持绝对导入，不支持相对导入。from即支持绝对导入，也支持相对导入。</p>
-<p>在python2.X中，使用下面的包，可以实现和Python3.X一样的导入机制 from <strong>future</strong> import absolute_import</p>
-<p>相对包导入的实现使用的是文件的__name__属性，所以对于直接执行的文件来说，不能使用相对导入，从下面第二条中Python3.6版本的报错信息可以看出来。</p>
-<p>python -m *** 的执行方式，应该是将要执行的文件作为被调用的模块，而不是顶层文件，-m后接的文件可以不加.py，穿过多级目录的文件中间使用.(dot)来连接，而不是平台相关的'/'或者''</p>
-<h2 id="what-you-cant-do">what you can't do</h2>
-<ul>
-<li><p><strong>在import语句（区别于from语句）中使用dot（相对导入）</strong> 原因：规则，只有from语句才能使用相对导入，详见<a href="https://www.python.org/dev/peps/pep-0328/#rationale-for-relative-imports" target="_blank" rel="external">PEP328</a></p></li>
-<li><p><strong>直接执行的python文件中，出现相对导入。</strong> python2.7的错误如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: Attempted relative import in non-package</span><br></pre></td></tr></table></figure></p></li>
-</ul>
-<p>python3.6的错误如下，或见<a href="https://stackoverflow.com/questions/41816973/modulenotfounderror-what-does-it-mean-main-is-not-a-package" target="_blank" rel="external">stackoverflow</a>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ModuleNotFoundError: No module named &apos;__main__.da_seg_dataset&apos;; &apos;__main__&apos; is not a package</span><br></pre></td></tr></table></figure>
-<p>原因： 直接执行时，执行文件作为一个命名空间的__name__属性是&quot;<strong>main</strong>&quot;,这样就不能保存路径信息，从而无法确定搜索路径。 常出现的情况是调试大的project中的子文件夹下的文件时，如果需要import该子文件夹下的其他文件时，from语句通常是dot开头(这时也可以使用从根目录开始（只要根目录在sys.path里，比如顶层）的路径，不能使用)</p>
-<ul>
-<li>随意使用 from ..*** import *** 由于相对包导入使用了__name__属性来获取路径，所以使用两个点来导入跨目录的文件时，需要被执行的顶层文件的__name__属性，至少记录了该文件上面两层的父目录才行。 错误如下，或者见<a href="https://stackoverflow.com/questions/30669474/beyond-top-level-package-error-in-relative-import" target="_blank" rel="external">stackoverflow</a>： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Attempted relative import beyond toplevel package</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="what-you-should-do">what you should do</h2>
-<p>Python3中导入同一个文件夹下的文件，且不在sys.path里，<strong>必须使用</strong>相对导入的语法，否则会报错。而在Python2.X中由于&quot;先相对，再绝对的方式&quot;，可以不使用相对导入语法。但是，如果只想使用绝对导入而不使用相对导入（只想使用sys.path下的包，而不使用本路径下的包）时，Python2.X就无法实现这一功能了。</p>
-<h2 id="whatw-now">what'w now</h2>
-<p>了解python标准库中的<a href="">importlib</a></p>
-<p>阅读<a href="https://docs.python.org/3/reference/import.html" target="_blank" rel="external">import system</a></p>
-<h2 id="参考">参考</h2>
-<p><a href="https://www.python.org/dev/peps/pep-0328/#rationale-for-relative-imports" target="_blank" rel="external">PEP328</a></p>
-<p><a href="https://stackoverflow.com/questions/72852/how-to-do-relative-imports-in-python/73149#73149" target="_blank" rel="external">how-to-do-relative-imports-in-python</a></p>
-<p><a href="http://www.dsf.unica.it/~fiore/LearningPython.pdf" target="_blank" rel="external">learning python 5th, Chapter 24. Module Packages</a></p>
-
-          
+          文件编码
+参考这篇博客 里面包含了linux下查看文件编码的方法
+pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert
+reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况
+convert是使用不同的编
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/03/encoding/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -460,7 +442,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/11/pytorch-0.4/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/15/weak-pairwise-constraints/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -479,8 +461,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/11/pytorch-0.4/" itemprop="url">
-                  Pytorch 0.4迁移指南
+                <a class="post-title-link" href="/2018/08/15/weak-pairwise-constraints/" itemprop="url">
+                  Adapting Deep Visuomotor Representations with Weak Pairwise Constraints
                 </a>
               
             
@@ -506,24 +488,12 @@
                 
               
 
-              <time title="创建时间：2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
+              <time title="创建时间：2018-08-15 16:22:04 / 修改时间：16:25:18" itemprop="dateCreated datePublished" datetime="2018-08-15T16:22:04+08:00">2018-08-15</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-11-11 11:34:59" itemprop="dateModified" datetime="2018-11-11T11:34:59+08:00">2018-11-11</time>
               
             
           </span>
@@ -558,99 +528,19 @@
       
         
           
-            <h1 id="版本迁移">版本迁移</h1>
-<p>0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。</p>
-<h1 id="自动求导">自动求导</h1>
-<p>requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，并且保存（累加）在grad属性里，如果require_grad=False，就不为该tensor计算误差。 可以通过在每一次前向计算时设置模型参数的requires_grad=False，使得loss.backward()时这些网络参数的梯度（grad）为None。</p>
-<p>网络权重的梯度的累加和optimizer中是否有该权重是相互独立的。</p>
-<p>optimizer只需要创建的时候参数的requires_grad=True就行，step()时=False也没有关系，grad属性可能是None，这时调用optimizer.step()就不会改变参数的值。requires_grad等于False并不代表grad一定是None，可能只是临时设置为False，但是有之前累积的grad。</p>
-<p>因为联系整个计算图的是中间的计算结果，网络参数本身可以看做是叶子节点，所以才可以做到网络参数的部分更新，这时一定要保证</p>
-<p>举个例子来说，首先定义模型和输入变量，ground truth以及优化器 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.optim <span class="keyword">import</span> SGD</span><br><span class="line"></span><br><span class="line">linear1 = nn.Linear(in_features=<span class="number">2</span>, out_features=<span class="number">2</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">linear2 = nn.Linear(in_features=<span class="number">2</span>, out_features=<span class="number">1</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">nn.init.constant_(linear1.weight.data, <span class="number">1</span>)</span><br><span class="line">nn.init.constant_(linear2.weight.data, <span class="number">2</span>)</span><br><span class="line">optimizer1 = SGD(linear1.parameters(), lr=<span class="number">100</span>)</span><br><span class="line">optimizer2 = SGD(linear2.parameters(), lr=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">gt = torch.ones(<span class="number">1</span>).unsqueeze(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>正常的前向传播和反向传播的流程如下，input-&gt;linear1-&gt;linear2-&gt;output，： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(output1.is_leaf,output2.is_leaf)</span><br><span class="line">print(linear1.weight.is_leaf,linear2.weight.is_leaf)</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
-<p>输出的模型参数的梯度如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">False</span> <span class="keyword">False</span></span><br><span class="line"><span class="keyword">True</span> <span class="keyword">True</span></span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>],</span><br><span class="line">        [<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br></pre></td></tr></table></figure></p>
-<p>网络的参数也属于leaf node，因为这些参数也是用户定义的，就像模型的输入一样。output1和output2是中间的计算结果，属于non-leaf node，中间节点的requires_grad属性是根据其输出节点的requires_grad属性来推断的，只有所有输入节点requires_grad为False，其自身的requires_grad才是False，否则就是True。但是中间节点的grad属性确实不会开启的，即loss.backward()之后，grad仍然是None，并不会保留梯度值，只有显示地设置retain_grad()，才会保留，如下面的代码所示。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">print(output2.requires_grad)</span><br><span class="line">print(output1.grad)</span><br><span class="line">print(output2.grad)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">print(output2.requires_grad)</span><br><span class="line">print(output1.grad)</span><br><span class="line">print(output2.grad)</span><br></pre></td></tr></table></figure></p>
-<p>结果是： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">None</span></span><br><span class="line"><span class="keyword">None</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">None</span></span><br><span class="line"><span class="keyword">None</span></span><br></pre></td></tr></table></figure></p>
-<p>即requires_grad为True，但是grad属性却始终是None。 retain_grad()可以让中间节点的grad被保留，相反地，如果不想让梯度传回到之前的计算图，可以使用detach()方法，将该中间节点变成leaf node(同时requires_grad变成False)，计算图从此处断开，前面的网络不会再接受梯度。注意，对于中间节点只能通过detach()方法使之requires_grad变为False，而不能直接设置。如果直接设置input1的requires_grad = False，会报错 RuntimeError: you can only change requires_grad flags of leaf variables. If you want to use a computed variable in a subgraph that doesn't require differentiation use var_no_grad = var.detach(). <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">output1 = output1.detach() <span class="comment"># 或者是input1.detach_()</span></span><br><span class="line">print(output1.requires_grad)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
-<p>输出结果如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="keyword">False</span></span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line"><span class="keyword">None</span></span><br></pre></td></tr></table></figure></p>
-<p>下面进行两次前向-反向传播，第一次设置linear2参数的requires_grad为False，第二次设置linear1参数的requires_grad为True <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一次前向传播</span></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> linear2.parameters():</span><br><span class="line">    param.requires_grad = <span class="keyword">False</span></span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br><span class="line"><span class="comment"># 第二次前向传播</span></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> linear2.parameters():</span><br><span class="line">    param.requires_grad = <span class="keyword">True</span></span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
-<p>输出的结果如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">None</span></span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>],</span><br><span class="line">        [<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line">tensor(<span class="number">1.00000e-04</span> *</span><br><span class="line">       [[<span class="number">-6.7067</span>, <span class="number">-6.7067</span>]])</span><br><span class="line">tensor(<span class="number">1.00000e-03</span> *</span><br><span class="line">       [[<span class="number">-1.3413</span>, <span class="number">-1.3413</span>],</span><br><span class="line">        [<span class="number">-1.3413</span>, <span class="number">-1.3413</span>]])</span><br></pre></td></tr></table></figure></p>
-<p>第一次反向传播之后，linear2参数的grad属性为None，没有误差，第二次的时候误差正常计算，这个过程中只是修改了params的requires_grad属性。第一次运行时，尽管linear2的参数不需要计算梯度，但是output1是需要计算的（因为linear1的参数需要计算梯度），所以output2 requires_grad=True，这样loss的梯度才会反传回来。</p>
-<p>还有一点需要注意，输入loss函数的第一项必须满足requires_grad=True，否则在loss.backward()时会报错，RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</p>
-<h2 id="旧版本">旧版本</h2>
-<p>之前版本 Variable的属性：</p>
-<ul>
-<li>data</li>
-<li>grad</li>
-<li>requires_grad</li>
-<li>volatile</li>
-<li>is_leaf</li>
-<li>data</li>
-<li>grad</li>
-</ul>
-<h3 id="和optimizer的关系">和optimizer的关系</h3>
-<ol style="list-style-type: decimal">
-<li>错误信息：optimizing a parameter that doesn't require gradients。送到优化器中的参数需要requires_grad = True</li>
-<li>错误信息：can't optimize a non-leaf Variable 送到优化器中的参数只能是leaf或者网络的权重参数，不能是中间的输出变量，如特征图（特征图一般也不需要优化，只需要传递误差就行）</li>
-</ol>
-<p>leaf node指的是用户自己定义的变量，以及模型的参数，而中间的结果都是non-leaf node。</p>
-<p>detach() 函数返回一个新的Variable，从当前的计算图中脱离，不需要计算梯度。返回的Variable和原来的Variable共用一个tensor数据，in-place的操作会彼此影响。</p>
-<p>register_hook(hook)注册一个反向传播的hook,hook是一个函数，输入是正常的grad,输出是新的grad或者None hook(grad) -&gt; Tensor or None</p>
-<p>detach_() 从计算图中脱离，成为一个叶子节点。detach_()之后required_grad自动变成False</p>
-<h2 id="新版本">新版本</h2>
-<p>Variable的属性 - data 保留，不变 - grad 保留 - requires_grad 保留 - volatile 废弃 - is_leaf 保留 - grad_fn 保留</p>
-<p>volatile去掉了，改成了使用上下文管理器来设置是否需要计算grad</p>
-<h3 id="data属性和detech">.data属性和detech()</h3>
-<p>在旧版本里.data属性获取的是tensor，就和计算图没有关系了，同时共享了底层的数据，如果对tensor进行in-place的操作，也会对梯度的反向传播产生影响（该变量之前的变量的梯度计算会出错），但是不会报错。 0.4版本中.data属性保持了同样的含义，会返回一个共享数据的Tensor,和计算历史无关，同时requires_grad = False，如果进行了in-place的操作，效果同上。</p>
-<p>推荐的方式是使用detach()，返回一个新的Variable或者tensor。如果detach()之后的量进行了in-place操作，会报错，但是抱错的位置不一样。0.3.1更早一点。</p>
-<p>0.3.1版本中 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3.</span>], requires_grad = <span class="keyword">True</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>out = a.sigmoid()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c = out.detach()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c.zero_()</span><br><span class="line">tensor([ <span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>])</span><br><span class="line">这里就会报错</span><br><span class="line">RuntimeError: <span class="keyword">in</span>-place operations can be only used on variables that don<span class="string">'t share storage with any other variables, but detected that there are 2 objects sharing it</span></span><br></pre></td></tr></table></figure></p>
-<p>0.4.0版本 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; a = torch.tensor([1,2,3.], requires_grad = True)</span><br><span class="line">&gt;&gt;&gt; out = a.sigmoid()</span><br><span class="line">&gt;&gt;&gt; c = out.detach()</span><br><span class="line">&gt;&gt;&gt; c.zero_()</span><br><span class="line">tensor([ 0., 0., 0.])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; out # modified by c.zero_() !!</span><br><span class="line">tensor([ 0., 0., 0.])</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; out.sum().backward() # Requires the original value of out, but that was overwritten by c.zero_()</span><br><span class="line">RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation</span><br></pre></td></tr></table></figure></p>
-<h3 id="loss累加">loss累加</h3>
-<p>之前版本中常用的计算多个batch的平均loss，用于输出的代码 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">total_loss += loss.data[0]</span><br></pre></td></tr></table></figure></p>
-<p>现在由于 loss是一个scalar，维度是0，所以[0]是会出错的，应该改成 loss.item() <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">total_loss += loss.item()</span><br></pre></td></tr></table></figure></p>
-<p><strong>Note:</strong> item()方法只针对包含一个元素的tensor适用</p>
-<h2 id="nn">nn</h2>
-<p>之前的损失函数中有reduce和size_average两个参数，bool类型，控制一个batch中多个样本的loss计算方式。分为三种情况。 - reduce=False, 这时会忽略size_average的设置，为每个样本返回计算一个loss - reduce=True, size_average=False, 多个样本之间的loss是相加的关系 - reduct=True, size_average=True, 多个样本之间的loss去平均</p>
-<p>其中，第二条和第三条的差别在于loss的值差了<span class="math inline">\(1/batch\)</span></p>
-<p>现在使用，reduction参数（str），取值有三种'none', ‘sum’,'elementwise_mean'对应上面的三种情况</p>
-<h2 id="tensor">tensor</h2>
-<p>torch.Tensor创建函数是默认的tensor类型的别名，torch.Tensor()如果接受多个数字的话，会把他解析成size，如果是序列的话，会解析成数据，这些在新旧版本都一样的，可以参考0.3.1Tensor文档中对于Tensor()创建函数中不同参数的定义。 <img src="/2018/09/11/pytorch-0.4/Tensor_class.JPG" title="Tensor_class"></p>
-<p>之前的版本也存在0维的tensor，torch.Tensor()创建的就是0维的tensor，但是这个没有什么用途（？），而且和0.4.0的不一样，0.4.0的zero-dimensional tensor指的是仅包含一个元素，dim()=0，size()=torch.Size([])的tensor，0.4.0中，torch.Tensor()虽然也会返回一个不包含任何元素的tensor，但是dim()=1，size()=torch.Size([1])。</p>
-<p>0.4.0增加了torch.tensor(data, dtype=None, device=None, requires_grad=False)的tensor创建函数，在之前的版本中，torch.tensor的类型是class 'module'，0.4.0中的类型是builtin_function_or_method。torch.tensor传入的第一个参数总是数据，包括Python number，list, tuple等，而且会拷贝原来的数据。</p>
-<table style="width:35%;">
-<colgroup>
-<col width="15%">
-<col width="6%">
-<col width="5%">
-<col width="6%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>numpy</th>
-<th>torch</th>
-<th>类型</th>
-<th>接受参数</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>np.array</td>
-<td>torch.tensor</td>
-<td>builtin_function_or_method</td>
-<td>data</td>
-</tr>
-<tr class="even">
-<td>np.ndarray</td>
-<td>torch.Tensor</td>
-<td>type</td>
-<td>np.ndarray只接受shape，torch.Tensor接受data或shape(单纯的数字)</td>
-</tr>
-</tbody>
-</table>
-<p>0.4.0<strong>重新定义</strong>了zero-dimensional tensor，即用tensor.dim()函数查看的话，返回的数字是0。创建的话可以使用torch.tensor(single_number)，</p>
-<p>item()可以用在只包含一个元素的tensor上，zero-dimensional tensor或者dim()=1，torch.size()=torch.Size([1])的都可以</p>
-<p>torch.Scalar相关的<a href="https://github.com/pytorch/pytorch/issues/1433" target="_blank" rel="external">讨论</a></p>
+          思路
+针对的是虚拟数据到真实数据的无监督域适应的问题，并且希望利用虚拟数据和真实数据之间的成对关系，于是在训练中基于特征人为构造了成对数据，并且和网络训练迭代进行。
+实现
+网络结构如下图所示： 
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/15/weak-pairwise-constraints/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -702,7 +592,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/05/distribution-adaptation/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -721,8 +611,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/05/distribution-adaptation/" itemprop="url">
-                  Distribution Adaptation
+                <a class="post-title-link" href="/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/" itemprop="url">
+                  Simultaneous deep transfer across domains and tasks
                 </a>
               
             
@@ -748,24 +638,12 @@
                 
               
 
-              <time title="创建时间：2018-09-05 17:14:45" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:45+08:00">2018-09-05</time>
+              <time title="创建时间：2018-08-15 13:29:54 / 修改时间：16:09:47" itemprop="dateCreated datePublished" datetime="2018-08-15T13:29:54+08:00">2018-08-15</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-11-01 16:49:32" itemprop="dateModified" datetime="2018-11-01T16:49:32+08:00">2018-11-01</time>
               
             
           </span>
@@ -800,12 +678,342 @@
       
         
           
-            <h1 id="方法">方法</h1>
-<p>Distributing Adaptation是数据分布自适应，这里主要介绍DA中的数据分布自适用的浅层方法。</p>
-<p>分为边缘分布自适应，条件分布自适应和联合分布自适应。其中边缘分布自适应是最早也是最基础的方法。</p>
-<p>TCA是经典的边缘分布自适应方法，使用了MMD准则作为领域（分布）之间距离的度量方法。</p>
+          思路
+本文针对的情况是目标域存在少量稀疏的带标签样本。通过domain confusion loss来获取领域一致的特征表示，同时由源域样本得到的soft label，建模类别之间的关系，指导目标域样本的分类，效果比hard label要好。
+方法
+网络结构如下图所示： 
+fcD层后面接的d
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/15/simultanueous-deep-transfer-across-domain-and-task/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/12/image-to-image-translation-conditional-gan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Zhang">
+      <meta itemprop="description" content="Domain Adaptation">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OnTheMoon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/12/image-to-image-translation-conditional-gan/" itemprop="url">
+                  Image-to-Image Translation with Conditional Adversarial Networks
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-12 14:43:09" itemprop="dateCreated datePublished" datetime="2018-08-12T14:43:09+08:00">2018-08-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-15 10:31:43" itemprop="dateModified" datetime="2018-08-15T10:31:43+08:00">2018-08-15</time>
+              
+            
+          </span>
 
           
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          思想
+利用条件GAN来解决图像到图像的学习问题，不仅学习图像到图像的映射，同时学习一个损失函数来训练这一映射，使得这一方法可以应用于不同的任务，例如由标签生成图像，由边缘图像重建物体，为物体上色等。
+生成器采用U-Net，判别器采用卷积“PatchGAN”分类器，仅在patch大小的区域对图像结
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/12/image-to-image-translation-conditional-gan/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/12/coupled-gan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Zhang">
+      <meta itemprop="description" content="Domain Adaptation">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OnTheMoon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/12/coupled-gan/" itemprop="url">
+                  Coupled GAN
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-12 16:26:18" itemprop="dateCreated datePublished" datetime="2018-08-12T16:26:18+08:00">2018-08-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-14 22:12:49" itemprop="dateModified" datetime="2018-08-14T22:12:49+08:00">2018-08-14</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          思路
+提出可以学习多领域图像的联合分布的coupled GAN，不需要不同领域之间图像的对应关系。这是通过强制权重共享来限制网络容量，并且偏向于不同边缘分布的乘积来构造一个联合分布。
+方法
+网络结构
+
+采用了两个并列的GAN,各自的输入是不同领域的边缘分布采样的结果。GAN的生成器将同一个
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/12/coupled-gan/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -846,7 +1054,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -889,7 +1097,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -938,7 +1146,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -1136,9 +1346,13 @@
   
     
       
+        
+      
     
       
-        
+    
+      
+    
       
     
       

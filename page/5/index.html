@@ -280,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/05/DA-in-semantic-segmentation/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/13/unsupervised-image-to-image-translation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -299,8 +299,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/05/DA-in-semantic-segmentation/" itemprop="url">
-                  DA in Semantic Segmentation
+                <a class="post-title-link" href="/2018/08/13/unsupervised-image-to-image-translation/" itemprop="url">
+                  Unsupervised Image-to-Image Translation Networks(UNIT)
                 </a>
               
             
@@ -326,24 +326,12 @@
                 
               
 
-              <time title="创建时间：2018-09-05 17:14:11" itemprop="dateCreated datePublished" datetime="2018-09-05T17:14:11+08:00">2018-09-05</time>
+              <time title="创建时间：2018-08-13 09:04:25 / 修改时间：22:33:15" itemprop="dateCreated datePublished" datetime="2018-08-13T09:04:25+08:00">2018-08-13</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-10-24 21:48:01" itemprop="dateModified" datetime="2018-10-24T21:48:01+08:00">2018-10-24</time>
               
             
           </span>
@@ -378,234 +366,17 @@
       
         
           
-            <h1 id="数据集">数据集</h1>
-<h2 id="cityscapes">Cityscapes</h2>
-<p>34个类别 图像分辨率2048x1024，训练集2975，验证集500，测试集1525 数据集的划分是城市级别的，训练集18个城市，验证集3个，测试集6个，不交叉</p>
-<h2 id="synthia">SYNTHIA</h2>
-<p>有13个类别 对于season-&gt;season任务，使用SYNTHIA-VIDEO-SEQUENCES。包括7段视频，涵盖不同的场景（），下面有不同的子设置：季节，天气，光照。图像有8个RGB相机拍摄构成360度的视角。为了减小视角的影响，只选择和行车记录仪视角类型的图像。</p>
-<p>对于synthetic -&gt; real任务，使用SYNTHIA-RAND-CITYSCAPES。从所有的视屏中随机选取了9000张图像，和cityscapes的标签兼容。</p>
-<h2 id="gta5">GTA5</h2>
-<p>从Grand Theft Auto V的开放世界中获取的包含24996张高质量图像。图像分辨率1914x1052，城市是基于Los Angeles的Los Santos。</p>
-<h1 id="论文">论文</h1>
-<p>全卷积网络在密集预测中被认为是有效的，但是遇到领域偏移的时候效果会下降。一些工作利用弱标签来提升语义分割的效果。<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>中使用带注意力机制的编码解码结构来迁移弱的类别标签，<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a><a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>中迁移物体的位置信息。</p>
-<p>更多的工作关注语义分割中的深度无监督域适应。</p>
-<h1 id="fcns-in-the-wild">FCNs in the wild</h1>
-<p><a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> 首先引入了这一概念，在FCN上进行对抗式的训练以实现整个领域的对齐。迁移空间布局是利用类别相关的constrained multiple instance loss。<a href="https://github.com/Wanger-SJTU/FCN-in-the-wild" target="_blank" rel="external">代码，pytorch</a></p>
-<p>作者指出在语义分割中有两个主要的领域偏移。首先是全局的变化会导致特征空间的边缘分布不同，这一差异会发生在任何两个不同的领域，但是在差异比较大的领域之间占主要部分；其次是特定类别之间的差异，比如不同城市之间车辆以及交通信号的偏移。作者因此采用了两个loss来分别处理。</p>
-<p>dense（有空间信息）的特征一致性和一维向量（分类任务）的特征一致性有什么区别吗？ 最后的dense的特征，每一个空间位置的一维向量都可以看做是分类任务的特征，不同位置之间的关系是不是可以利用一下？</p>
-<p>Hoffman et al. [13] introduce the task of domain adaptation on semantic seg- mentation by applying adversarial learning (i.e., DANN) in a fully-convolutional way on feature representations and additional category constraints similar to the constrained CNN [29]. ----<a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> category specific adaptation是从弱语义分割学习的方法中借鉴过来的。还需要看一下 Constrained convolutional neural networks for weakly supervised segmentation. Fully convolutional multi-class multiple instance learning.</p>
-<p>In particular, FCN in the wild uses an adversarial loss to align fully connected layers (adapted to convolution layers) of a VGG16 model, and additionally leverages multiple instance learning to transfer spatial layout [9].</p>
-<h2 id="指标">指标</h2>
-<p>数据集：Cityscapes， SYNTHIA，GTA5，BDDS(proposed) 分了三类任务： cities-&gt;cities，season-&gt;season，synthetic-&gt;real 其中cities-&gt;cities，synthetic-&gt;real任务使用的是cityscapes的19类标签 season-&gt;season使用的是SYNTHIA的13类标签</p>
-<p>GAT5 -&gt; Cityscapes： before adaptation 21.1 after adaptation 27.1</p>
-<p>SYNTHIA Cityscpes： 14.7 17.0</p>
-<h2 id="实验">实验</h2>
-<h3 id="对抗训练">对抗训练</h3>
-<p>对抗训练是在有空间信息的特征图上，对每一个空间位置都进行源域vs目标域的分类，而不是最后输出1x1的特征图输出然后判断。</p>
-<p>和learning to adapt相比，在反向训练（<span class="math inline">\(L_{inv}\)</span>）的时候，使用了源域的数据，而learning to adapt没有。对应公式(4)</p>
-<p>这里是迭代训练的，而leaning to adapt是反向传播loss并叠加，然后一起更新。</p>
-<p>这里在反向训练（<span class="math inline">\(L_{inv}\)</span>）的时候，也用了正向训练的损失（其实和learning to adapt的一次更新过程一样）。对应公式(7) ### 类别的适应 对于特定类别，通过每一张图片都可以得到一个比例，统计所有图片，可以得到一个直方图 <span class="math inline">\(\alpha_c\)</span>是下10%的界，<span class="math inline">\(\delta_c\)</span>是均值，<span class="math inline">\(\gamma_c\)</span>是上10%的界</p>
-<p>对目标图像使用像素比例上的限制。但是为什么要用图像级别的标签呢？</p>
-<h1 id="curriculum-domain-adaptationcda">Curriculum domain adaptation(CDA)</h1>
-<p><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> ICCV2017 使用虚拟图像来增强现实图像的语义分割效果，使用了图像级别的全局标签分布损失，和超像素级别的局部标签分布损失来正则化模型的微调过程。<a href="https://github.com/YangZhang4065/AdaptationSeg" target="_blank" rel="external">代码，keras</a> 数据集：Cityscapes， SYNTHIA，GTA5</p>
-<p>课程学习，更倾向于学习一个数据的分布。</p>
-<p>颜色的一致性在由虚拟到真实的迁移也很重要。使用了现成的方法。</p>
-<p>能不能像STN那样有一个显式的转换模块?</p>
-<p>关键问题是全局的标签分布是什么意思，各类别标签所占的比例，还是所有像素标签概率的均值。假设是前者的话，目标样本通过语义分割模型产生的结果如何对应到这一分布呢，是取平均吗，这不就是后者了吗？</p>
-<p>线性谱聚类的输入应该是原图像吧，不需要分割网络参与？</p>
-<p><a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a><a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a><a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a><a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a><a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a>是之前或同一时期的工作。VisDA2017中获胜的方案是很多模型的集成。</p>
-<p>softmax输出的概率层面的分布的匹配和特征空间的概率匹配。</p>
-<p>Constrained convolutional neural networks for weakly supervised segmentation. ICCV2015 Training constrained deconvolutional networks for road scene semantic segmentation.</p>
-<h1 id="no-more-discrimination">No more discrimination</h1>
-<p><a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> ICCV2017 中跨城市语义分割的框架，为目标域的像素赋予伪标签，然后通过领域对抗学习实现全局和类别的对齐。<a href="">代码</a> <a href="https://yihsinchen.github.io/segmentation_adaptation/" target="_blank" rel="external">项目主页</a> 作者考虑了两类领域偏移的情况，一类是全局的偏移，一类是类别的偏移。前者是由于城市外观的差异，后者是由于道路上不同的组成情况。</p>
-<p>全局偏移的loss定义和FCN in the wilds是一样的，也是迭代训练，但是正向的损失函数没有参与到反向的迭代过程中。全局的loss也是分开grid来做的。</p>
-<p>这里是不是有后验概率不好计算，转而计算另一个比较好算的概率的trick?</p>
-<p>类别的适应在Fcn in the wild也有，但是那里是利用类别的组成比例，即假设不同城市之间的组成是相似的。本文拓展了JDA的思想，为目标域图像的像素赋予伪标签，在全局的域适应完成之后，目标域的图像可以产生语义预测结果。因此，源域和目标域之间的类别关联就可以获得了。类别相关的对抗是在每一个grid的每一类别上进行的，没有对同一位置的类别进行max之后再构造对抗损失。为每一个grid计算类别概率均值，然后对于每一类别在图像空间内进行平均。这一平均之后的值作为对抗损失的系数。</p>
-<p>利用Google Street View构建了一个数据集</p>
-<h2 id="相关论文">相关论文</h2>
-<p>数据偏差论文： A. Khosla, T. Zhou, T. Malisiewicz, A. A. Efros, and A. Tor- ralba. Undoing the damage of dataset bias. In ECCV. Springer, 2012. A. Torralba and A. A. Efros. Unbiased look at dataset bias. In CVPR. IEEE, 2011</p>
-<p>网络结构如下图所示 </p>
-<p>和Learning to adapt structured output space的作者是一样的。</p>
-<h2 id="指标-1">指标</h2>
-<p>SYNTHIA - Cityscapes 预训练 30.7 全局 33.8 全局+类别 35.7</p>
-<h1 id="road-net">ROAD-Net</h1>
-<p><a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> CVPR2018 使用了目标引导的蒸馏模型来迁移真实图像的风格，同时使用了空间感知适应模块来利用内在的空间结构来减小领域偏移。不同于在特征空间上直接进行简单的对抗损失。<a href="http://www.vision.ee.ethz.ch/~yuhchen/" target="_blank" rel="external">作者主页</a></p>
-<p>从特征表示的角度讲，模型会在虚拟数据集上过拟合，使得在真实图像上不适合。从分布的角度讲，虚拟数据和真实数据的分布不匹配。</p>
-<p>首先使用目标域引导的蒸馏方法来学习真实图像的风格，通过让分割模型学习在真实图片上预训练好的模型。然后，提出了空间感知模块来对齐两个领域分布。这两个模型可以添加到任意的分割模型中。</p>
-<p>受到模型蒸馏论文的启发，使用了在ImageNet上预训练好的模型（参数固定）来充当老师，在虚拟数据集上训练时构造一个蒸馏损失（特征的欧式距离），使模型输出的特征不要过分地偏向于虚拟数据。还有其他的方法防止在虚拟数据集上的过拟合，比如固定某些层，或者使用learning without forgeting的方法。</p>
-<p>空间感知的适应模块是将图像划分成不同的块，然后在每一块上使用领域对抗损失。</p>
-<p>相关工作：<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a> <a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a><a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a><a href="#fn17" class="footnoteRef" id="fnref17"><sup>17</sup></a><a href="#fn18" class="footnoteRef" id="fnref18"><sup>18</sup></a><a href="#fn19" class="footnoteRef" id="fnref19"><sup>19</sup></a></p>
-<h2 id="问题">问题</h2>
-<p>However, aligning pixel-level features between synthetic and real data for urban scene images is non-trivial. Conventional domain adaptation approaches are usually proposed for the image classification task. While similar methodol- ogy can be applied by taking each pixel-level feature as a training sample, it is still challenging to fully reduce the distribution mismatch, since the pixels vary significantly in appearance [17] and scale [2]. 挖掘局部特征之间的关联？或者进行max之类的操作然后再对齐。</p>
-<p>Hoffman et al. [17] implemented it by switching domain label similarly as in the Generative Adversarial Networks (GAN) [11]. We follow [8] to insert a gradient reverse layer between F and h. Particularly,</p>
-<h2 id="指标-2">指标</h2>
-<p>数据集：GTA5→Cityscapes DeepLab: 35.9 PSPNet: 39.4</p>
-<h1 id="learning-from-synthetic-data">Learning From Synthetic Data</h1>
-<p><a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a> CVPR2018 使用了GAN将特征映射到图像空间（新的图像空间和原图像可以使用reconstruction loss），在图像空间使用判别器。<a href="https://github.com/swamiviv/LSD-seg" target="_blank" rel="external">代码，pytorch</a></p>
-<p>相关论文：<a href="#fn21" class="footnoteRef" id="fnref21"><sup>21</sup></a><a href="#fn22" class="footnoteRef" id="fnref22"><sup>22</sup></a></p>
-<p>网络结构： <img src="/2018/09/05/DA-in-semantic-segmentation/learning-from-synthetic-data-framework.JPG" title="learning-from-synthetic-data网络结构"></p>
-<p>Unsupervised Image-to-Image Translation Networks(UNIT)的网络结构如下图所示 <img src="/2018/09/05/DA-in-semantic-segmentation/UNIT-network-arch.JPG" title="UNIT网络结果"></p>
-<p>Since the advent of deep neural networks, emphasis has been shifted to learning do- main invariant features in an end-to-end fashion. Astandard framework for deep domain adaptation involves minimizing a measure of domain discrepancy along with the task being solved. Some approaches use Maximum Mean Discrepancy and its kernel variants for this task ( [21], [22]), while oth- ers use adversarial approaches ( [7], [2], [28]).</p>
-<h2 id="指标-3">指标</h2>
-<p>数据集： SYNTHIA→CITYSCAPES FCN8s-VGG16 36.1</p>
-<p>GTAV→CITYSCAPES FCN8s-VGG16 37.1</p>
-<h1 id="learning-to-adapt-structured-output-space">Learning to adapt structured output space</h1>
-<p><a href="#fn23" class="footnoteRef" id="fnref23"><sup>23</sup></a> CVPR2018，<a href="https://github.com/wasidennis/AdaptSegNet" target="_blank" rel="external">代码,pytorch0.4</a></p>
-<p>考虑到语义分割是结构化的输出，包含了源域和目标域之间的相似性，在输出空间使用对抗学习。为了进一步增强适应模型，我们在不同的特征层的输出上进行对抗式域适应。</p>
-<p>首先是在输出的语义图（是在<span class="math inline">\(c\times h\times w\)</span>的特征图上，没有经过softmax操作）上进行对抗训练，也是structured的来源。其次，在多个特征图上进行，如conv5和conv4，使用这两层的输出构造语义分割损失，并进行对抗训练，。</p>
-<p>对抗损失的任务本身是一个分类任务，但是和前面一样，都是在特征图的不同位置上都进行对抗损失的计算。</p>
-<p>尽管论文中这样写 Given the segmentation softmax output <span class="math inline">\(P = G(I) ∈ R^H×W×C\)</span>, where C is the number of categories, we forward P to a fully-convolutional discriminator D using a cross-entropy loss <span class="math inline">\(L_d\)</span> for the two classes (i.e., source and target). 但是送到判别的输入不是softmax之后的值，而是softmax前面一步的值，虽然二者的大小关系是一致的。</p>
-<p>网络结构如下图  数据集： GTA5→Cityscapes， VGG16 35.0 ResNet101 42.4 SYNTHIA→Cityscapes VGG16 37.6 Resnet101 46.7</p>
-<h2 id="相关工作">相关工作</h2>
-<p><a href="#fn24" class="footnoteRef" id="fnref24"><sup>24</sup></a> introduce the task of domain adaptation on semantic seg- mentation by applying adversarial learning (i.e., DANN) in a fully-convolutional way on feature representations and additional category constraints similar to the constrained CNN[29]. <a href="#fn25" class="footnoteRef" id="fnref25"><sup>25</sup></a> focus on adapting synthetic-to- real or cross-city images by adopting class-wise adversarial learning [3] or label transfer [3]. <a href="#fn26" class="footnoteRef" id="fnref26"><sup>26</sup></a> Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learn- ing [13].</p>
-<p>Recently, the PixelDA method [1] addresses domain adap- tation for image classification by transferring the source images to target domain, thereby obtaining a simulated train- ing set for target images.</p>
-<h2 id="指标-4">指标</h2>
-<p>实验结果中的oracle指的是在目标域数据集的训练集上训练，测试集上测试的结果</p>
-<p>判别器的选择：全卷积网络，leaky ReLU 0.2，不使用batch-normalization层因为使用了小batchsize</p>
-<p>语义分割网络：DeepLab-v2 不用multi-scale混合策略，</p>
-<h2 id="代码">代码</h2>
-<p>训练领域分类器使用的loss是BCE Loss，尽管论文中训练分类器的时候写的是softmax loss。 在对抗训练的特征提取器训练（以生成领域不变的特征）过程中，只使用了目标域的数据，将它分类成源域数据，和公式(4)一致。 流程是一轮对抗训练完成之后更新一次参数。</p>
-<p>文章中没有说训练时采用的图像大小。 测试代码使用的是1024x512，但是在1080ti上使用1024 x 512显存会超出。</p>
-<p>训练了512x256的模型，测试时使用512x256比1024x512的效果要好。</p>
-<h1 id="conditional-generative-adversarial-network-for-structured-domain-adaptation">Conditional Generative Adversarial Network for Structured Domain Adaptation</h1>
-<p><a href="#fn27" class="footnoteRef" id="fnref27"><sup>27</sup></a> CVPR2018 将GAN嵌入到FCN中实现域适应。具体地，学习一个条件生成器将生成图像的特征迁移到真实图像，判别器来判断是否是真实图像。对于每一个训练batch，条件生成器和判别器彼此竞争以生成更加真实的特征，然后更新FCN的参数来适应GAN的变化。</p>
-<p>有文献指出对于结构化的预测学习一个决策函数，标签空间是指数级别的。</p>
-<p>与Learning from synthetic data相比，首先，Learning from synthetic data还是基于共享特征空间的假设，特征提取器和GAN的生成器都是共享的，而这里源域图像额外经过了一个残差连接的结构，以实现虚拟特征到真实特征之间的转换。其次，Learning from synthetic中判别的对象在像素空间，而这里判别的对象在特征空间；最后，learning form synthetic中有虚拟到真实和真实到虚拟两种变换，判别器有领域内真假的判别和跨领域真实和生成之间的判别，这里只有虚拟到真实的变换，判别器只需要进行跨领域的判别。</p>
-<p>模型的网络结构如下图所示： <img src="/2018/09/05/DA-in-semantic-segmentation/conditional-GAN.JPG" title="基于条件GAN的分割域适应模型"></p>
-<p>文章在第一节末尾的写法和PixelDA类似： &gt; Our unsupervised pixel-level domain adaptation method (PixelDA) offers a number of advantages over existing approaches:</p>
-<blockquote>
-<p>Our unsupervised domain adaptation method offers the following advantages over existing approaches:</p>
-</blockquote>
-<h2 id="主要贡献">主要贡献</h2>
-<p>如何才能不依赖于源域和目标域共享一个特征空间上的预测函数？作者提出学习源域和目标域的特征空间的残差。在学习源域到目标之间的变换关系的同时，保留源域的语义空间结构。通过GAN来实现这样的变换。</p>
-<ul>
-<li>不假设共享的特征空间：思想来源于Residual Transfer network。实验结果表明，这种残差学习的思想是解决结构化域适应问题的关键</li>
-<li>统一的网络结构：no more discrimination和curriculum更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</li>
-<li>数据增强：通过依赖于源域图像和随机噪声的生成器，可以创造更多的虚拟样本</li>
-</ul>
-<h2 id="训练">训练</h2>
-<p>值得注意的是这里的判别器使用的是全连接网络，最终只输出一个概率值，而不是像其他方法一样在特征空间的多个位置上进行分类。</p>
-<p>在分割网络的训练中，使用了adapted和non-adapted的特征图进行训练。单纯在adpted之后的网络上训练不稳定，需要多次初始化和学习率设置。和PixelDA中的说法是一样的。</p>
-<p>Notice that we train T with both adapted and non-adapted source feature maps. Training T solely on adapted feature maps leads to similar performance, but requires many runs with different initializations and learning rates due to the instability of the GAN. Indeed, without train- ing on source as well, the model is free to shift class assignments (e.g. class 1 becomes 2, class 2 becomes 3 etc.), meanwhile the objective function is still optimized. Similiar to PixelDA, training classifier T on both source and adapted images avoids this shift and greatly stabilizes training. ## 相关工作 FCN in the wild Curriculum domain adaptation (CDA) No more discrimination Cross city adaptation (CCA) ROAD</p>
-<p>前面三个更多的是依赖于像素的分布和标签的统计数据来进行域适应，本文通过条件生成器来变换特征，这样所有的结构都集中在一个网络中，可以端到端的训练。</p>
-<h2 id="指标-5">指标</h2>
-<p>基础网络是FCN-8s，VGG19，能达到这个效果还是很好的 GTA5→Cityscapes NoAdapt 21.1 adapt 44.5 SYNTHIA→Cityscapes noadapt 17.4 adapt 41.2</p>
-<p>关于生成器部分的对比实验，为什么不使用生成器，单纯的对抗训练效果比不迁移还差呢？</p>
-<h2 id="训练-1">训练</h2>
-<p>图像缩放到<span class="math inline">\(480\times960\)</span>，Conv1的特征图大小是<span class="math inline">\(64\times339\times579\)</span>，所以随机噪声的大小是<span class="math inline">\(1\times\339\times579\)</span>，组成<span class="math inline">\(65\times\339\times579\)</span>，然后经过<span class="math inline">\(3\times3\)</span>的卷积，恢复成64通道。后面卷积都是64通道的。</p>
-<h1 id="class-balanced-self-training">Class-Balanced Self-Training</h1>
-<p><a href="#fn28" class="footnoteRef" id="fnref28"><sup>28</sup></a> ECCV2018 文章通过迭代的自学习流程来解决无监督的域适应问题，具体地，为目标样本生成伪标签，然后在用伪标签训练模型，如此不断迭代。在自学习的基础上，也提出了一个新的类别平衡自学习框架来克服伪标签生成过程中的逐渐变大的类别的主导地位，并且引入了空间先验来微调生成的标签。</p>
-<p>不同类别之间的迁移难度是不一样的，原因可能是因为视觉差异，源域中类别分布不平衡，以及源域分布和目标分布不一样。</p>
-<p>数据集：Cityscapes NTHU(Rome, Rio, Tokyo,Taipei) GTA5 Cityscapes SYNTHIA Cityscapes</p>
-<h1 id="deep-activation-matching">deep activation matching</h1>
-<p><a href="#fn29" class="footnoteRef" id="fnref29"><sup>29</sup></a> ECCV2018 通过对齐中间层的输出的分布来解决域适应问题。一方面，中间层的输入可以为网络的训练引入更多的约束。另一方面，匹配之后的激活之可以为下一层提供相似的输入，从而减轻covarite shift。使用了GAN来对齐激活值的分布。</p>
-<p>网络结果如下图所示： <img src="/2018/09/05/DA-in-semantic-segmentation/deep-activation-matching-framework.JPG" title="deep-activate-matching网络结果"> 文章中引入了以下约束来解决目标域没有标注信息的问题 - 标签分布：假设源域和目标域上的标签类别分布是相似的。 - 激活值分布：在中间层的输出上进行分布的匹配。 - 权重漂移：域适应问题通常假设源域的表示会携带目标域的信息，仅仅需要微调来提升目标域的表现。上述的损失函数不能捕捉这一逐渐的变化。通过引入源域网络和目标域网络的正则化项，保证适应的过程中权重变化不要太大。实验中使用的是2范数</p>
-<p>标签分布和激活值分布的匹配的损失函数是JS熵，使用了对抗训练的模式。JS熵是衡量分布匹配的损失函数。其他的对抗训练中用的是交叉熵。都可以看做是定义了对距离的一种度量。</p>
-<p>数据集： GTA5 Cityscapes ERFNet 31.3 FCN8s-VGG16 32.6 Dilated Residual Network 40.2 SYNTHIA Cityscapes</p>
-<h2 id="训练-2">训练</h2>
-<p>图像1024x512 在Cityscapes的测试集（1525）上的结果 在语义分割任务里使用了Least Square GAN来稳定训练</p>
-<h2 id="实验结果">实验结果</h2>
-<p>ADDA是在与ADDA进行对比的是因为ADDA也是源域和目标域采用两个独立的网络，也使用了GAN式的对抗训练</p>
-<h1 id="effective-use-of-synthetic-data">Effective Use of Synthetic Data</h1>
-<p><a href="#fn30" class="footnoteRef" id="fnref30"><sup>30</sup></a> ECCV2018 在训练过程中不需要看到任何的真实图片。文章的motivation是前景和背景类别的领域偏移的方式不同，因此需要分别对待。具体地，前景类别的形状通常是一样的，而纹理有差异，使用基于检测的方式来处理，而背景通常更加真实。</p>
-<p>作者比较了DeepLab模型和Mask R-CNN模型在生成数据上的前景物体的mIOU，Mask R-CNN模型的表现更好。因此，使用语义分割模型来处理背景，基于检测的方法来处理前景物体。</p>
-<p>网络结构如下图所示： <img src="/2018/09/05/DA-in-semantic-segmentation/effective-use-framework.JPG" title="effective-use网络结构"></p>
-<p>流程很直观，训练时可以只在虚拟数据集上训练，测试时分别得到Mask RCNN的各个实例的语义分割图，用类似NMS的方式做后处理（保留所有不重叠的样本），剩余的空洞用DeepLab的预测结果来填充。由于一般的数据集没有实例分割的标注，所以使用了自己的数据集来训练Mask RCNN。训练阶段可以看到真实图像的情况下，可以使用整个模型在真实图像上生成的伪标签来训练DeepLab模型（Mask-RCNN没有重新训练） 在生成伪标签的时候，Mask RCNN剩下的空中如果DeepLab的最大概率还是前景类别，训练的时候将它忽略，因为DeepLab模型迁移到真实图像生成的前景类别并不十分准确。使用真实图像之后，准确率会进一步提升。</p>
-<h2 id="指标-6">指标</h2>
-<p>GTAV 不使用真实图像 38.0 使用真实图像 42.5</p>
-<h1 id="cycada">Cycada</h1>
-<p><a href="#fn31" class="footnoteRef" id="fnref31"><sup>31</sup></a> ICML2018 引入了循环一致性的对抗式域适应，在像素层面和特征层面进行适配，不需要成对的图像。 <a href="https://github.com/jhoffman/cycada_release" target="_blank" rel="external">代码，pytorch</a> ## motivation Cycada通过循环一致性图像到图像的转换将特征级别（DANN,ADDA）和图像级别(Unsupervised cross-domain image generation ICLR2017,Unsupervised pixel-level domain adaptation with generative adversarial networks，CVPR2017)的对抗式域适应方法结合起来。使用重建损失（循环一致性损失）来保留局部的结构信息，使用语义损失来保持语义的一致性。</p>
-<p>这篇是不是将第一次将循环一致性约束引入域适应的？</p>
-<p>是否会将源域图像和转换成目标域风格的图像一起送到分割网络里？</p>
-<p>循环一致性的论文如下： Jun-Yan Zhu, Taesung Park, Phillip Isola, and Alexei A Efros. Unpaired image-to-image translation using cycle-consistent adversarial networks. In International Conference on Computer Vision (ICCV), 2017.</p>
-<p>网络结构如下图所示，其中对抗判别器<span class="math inline">\(D_T\)</span>是用来保证转换后的源域图像和目标域图像的风格一致性。为了保证内容的一致性，使用了循环一致性约束（如果只是对源域图像和转换后的源域图像进行内容一致性约束呢？）。为了实现源域图像和转换后的源域图像之间的语义一致性，使用了一个在源域上训练好的语义分割模型，参数固定，转换后的图像作为输入，未转换的图像经过语义分割模型生成的标签作为“真实标签”，损失函数仍然是语义分割任务的损失。与风格转换和像素适应中的内容损失类似。</p>
-
-<p>图中的Reconstructed Source Image图像是不是有问题，内容应该和源域的图像是一致的才对啊。 将上图与Learning From Synthetic Data中的结构对比，</p>
-<p>Similar to the PixelDA method [1], one concurrent work, CyCADA [12] uses the CycleGAN [42] and transfers source domain images to the target domain with pixel alignment, thus generating extra training data combined with feature space adversarial learning [13]. ----<a href="#fn32" class="footnoteRef" id="fnref32"><sup>32</sup></a></p>
-<h2 id="相关工作-1">相关工作</h2>
-<p>The representation is optimized using the standard minimax objective (Ganin &amp; Lempitsky, 2015), the symmetric confusion objective (Tzeng et al., 2015), or the inverted label objective (Tzeng et al., 2017). Each of these objectives is related to the literature on generative adversarial networks (Goodfellow et al., 2014) and follow-up work for improved training procedures for these networks (Salimans et al., 2016b; Arjovsky et al., 2017).</p>
-<p>特征空间的对齐-&gt;对抗式学习(discriminative representation space)-&gt;生成式模型(pixel-space)</p>
-<p>图像风格转换，其中怎么利用对抗式方法？ 源域图像，转换后的源域图像，和目标域的图像，三者之间的loss应该怎么用。源域图像和转换后的源域图像之间的内容应该是相似的，转换后的源域图像和目标域的图像之间的风格是相似的。</p>
-<p>非成对的图像转换</p>
-<h2 id="指标-7">指标</h2>
-<p>GAT5 -&gt; Cityscapes FCN-8s pixel+feat 35.4</p>
-<h1 id="maximum-classifier-discrepancy">Maximum classifier discrepancy</h1>
-<p><a href="#fn33" class="footnoteRef" id="fnref33"><sup>33</sup></a> CVPR2018，oral <a href="https://github.com/mil-tokyo/MCD_DA" target="_blank" rel="external">代码，pytorch</a> 许多对抗式的方法训练一个领域分类网络来区分特征是来自于源域还是目标域，或者训练一个生成器来模仿判别器。这些方法存在两个问题，首先领域分类器仅仅试图区分特征来自于哪里，并没有考虑任务相关的类别之间的决策边界，使得生成器产生的样本生成类别边界附近的有歧义的样本。其次，这些方法期望完全的匹配不同领域之间的特征分布，但领域的属性不同，导致这一目标很困难。</p>
-<p>为了解决这些问题，引入了一种新方法，利用任务相关的决策边界来对齐源域和目标域之间的分布。我们提出最大化两个分类器输出的差异来检测远离源域支持面的目标域中的样本（有使分类器学到更紧致的界的效果？）。特征生成器用来学习生成目标域的特征来最小化分类器之间的差异（使得目标域的特征趋近于源域？）。</p>
-<h2 id="指标-8">指标</h2>
-<p>GTA5-&gt;Cityscapes VGG-16 28.8</p>
-<h1 id="dual-channel-wise-alignment-networks">Dual Channel-wise Alignment Networks</h1>
-<p><a href="#fn34" class="footnoteRef" id="fnref34"><sup>34</sup></a> ECCV2018 Dual Channel-wise Alignment Networks是一个在像素级别和特征级别减少领域偏移的网络。为了利用CNN特征的每一个通道的统计数据，在基于通道的特征上对齐，在图像生成器和分割网络上都保留了空间结构和语义信息。具体地，给定了一副源域图像和无标注的目标域图像，生成器在线地合成外观类似于目标域的图像，分割网络进一步地微调高级特征以生成最后的语义图。和最近的依靠对抗训练的网络不同，本文的框架更轻量且容易训练。</p>
-<p>网络结构如下图所示： </p>
-<p>CNN特征图的每一个通道的均值和方差可以看做体现了图像的风格信息，因此，可以通过简单的实例归一化步骤来实现特征图的逐通道的对齐，从而实现快速的风格转换。实际使用了adaptive instance normalization<a href="#fn35" class="footnoteRef" id="fnref35"><sup>35</sup></a>来匹配均值和方差，将源域的多个特征图转换到和和目标域的特征图的分布一致。之后再对特征解码生成新的图像，新的图像和原始的源域图像之间进行内容（欧式距离）和风格（Gram矩阵）的约束。</p>
-<p>同样地，在语义分割网络中也使用了逐通道的对齐。具体地，将语义分割模型分成编码器和解码器，在编码器的输出上应用一次逐通道的对齐，然后送入解码器。</p>
-<h2 id="指标-9">指标</h2>
-<p>GTA5 FCN8s-VGG16 36.2/27.8 FCN8s-ResNet101 38.5/29.8 PSPNet 41.7/33.3</p>
-<h2 id="实验结果分析">实验结果分析</h2>
-<h1 id="fcan">FCAN</h1>
-<p>CVRP2018 In this paper, we facilitate this issue from the perspectives of both visual appearance-level and representation-level do- main adaptation. The former adapts source-domain images to appear as if drawn from the “style” in the target domain and the latter attempts to learn domain-invariant representations.</p>
-<p>在对抗损失的前面增加了一个风格迁移的网络，对抗的分类器中引入了ASPP</p>
-<p>这里的对抗是什么样子的？后面网络的训练怎么反馈到ANN中？</p>
-<p>整体的网络结构如下图 <img src="/2018/09/05/DA-in-semantic-segmentation/FCAN-framework.JPG" title="FCAN网络结构"></p>
-<p>风格迁移网络AAN（Appearance Adaptation Network）的结构 <img src="/2018/09/05/DA-in-semantic-segmentation/FCAN-AAN-framework.JPG" title="AAN的网络结构"></p>
-<p>与Learning From Synthetic Data，这里虽然也有fake source,fake target，但是只用用在了领域之间的对抗，而没有真假的对抗。</p>
-<h1 id="other">other</h1>
-<h2 id="和adda在语义分割任务上进行了比较的工作">和ADDA在语义分割任务上进行了比较的工作</h2>
-<p>DCAN Deep activation matching FCAN</p>
-<h2 id="在分类任务上也有实验的论文">在分类任务上也有实验的论文</h2>
-<p>Deep Activate Matching</p>
-<h2 id="adabn">ADAbn</h2>
-<p>综述论文的正文部分，介绍了[69]Y. Li, N. Wang, J. Shi, J. Liu, and X. Hou. Revisiting batch normaliza- tion for practical domain adaptation. arXiv preprint arXiv:1603.04779, 2016. 但是没有介绍[54]X. Huang and S. Belongie. Arbitrary style transfer in real-time with adaptive instance normalization. arXiv preprint arXiv:1703.06868, 2017 尽管[54]也在表格里列出来了</p>
-<h2 id="adda">ADDA</h2>
-<p>使用了不共享的网络 将前面的特征网络看做是对图像的映射</p>
-<h2 id="依次偏移">依次偏移</h2>
-<p>哪些论文中，如果不加额的限制，会使得预测的结果依次偏移，而且损失还会下降？</p>
-<h2 id="source-only">source only</h2>
-<p>FCN-8S 21.2 Cycada 17.9 DCAN 27.8 currium 22.3 LSD 26.8 Deep activate matching 18.8</p>
-<h2 id="oracle">oracle</h2>
-<p>各论文实现的FCN-8s在Cityscapes上的语义分割结果 FCNs in the wild 64.0 Cycada 60.3 Learning to adapt structure output 61.8 DCAN 62.0 Deep activation matching 65.0 learning from synthetic data 57.6</p>
-<div class="footnotes">
-<hr>
-<ol>
-<li id="fn1"><p>S. Hong, J. Oh, H. Lee, and B. Han. Learning transferrable knowledge for semantic segmentation with deep convolutional neural network. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 3204–3212, 2016.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>A. Kolesnikov and C. H. Lampert. Seed, expand and constrain: Three principles for weakly-supervised image segmentation. In European Conference on Computer Vision, pages 695–711. Springer, 2016.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref4">↩</a></p></li>
-<li id="fn5"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref5">↩</a></p></li>
-<li id="fn6"><p>Y. Zhang, P. David, and B. Gong. Curriculum domain adaptation for semantic segmentation of urban scenes. In The IEEE International Conference on Computer Vision (ICCV), volume 2, page 6, 2017.<a href="#fnref6">↩</a></p></li>
-<li id="fn7"><p>Y. Chen, W. Li, and L. Van Gool. Road: Reality oriented adaptation for semantic segmentation of urban scenes. In CVPR, 2018.<a href="#fnref7">↩</a></p></li>
-<li id="fn8"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref8">↩</a></p></li>
-<li id="fn9"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref9">↩</a></p></li>
-<li id="fn10"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref10">↩</a></p></li>
-<li id="fn11"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref11">↩</a></p></li>
-<li id="fn12"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. In ICCV, 2017.<a href="#fnref12">↩</a></p></li>
-<li id="fn13"><p>Y. Chen, W. Li, and L. Van Gool. Road: Reality oriented adaptation for semantic segmentation of urban scenes. In CVPR, 2018.<a href="#fnref13">↩</a></p></li>
-<li id="fn14"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref14">↩</a></p></li>
-<li id="fn15"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref15">↩</a></p></li>
-<li id="fn16"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. In ICCV, 2017.<a href="#fnref16">↩</a></p></li>
-<li id="fn17"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref17">↩</a></p></li>
-<li id="fn18"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref18">↩</a></p></li>
-<li id="fn19"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref19">↩</a></p></li>
-<li id="fn20"><p>Sankaranarayanan S, Balaji Y, Jain A, et al. Learning From Synthetic Data: Addressing Domain Shift for Semantic Segmentation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 3752-3761.<a href="#fnref20">↩</a></p></li>
-<li id="fn21"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref21">↩</a></p></li>
-<li id="fn22"><p>J. Hoffman, D. Wang, F. Yu, and T. Darrell. Fcns in the wild: Pixel-level adversarial and constraint-based adaptation. arXiv preprint arXiv:1612.02649, 2016.<a href="#fnref22">↩</a></p></li>
-<li id="fn23"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref23">↩</a></p></li>
-<li id="fn24"><p>W. Shimoda and K. Yanai. Distinct class-specific saliency maps for weakly supervised semantic segmentation. In European Conference on Computer Vision, pages 218–234. Springer, 2016.<a href="#fnref24">↩</a></p></li>
-<li id="fn25"><p>Y.-H. Chen, W.-Y. Chen, Y.-T. Chen, B.-C. Tsai, Y.-C. F. Wang, and M. Sun. No more discrimination: Cross city adaptation of road scene segmenters. In ICCV, 2017.<a href="#fnref25">↩</a></p></li>
-<li id="fn26"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref26">↩</a></p></li>
-<li id="fn27"><p>Hong W, Wang Z, Yang M, et al. Conditional Generative Adversarial Network for Structured Domain Adaptation[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018: 1335-1344.<a href="#fnref27">↩</a></p></li>
-<li id="fn28"><p>Zou Y, Yu Z, Vijaya Kumar B V K, et al. Unsupervised Domain Adaptation for Semantic Segmentation via Class-Balanced Self-Training[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 289-305.<a href="#fnref28">↩</a></p></li>
-<li id="fn29"><p>Huang H, Huang Q, Kraehenbuehl P. Domain transfer through deep activation matching[C]//Proceedings of the European Conference on Computer Vision (ECCV). 2018: 590-605.<a href="#fnref29">↩</a></p></li>
-<li id="fn30"><p>Saleh F S, Aliakbarian M S, Salzmann M, et al. Effective Use of Synthetic Data for Urban Scene Semantic Segmentation[J]. arXiv preprint arXiv:1807.06132, 2018.<a href="#fnref30">↩</a></p></li>
-<li id="fn31"><p>Hoffman J, Tzeng E, Park T, et al. Cycada: Cycle-consistent adversarial domain adaptation[J]. arXiv preprint arXiv:1711.03213, 2017.<a href="#fnref31">↩</a></p></li>
-<li id="fn32"><p>Tsai Y H, Hung W C, Schulter S, et al. Learning to adapt structured output space for semantic segmentation[J]. arXiv preprint arXiv:1802.10349, 2018. CVPR2018<a href="#fnref32">↩</a></p></li>
-<li id="fn33"><p>Saito K, Watanabe K, Ushiku Y, et al. Maximum classifier discrepancy for unsupervised domain adaptation[J]. arXiv preprint arXiv:1712.02560, 2017, 3.<a href="#fnref33">↩</a></p></li>
-<li id="fn34"><p>DCAN: Dual Channel-wise Alignment Networks for Unsupervised Scene Adaptation.<a href="#fnref34">↩</a></p></li>
-<li id="fn35"><p>Huang, X., Belongie, S.: Arbitrary style transfer in real-time with adaptive instance normalization. In: ICCV. (2017)<a href="#fnref35">↩</a></p></li>
-</ol>
-</div>
-
-          
+          思路
+本文同样关注unsupvised设置，即只知道两个领域图像各自的边缘分布\(P_{x1}\)和\(P_{x2}\)，而不知道联合分布\(P_{x1,x2}\),和作者的上一篇Coupled GAN1一样. 上一篇论文的介绍看这里Coupled GAN.
+作者同样遵循了Coupled GAN
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/13/unsupervised-image-to-image-translation/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -657,7 +428,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/03/encoding/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/12/conditional-gan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -676,8 +447,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/03/encoding/" itemprop="url">
-                  字符和编码
+                <a class="post-title-link" href="/2018/08/12/conditional-gan/" itemprop="url">
+                  Conditional Generative Adversarial Nets
                 </a>
               
             
@@ -703,24 +474,12 @@
                 
               
 
-              <time title="创建时间：2018-09-03 22:00:23" itemprop="dateCreated datePublished" datetime="2018-09-03T22:00:23+08:00">2018-09-03</time>
+              <time title="创建时间：2018-08-12 10:47:29 / 修改时间：13:21:02" itemprop="dateCreated datePublished" datetime="2018-08-12T10:47:29+08:00">2018-08-12</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-04 14:58:57" itemprop="dateModified" datetime="2018-09-04T14:58:57+08:00">2018-09-04</time>
               
             
           </span>
@@ -755,25 +514,16 @@
       
         
           
-            <h1 id="文件编码">文件编码</h1>
-<p>参考<a href="https://blog.csdn.net/gatieme/article/details/55045883" target="_blank" rel="external">这篇博客</a> 里面包含了linux下查看文件编码的方法</p>
-<p>pycharm里也可以修改文本文件的编码， 位置在右下角 提供两个选项，reload convert</p>
-<p>reload不改变文件时间的二进制值，只是修改读取方式，适用于出现了乱码需要寻找合适编码的情况</p>
-<p>convert是使用不同的编码保存文件，会修改文件保存出来的二进制值，以及文件大小。</p>
-<h1 id="字符和编码">字符和编码</h1>
-<p><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="external">这篇博客</a>探讨不同概念的来源，没有涉及python2中的str和unicode，可以看下面的博客来理解</p>
-<p>关于python2中的str和unicode看<a href="https://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386819196283586a37629844456ca7e5a7faa9b94ee8000" target="_blank" rel="external">这篇博客</a></p>
-<img src="/2018/09/03/encoding/encoding-1.JPG" title="encoding和py2的字符，unicode">
-<img src="/2018/09/03/encoding/encoding-2.JPG" title="py2中str和unicode的转换">
-<h1 id="py文件">py文件</h1>
-<p>在py2的文件一开始，通常会写</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br></pre></td></tr></table></figure>
-<p>这句话的作用是为了告诉Python解释器，按照UTF-8编码读取源代码，否则，你在源代码中写的中文输出可能会有乱码。 这句代码并不能保证.py文件自身的编码格式</p>
-<p>需要设置.py文件自身的编码格式是UTF-8，而不是其他如GBK等，pycharm中如果开头添加了这句话，那么右下角的文件编码格式会自动锁定UTF-8，还是很贴心的。</p>
-<h1 id="py2-和-py3的区别">py2 和 py3的区别</h1>
-<p>fluent python的作者写的<a href="https://speakerdeck.com/ramalho/unicode-solutions-in-python-2-and-python-3?slide=22" target="_blank" rel="external">unicode solution</a></p>
+          原始的GAN可以通过在生成器和判别器上加入额外的依赖信息\(y\)，构成条件GAN，\(y\)可以是任意类型的附加信息，比如说标签信息，或者其他模态的信息。 原始的GAN的公式如下：  增加了额外输入信息的条件GAN公式如下：  网络结构如下： 
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/12/conditional-gan/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -825,7 +575,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/15/weak-pairwise-constraints/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/11/unsupervised-pixel-level-domain-adaptation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -844,8 +594,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/15/weak-pairwise-constraints/" itemprop="url">
-                  Adapting Deep Visuomotor Representations with Weak Pairwise Constraints
+                <a class="post-title-link" href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/" itemprop="url">
+                  Unsupervised Pixel–Level Domain Adaptation with Generative Adversarial Networks
                 </a>
               
             
@@ -871,7 +621,7 @@
                 
               
 
-              <time title="创建时间：2018-08-15 16:22:04 / 修改时间：16:25:18" itemprop="dateCreated datePublished" datetime="2018-08-15T16:22:04+08:00">2018-08-15</time>
+              <time title="创建时间：2018-08-11 20:59:26 / 修改时间：21:24:07" itemprop="dateCreated datePublished" datetime="2018-08-11T20:59:26+08:00">2018-08-11</time>
             
 
             
@@ -911,12 +661,323 @@
       
         
           
-            <h1 id="思路">思路</h1>
-<p>针对的是虚拟数据到真实数据的无监督域适应的问题，并且希望利用虚拟数据和真实数据之间的成对关系，于是在训练中基于特征人为构造了成对数据，并且和网络训练迭代进行。</p>
-<h1 id="实现">实现</h1>
-<p>网络结构如下图所示： <img src="/2018/08/15/weak-pairwise-constraints/network.JPG" title="proposed network"></p>
+          思路
+利用已经标注好的源域的数据，由生成器初产生和目标域相似的图像，同时保留源域的标注，这样构造的数据集期望和目标域上的数据分布一致，这样在这一“新”数据集上训练的模型可以直接应用到目标数据集上。这里是直接在像素空间进行转换，和Unsupervised Domain Adaptation by B
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/11/unsupervised-pixel-level-domain-adaptation/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/06/domain-adversarial-training/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Zhang">
+      <meta itemprop="description" content="Domain Adaptation">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OnTheMoon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/06/domain-adversarial-training/" itemprop="url">
+                  Domain Adversarial Training of Nerual Networks阅读笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-06 15:08:50" itemprop="dateCreated datePublished" datetime="2018-08-06T15:08:50+08:00">2018-08-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-10 17:09:43" itemprop="dateModified" datetime="2018-08-10T17:09:43+08:00">2018-08-10</time>
+              
+            
+          </span>
 
           
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          introduction
+这篇文章是Unsupervised Domain Adaptation by Backpropagation，YaroslavI，CML2015的JMLR版方法是同一个，多了一些理论推导 从方便理解的角度，先读Unsupervised Domain Adaptation会
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/06/domain-adversarial-training/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/08/03/Image Style Transfer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vincent Zhang">
+      <meta itemprop="description" content="Domain Adaptation">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="OnTheMoon">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/03/Image Style Transfer/" itemprop="url">
+                  Style Transfer 论文阅读笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-03 15:06:43 / 修改时间：16:16:38" itemprop="dateCreated datePublished" datetime="2018-08-03T15:06:43+08:00">2018-08-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          在实际操作的时候，loss用来更新像素的值，而不是网络参数
+content loss用来衡量两幅图像的内容差异，这里使用某一层输出的特征图来表示图像本身的内容，content loss由逐通道，逐空间位置的平方误差构成,形式如下： \[ L_c = w_c x \]
+style loss用来衡量
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/03/Image Style Transfer/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -957,7 +1018,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
   </nav>
 
 
@@ -1000,7 +1061,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1049,7 +1110,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -1248,6 +1311,10 @@
     
       
         
+      
+    
+      
+    
       
     
       
