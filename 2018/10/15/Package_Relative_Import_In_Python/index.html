@@ -355,9 +355,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2018/10/15/Package_Relative_Import_In_Python/#comments" itemprop="discussionUrl">
-                
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/10/15/Package_Relative_Import_In_Python/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/10/15/Package_Relative_Import_In_Python/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -483,14 +481,7 @@
 
   
     <div class="comments" id="comments">
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
     </div>
-
   
 
 
@@ -788,27 +779,8 @@
 
   
 
-  
-    <script id="dsq-count-scr" src="https://zhyx12.disqus.com/count.js" async></script>
-  
 
-  
-    <script type="text/javascript">
-      var disqus_config = function () {
-        this.page.url = 'http://zhyx12.top/2018/10/15/Package_Relative_Import_In_Python/';
-        this.page.identifier = '2018/10/15/Package_Relative_Import_In_Python/';
-        this.page.title = 'python中的包导入';
-        };
-      function loadComments () {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://zhyx12.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', '' + +new Date());
-        (d.head || d.body).appendChild(s);
-      }
-      
-        loadComments();
-      
-    </script>
+
   
 
 
@@ -818,7 +790,30 @@
 
 
 
-
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'ipp19tM9nsA9Tex25tBi2zmi-gzGzoHsz',
+        appKey: 'ywOs6aPOrRCfiVpwAaWMJnrv',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        meta:guest,
+        pageSize:'10' || 10,
+        visitor: false
+    });
+  </script>
 
 
 
