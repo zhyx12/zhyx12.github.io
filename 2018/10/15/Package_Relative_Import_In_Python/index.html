@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="python中的包导入 概念 python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。 绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两">
+  <meta name="description" content="python中的包导入  概念 python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。 绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超">
 <meta name="keywords" content="python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python中的包导入">
 <meta property="og:url" content="http://zhyx12.top/2018/10/15/Package_Relative_Import_In_Python/index.html">
 <meta property="og:site_name" content="OnTheMoon">
-<meta property="og:description" content="python中的包导入 概念 python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。 绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两">
+<meta property="og:description" content="python中的包导入  概念 python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。 绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-11-01T08:56:45.212Z">
+<meta property="og:updated_time" content="2018-11-16T08:19:34.231Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python中的包导入">
-<meta name="twitter:description" content="python中的包导入 概念 python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。 绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两">
+<meta name="twitter:description" content="python中的包导入  概念 python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。 绝对导入：导入时只搜索sys.path 相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超">
 
 
 
@@ -340,7 +340,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-01 16:56:45" itemprop="dateModified" datetime="2018-11-01T16:56:45+08:00">2018-11-01</time>
+                <time title="修改时间：2018-11-16 16:19:34" itemprop="dateModified" datetime="2018-11-16T16:19:34+08:00">2018-11-16</time>
               
             
           </span>
@@ -395,18 +395,19 @@
 
       
         <h1 id="python中的包导入">python中的包导入</h1>
+<h2 id="section"></h2>
 <h2 id="概念">概念</h2>
 <p>python的代码中包导入的情况，既有python直接执行的文件，即顶层文件中的导入语句，也有被顶层文件导入的其他模块中的导入语句。这两个本质上没有区别，都是从一些给定的路径中搜索符合名字的文件或者文件夹。但是在涉及到相对导入的时候，二者又有各自不同的情况。</p>
 <p>绝对导入：导入时只搜索sys.path</p>
-<p>相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两层，'insane was the word Guido used'）。 Python2.X在任何时候使用的是先相对再绝对的搜索机制，而在语法和实际执行上有<strong>严格的对应关系</strong>，默认的搜索（一般的import语法和from语法）使用的是绝对导入，而要指定相对搜索，也就是只搜索相对路径上的目录，从语法上来说，就是from . import *** 或者是 from .*** , 具体地，使用from语句而且由点开始（leading dot）。</p>
+<p>相对导入：导入时只搜索当前目录或上一级或几级目录（不建议超过两层，'insane was the word Guido used'）。 Python2.X在任何时候使用的是先相对再绝对的搜索机制，而在语法和实际执行上有<strong>严格的对应关系</strong>，默认的搜索（一般的import语法和from语法）使用的是绝对导入，而要指定相对搜索，也就是只搜索相对路径上的目录，从语法上来说，就是from . import *** 或者是 from .*** , 具体地，使用from语句而且<strong>由点开始</strong>（leading dot）。</p>
 <p>在Python3.X中，import *** （import语句）和 from *** import *** （from语句）是<strong>有区别的</strong>，import只语句支持绝对导入，不支持相对导入。from即支持绝对导入，也支持相对导入。</p>
 <p>在python2.X中，使用下面的包，可以实现和Python3.X一样的导入机制 from <strong>future</strong> import absolute_import</p>
 <p>相对包导入的实现使用的是文件的__name__属性，所以对于直接执行的文件来说，不能使用相对导入，从下面第二条中Python3.6版本的报错信息可以看出来。</p>
-<p>python -m *** 的执行方式，应该是将要执行的文件作为被调用的模块，而不是顶层文件，-m后接的文件可以不加.py，穿过多级目录的文件中间使用.(dot)来连接，而不是平台相关的'/'或者''</p>
+<p>python -m *** 的执行方式，应该是将要执行的文件作为被调用的模块，而不是顶层文件，-m后接的文件不加.py，穿过多级目录的文件中间使用.(dot)来连接，而不是平台相关的'/'或者''</p>
 <h2 id="what-you-cant-do">what you can't do</h2>
 <ul>
 <li><p><strong>在import语句（区别于from语句）中使用dot（相对导入）</strong> 原因：规则，只有from语句才能使用相对导入，详见<a href="https://www.python.org/dev/peps/pep-0328/#rationale-for-relative-imports" target="_blank" rel="external">PEP328</a></p></li>
-<li><p><strong>直接执行的python文件中，出现相对导入。</strong> python2.7的错误如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: Attempted relative import in non-package</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>直接执行的python文件中，出现相对导入</strong> 注意由.开始的from语义才是相对导入，不能出现的直接执行的文件中，但是位于中间的.是可以的。 python2.7的错误如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: Attempted relative import in non-package</span><br></pre></td></tr></table></figure></p></li>
 </ul>
 <p>python3.6的错误如下，或见<a href="https://stackoverflow.com/questions/41816973/modulenotfounderror-what-does-it-mean-main-is-not-a-package" target="_blank" rel="external">stackoverflow</a>：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ModuleNotFoundError: No module named &apos;__main__.da_seg_dataset&apos;; &apos;__main__&apos; is not a package</span><br></pre></td></tr></table></figure>
@@ -416,7 +417,7 @@
 </ul>
 <h2 id="what-you-should-do">what you should do</h2>
 <p>Python3中导入同一个文件夹下的文件，且不在sys.path里，<strong>必须使用</strong>相对导入的语法，否则会报错。而在Python2.X中由于&quot;先相对，再绝对的方式&quot;，可以不使用相对导入语法。但是，如果只想使用绝对导入而不使用相对导入（只想使用sys.path下的包，而不使用本路径下的包）时，Python2.X就无法实现这一功能了。</p>
-<h2 id="whatw-now">what'w now</h2>
+<h2 id="whats-now">what's now</h2>
 <p>了解python标准库中的<a href="">importlib</a></p>
 <p>阅读<a href="https://docs.python.org/3/reference/import.html" target="_blank" rel="external">import system</a></p>
 <h2 id="参考">参考</h2>
@@ -628,7 +629,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#python中的包导入"><span class="nav-number">1.</span> <span class="nav-text">python中的包导入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-you-cant-do"><span class="nav-number">1.2.</span> <span class="nav-text">what you can't do</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-you-should-do"><span class="nav-number">1.3.</span> <span class="nav-text">what you should do</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#whatw-now"><span class="nav-number">1.4.</span> <span class="nav-text">what'w now</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.5.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#python中的包导入"><span class="nav-number">1.</span> <span class="nav-text">python中的包导入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#section"><span class="nav-number">1.1.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">1.2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-you-cant-do"><span class="nav-number">1.3.</span> <span class="nav-text">what you can't do</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-you-should-do"><span class="nav-number">1.4.</span> <span class="nav-text">what you should do</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#whats-now"><span class="nav-number">1.5.</span> <span class="nav-text">what's now</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.6.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
 
           </div>
