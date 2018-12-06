@@ -383,7 +383,7 @@
 <p>沿用了一开始的个人设置，我把所有的项目都放在~/PycharmProjects/下面，</p>
 <h2 id="shell文件">shell文件</h2>
 <p>在shell文件中，都可以采用如下的模板，首先集群中的home是/ghome/，和一般的服务器不同，其次，集群中使用docker之提交任务之后，默认的用户目录发生了改变，这样之前约定的路径都会产生问题，因此，可以屏蔽掉这些区别，直接cd到项目目录。docker中的HOME环境变量是&quot;/&quot;，也需要切换到/ghome/***</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line">if [ $HOME == '/' ]; then</span><br><span class="line">    export HOME='/ghome/zhangyx'</span><br><span class="line">fi</span><br><span class="line">cd $HOME'/PycharmProjects/semseg'</span><br><span class="line">python ***.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line">if [ $HOME == '/' ]; then</span><br><span class="line">    export HOME='/ghome/zhangyx'</span><br><span class="line">fi</span><br><span class="line">cd $HOME'/PycharmProjects/semseg'</span><br><span class="line">python ***.py</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -502,7 +502,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-count">31</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -553,7 +553,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
