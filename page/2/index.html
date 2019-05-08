@@ -280,7 +280,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/09/11/pytorch-0.4/">
+    <link itemprop="mainEntityOfPage" href="http://zhyx12.top/2018/10/15/Package_Relative_Import_In_Python/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vincent Zhang">
@@ -299,8 +299,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/11/pytorch-0.4/" itemprop="url">
-                  Pytorch 0.4迁移指南
+                <a class="post-title-link" href="/2018/10/15/Package_Relative_Import_In_Python/" itemprop="url">
+                  python中的包导入
                 </a>
               
             
@@ -326,7 +326,7 @@
                 
               
 
-              <time title="创建时间：2018-09-11 19:11:46" itemprop="dateCreated datePublished" datetime="2018-09-11T19:11:46+08:00">2018-09-11</time>
+              <time title="创建时间：2018-10-15 11:27:17" itemprop="dateCreated datePublished" datetime="2018-10-15T11:27:17+08:00">2018-10-15</time>
             
 
             
@@ -343,7 +343,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-30 16:54:05" itemprop="dateModified" datetime="2018-11-30T16:54:05+08:00">2018-11-30</time>
+                <time title="修改时间：2018-12-05 21:36:34" itemprop="dateModified" datetime="2018-12-05T21:36:34+08:00">2018-12-05</time>
               
             
           </span>
@@ -357,8 +357,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/09/11/pytorch-0.4/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/09/11/pytorch-0.4/" itemprop="commentCount"></span>
+                <a href="/2018/10/15/Package_Relative_Import_In_Python/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/10/15/Package_Relative_Import_In_Python/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -366,7 +366,7 @@
 
           
           
-             <span id="/2018/09/11/pytorch-0.4/" class="leancloud_visitors" data-flag-title="Pytorch 0.4迁移指南">
+             <span id="/2018/10/15/Package_Relative_Import_In_Python/" class="leancloud_visitors" data-flag-title="python中的包导入">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -399,14 +399,15 @@
       
         
           
-          版本迁移
-0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。
-自动求导
-requires_grad是自动求导的核心标志。在loss.
+          python中的包导入
+相对导入之前
+Scripts vs Module
+参考这里 直接运行python文件和在其他地方引用这个文件是存在很大的区别的。
+python中有两种方法来载入一个Python文件，一种是直接运行，作为顶层文件，例如在命令行里输入python myfile.py，另一
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/11/pytorch-0.4/#more" rel="contents">
+            <a class="btn" href="/2018/10/15/Package_Relative_Import_In_Python/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1269,7 +1270,7 @@ Few-Shot Image Recognition by Predicting Parameters from Activations
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -1463,8 +1464,6 @@ Few-Shot Image Recognition by Predicting Parameters from Activations
   
   
     
-      
-        
       
     
       

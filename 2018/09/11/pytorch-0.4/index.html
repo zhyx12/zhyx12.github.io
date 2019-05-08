@@ -117,7 +117,7 @@
 <meta property="og:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://zhyx12.top/2018/09/11/pytorch-0.4/Tensor_class.JPG">
-<meta property="og:updated_time" content="2018-11-30T08:54:05.443Z">
+<meta property="og:updated_time" content="2019-05-08T02:44:12.397Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pytorch 0.4迁移指南">
 <meta name="twitter:description" content="版本迁移 0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。 自动求导 requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，">
@@ -342,7 +342,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2018-11-30 16:54:05" itemprop="dateModified" datetime="2018-11-30T16:54:05+08:00">2018-11-30</time>
+                <time title="修改时间：2019-05-08 10:44:12" itemprop="dateModified" datetime="2019-05-08T10:44:12+08:00">2019-05-08</time>
               
             
           </span>
@@ -399,9 +399,8 @@
         <h1 id="版本迁移">版本迁移</h1>
 <p>0.4最大的改变在于将Tensor和Variable合并。本文的目的在于厘清一些之前比较模糊的概念，如求导机制中的requires_grad，volatile，leaf，non-leaf等，并介绍新旧版本的差异。</p>
 <h1 id="自动求导">自动求导</h1>
-<p>requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，并且保存（累加）在grad属性里，如果require_grad=False，就不为该tensor计算误差。 可以通过在每一次前向计算时设置模型参数的requires_grad=False，使得loss.backward()时这些网络参数的梯度（grad）为None。</p>
-<p>网络权重的梯度的累加和optimizer中是否有该权重是相互独立的。</p>
-<p>optimizer只需要创建的时候参数的requires_grad=True就行，step()时=False也没有关系，grad属性可能是None，这时调用optimizer.step()就不会改变参数的值。requires_grad等于False并不代表grad一定是None，可能只是临时设置为False，但是有之前累积的grad。</p>
+<p>requires_grad是自动求导的核心标志。在loss.backward()时，遇到一个tensor的require_grad=True，就会为它计算误差，并且保存（累加）在grad属性里，如果require_grad=False，就不为该tensor计算误差。 通过在backward时设置参数的requires_grad=False，就可以使得误差反向传播时跳过这些参数（例如GAN的generator更新时，将discriminator所有参数的requires_grad设置成False）。</p>
+<p>optimizer只需要创建的时候参数的requires_grad=True就行，optimizer.step()时requires_grad=False也没有关系，requires_grad等于False并不意味着grad一定是None，可能只是临时设置为False，但是有之前累积的grad。即使grad=None，调用optimizer.step()也没有问题，只是参数的值不会发生改变。</p>
 <p>因为联系整个计算图的是中间的计算结果，网络参数本身可以看做是叶子节点，所以才可以做到网络参数的部分更新，这时一定要保证</p>
 <p>举个例子来说，首先定义模型和输入变量，ground truth以及优化器 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.optim <span class="keyword">import</span> SGD</span><br><span class="line"></span><br><span class="line">linear1 = nn.Linear(in_features=<span class="number">2</span>, out_features=<span class="number">2</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">linear2 = nn.Linear(in_features=<span class="number">2</span>, out_features=<span class="number">1</span>, bias=<span class="keyword">False</span>)</span><br><span class="line">nn.init.constant_(linear1.weight.data, <span class="number">1</span>)</span><br><span class="line">nn.init.constant_(linear2.weight.data, <span class="number">2</span>)</span><br><span class="line">optimizer1 = SGD(linear1.parameters(), lr=<span class="number">100</span>)</span><br><span class="line">optimizer2 = SGD(linear2.parameters(), lr=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">gt = torch.ones(<span class="number">1</span>).unsqueeze(<span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
 <p>正常的前向传播和反向传播的流程如下，input-&gt;linear1-&gt;linear2-&gt;output，： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">input = torch.ones((<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">output1 = linear1(input)</span><br><span class="line">output2 = linear2(output1)</span><br><span class="line">loss = F.binary_cross_entropy_with_logits(output2, gt)</span><br><span class="line">loss.backward()</span><br><span class="line">print(output1.is_leaf,output2.is_leaf)</span><br><span class="line">print(linear1.weight.is_leaf,linear2.weight.is_leaf)</span><br><span class="line">print(linear2.weight.grad)</span><br><span class="line">print(linear1.weight.grad)</span><br></pre></td></tr></table></figure></p>
@@ -453,7 +452,7 @@
 <h2 id="tensor">tensor</h2>
 <p>torch.Tensor创建函数是默认的tensor类型的别名，torch.Tensor()如果接受多个数字的话，会把他解析成size，如果是序列的话，会解析成数据，这些在新旧版本都一样的，可以参考0.3.1Tensor文档中对于Tensor()创建函数中不同参数的定义。 <img src="/2018/09/11/pytorch-0.4/Tensor_class.JPG" title="Tensor_class"></p>
 <p>之前的版本也存在0维的tensor，torch.Tensor()创建的就是0维的tensor，但是这个没有什么用途（？），而且和0.4.0的不一样，0.4.0的zero-dimensional tensor指的是仅包含一个元素，dim()=0，size()=torch.Size([])的tensor，0.4.0中，torch.Tensor()虽然也会返回一个不包含任何元素的tensor，但是dim()=1，size()=torch.Size([1])。</p>
-<p>0.4.0增加了torch.tensor(data, dtype=None, device=None, requires_grad=False)的tensor创建函数，在之前的版本中，torch.tensor的类型是class 'module'，0.4.0中的类型是builtin_function_or_method。torch.tensor传入的第一个参数总是数据，包括Python number，list, tuple等，而且会拷贝原来的数据。</p>
+<p>0.4.0增加了torch.tensor(data, dtype=None, device=None, requires_grad=False)的tensor创建函数，在之前的版本中，torch.tensor的类型是class 'module'，0.4.0中的类型是builtin_function_or_method。torch.tensor传入的第一个参数总是数据，包括Python number，list, tuple等，而且会拷贝原来的数据，数据类型是自动推断的。torch.Tensor()是torch.FloatTensor()的别名，返回的总是float32类型。</p>
 <table style="width:35%;">
 <colgroup>
 <col width="15%">
@@ -497,8 +496,13 @@
 <p>为什么没有提供tensor类自己的eye的inplace操作？</p>
 <h2 id="no-grad-in-gpu">no grad in GPU?</h2>
 <p>有时候会测试一些小例子，看看梯度能不能正常计算，之前一般都是在CPU上计算的，但是测试torch.inverse()的时候发现，在GPU上grad是None。比如如下的代码 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line">a = torch.eye(<span class="number">3</span>,requires_grad=<span class="keyword">True</span>)</span><br><span class="line">a = a.cuda()  <span class="comment"># 移动到GPU上</span></span><br><span class="line">b = torch.inverse(a)</span><br><span class="line">c =torch.sum(b)</span><br><span class="line">c.backward()</span><br></pre></td></tr></table></figure></p>
-<p>这时输出的grad是None，但是如果将a = a.cuda()注释掉，就可以正常显示梯度值了。这不是在GPU上不能正常保存grad，而是因为.cuda()算对a进行了修改，而且进行了重新赋值，所以在显示grad时的a已经是中间节点了，grad不会保存。赋值给新变量，在创建的a时候指明device，或者.cuda()都可以避免这种情况。</p>
+<p>这时输出的grad是None，但是如果将a = a.cuda()注释掉，就可以正常显示梯度值了。这不是在GPU上不能正常保存grad，而是因为.cuda()算对a进行了修改，而且进行了重新赋值，所以在显示grad时的a已经是中间节点了，grad不会保存。赋值给新变量，或者在创建的a时候指明device都可以避免这种情况，但是使用.cuda()是不行的。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = torch.eye(<span class="number">3</span>,requires_grad=<span class="keyword">True</span>,device=<span class="string">'cuda:0'</span>)  <span class="comment"># a 是 leaf node</span></span><br><span class="line">a = torch.eye(<span class="number">3</span>,requires_grad=<span class="keyword">True</span>).cuda() <span class="comment"># a是non leaf node</span></span><br></pre></td></tr></table></figure></p>
 <p>.cuda()并不会导致loss不能反传，其他函数类似，如unsqueeze()，因此没必要使用unsqueeze_()，尤其是对于叶子节点，使用inplace版本是错的。中间节点可以使用unsqueeze_()，这样应该可以节省显存。</p>
+<h2 id="跨gpu的梯度反向传播">跨GPU的梯度反向传播</h2>
+<p>问题的详细描述是将GPU0的tensor a，复制到GPU1，然后在GPU1中进行反向传播之后，梯度是否可以传回GPU0</p>
+<p>是可以的，无论是从CPU到GPU(.cuda()函数）还是不同GPU之间的转移，loss都是可以正常传播的。</p>
+<h2 id="模型跨gpu时需要注意的问题">模型跨GPU时需要注意的问题</h2>
+<p>计算loss的时候，需要保证ground truth（无论是dataloader提供的，还是手动构造的）和prediction所处的GPU相同，可以通过和模型保持一致来处理。 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gt = gt.to(<span class="string">'cuda:&#123;&#125;'</span>.format(model.device_ids[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure></p>
 <h2 id="what-torch.no_grad-do">what torch.no_grad() do?</h2>
 <p>如果在前向传播的某处使用了torch.no_grad()，尽管在此之前没有使用，但是梯度仍然不能正常传到前面。</p>
 
@@ -714,7 +718,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本迁移"><span class="nav-number">1.</span> <span class="nav-text">版本迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动求导"><span class="nav-number">2.</span> <span class="nav-text">自动求导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">旧版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和optimizer的关系"><span class="nav-number">2.1.1.</span> <span class="nav-text">和optimizer的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本"><span class="nav-number">2.2.</span> <span class="nav-text">新版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data属性和detech"><span class="nav-number">2.2.1.</span> <span class="nav-text">.data属性和detech()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss累加"><span class="nav-number">2.2.2.</span> <span class="nav-text">loss累加</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn"><span class="nav-number">2.3.</span> <span class="nav-text">nn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tensor"><span class="nav-number">2.4.</span> <span class="nav-text">tensor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn.init"><span class="nav-number">2.5.</span> <span class="nav-text">nn.init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#no-grad-in-gpu"><span class="nav-number">2.6.</span> <span class="nav-text">no grad in GPU?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-torch.no_grad-do"><span class="nav-number">2.7.</span> <span class="nav-text">what torch.no_grad() do?</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本迁移"><span class="nav-number">1.</span> <span class="nav-text">版本迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动求导"><span class="nav-number">2.</span> <span class="nav-text">自动求导</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#旧版本"><span class="nav-number">2.1.</span> <span class="nav-text">旧版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#和optimizer的关系"><span class="nav-number">2.1.1.</span> <span class="nav-text">和optimizer的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新版本"><span class="nav-number">2.2.</span> <span class="nav-text">新版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data属性和detech"><span class="nav-number">2.2.1.</span> <span class="nav-text">.data属性和detech()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss累加"><span class="nav-number">2.2.2.</span> <span class="nav-text">loss累加</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn"><span class="nav-number">2.3.</span> <span class="nav-text">nn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tensor"><span class="nav-number">2.4.</span> <span class="nav-text">tensor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn.init"><span class="nav-number">2.5.</span> <span class="nav-text">nn.init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#no-grad-in-gpu"><span class="nav-number">2.6.</span> <span class="nav-text">no grad in GPU?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨gpu的梯度反向传播"><span class="nav-number">2.7.</span> <span class="nav-text">跨GPU的梯度反向传播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型跨gpu时需要注意的问题"><span class="nav-number">2.8.</span> <span class="nav-text">模型跨GPU时需要注意的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-torch.no_grad-do"><span class="nav-number">2.9.</span> <span class="nav-text">what torch.no_grad() do?</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -734,7 +738,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
